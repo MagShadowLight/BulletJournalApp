@@ -1,0 +1,10 @@
+[ERROR]: Failed to add task
+[WARNING]: Test Warning
+[LOG]: Task added successfully
+[ERROR]: Failed to add task
+[WARNING]: Test Warning
+[LOG]: Task added successfully
+[ERROR]: Failed to add task
+[WARNING]: Test Warning
+[LOG]: Task added successfully
+[ERROR]: Failed to add task
