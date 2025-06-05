@@ -12,11 +12,11 @@ namespace BulletJournalApp.Consoles
 
         static void Main(string[] args)
         {
-            string path = Path.Combine("../", "../", "../", "Temp", "Log.txt");
+            string path = Path.Combine("Temp", "Log.txt");
             if (!File.Exists(path))
             {
                 //Console.WriteLine($"File Creating: {Path.GetFullPath(path)}");
-                string dir = Path.Combine("../", "../", "../", "Temp");
+                string dir = Path.Combine("Temp");
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
@@ -26,14 +26,14 @@ namespace BulletJournalApp.Consoles
             else
             {
                 int num = 0;
-                string newPath = Path.Combine("../", "../", "../", "Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
+                string newPath = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
                 if ((File.Exists(newPath)))
                 {
                     while (File.Exists(newPath))
                     {
                         //Console.WriteLine("meow");
                         num++;
-                        newPath = Path.Combine("../", "../", "../", "Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
+                        newPath = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
                     }
                 }
                 File.Copy(path, newPath);

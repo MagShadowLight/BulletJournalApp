@@ -10,8 +10,8 @@ namespace BulletJournalApp.Core.Services
 {
     public class FileLogger : IFileLogger
     {
-        public string path = Path.Combine("../","../","../","Temp", "Log.txt");
-        public string directory = Path.Combine("../", "../", "../", "Temp");
+        public string path = Path.Combine("Temp", "Log.txt");
+        public string directory = Path.Combine("Temp");
         public void Error(string message)
         {
             using (StreamWriter fs = File.AppendText(path))
