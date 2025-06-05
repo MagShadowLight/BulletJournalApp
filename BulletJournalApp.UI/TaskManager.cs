@@ -114,17 +114,36 @@ namespace BulletJournalApp.UI
                         DeleteTask();
                         break;
                     case "16":
-                        _filelogger.Log("This option is not ready yet, Please come back when it updated with this function");
-                        Console.WriteLine("Work in progress. Please come back later");
+                        _filelogger.Log("Loading tasks from txt file");
+                        try
+                        {
+                            LoadTask();
+                        } catch (Exception ex)
+                        {
+                            _consolelogger.Error(ex.Message);
+                            _filelogger.Error(ex.Message);
+                        }
+
                         break;
                     case "0":
                         _filelogger.Log("Exiting");
-                        Console.WriteLine("Do you want to save the Tasks? Y or N");
+                        Console.WriteLine("Do you want to save the Tasks? (Y)es, (N)o, or (C)ancel");
                         var saveinput = Console.ReadLine().ToUpper();
                         if (saveinput == "Y")
                         {
                             _filelogger.Log("Saving task");
-                            SaveTasks();
+                            try
+                            {
+                                SaveTasks();
+                            } catch (Exception ex)
+                            {
+                                _filelogger.Log(ex.Message);
+                                break;
+                            }
+                        } else if (saveinput == "C")
+                        {
+                            _filelogger.Log("Cancelled to save tasks");
+                            break;
                         }
                         Console.WriteLine("Good Bye");
                         _filelogger.Log("Closing Task Manager");
@@ -566,6 +585,14 @@ namespace BulletJournalApp.UI
             Console.WriteLine("What the file name of the Tasks: ");
             var filename = Console.ReadLine();
             Console.WriteLine("Creating File");
+            string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            if (File.Exists(path))
+            {
+                Console.Write($"Are you sure you want to overwrite {filename}.txt");
+                var overwrite = Console.ReadLine()?.ToUpper();
+                if (overwrite != "Y")
+                    throw new Exception("Cancelled to override tasks");
+            }
             _filelogger.Log($"Saving to {filename}");
             try
             {
@@ -579,9 +606,19 @@ namespace BulletJournalApp.UI
                 _filelogger.Error(ex.Message);
             }
         }
-        public List<Tasks> LoadTask()
+        public void LoadTask()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter the name of the file: ");
+            var filename = Console.ReadLine();
+            string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            if (!File.Exists(path))
+            {
+                throw new Exception("File not found. Invalid file name. Try again.");
+            }
+            _filelogger.Log($"Loading tasks from {filename}");
+            _taskservice.LoadTasks(filename);
+            _consolelogger.Log("Tasks loaded successfully");
+            _filelogger.Log("Tasks loaded successfully");
         }
     }
 }

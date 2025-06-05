@@ -20,9 +20,8 @@ namespace BulletJournalApp.Core.Models
         public Category Category { get; set; }
         public TasksStatus Status { get; set; }
         public Schedule schedule { get; set; }
-        int id = 0;
 
-        public Tasks(DateTime? dueDate,  string title, string description, Schedule timely, Priority priority = Priority.Medium, Category category = Category.None, string notes = "")
+        public Tasks(DateTime? dueDate, string title, string description, Schedule timely, Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
         {
             Validate(title, nameof(title));
             Validate(description, nameof(description));
@@ -32,11 +31,11 @@ namespace BulletJournalApp.Core.Models
             Title = title;
             Description = description;
             Priority = priority;
-            Status = TasksStatus.ToDo;
+            Status = status;
             schedule = timely;
             Notes = notes;
             Category = category;
-            IsCompleted = false;
+            IsCompleted = iscompleted;
         }
 
         public void Update(DateTime? newDueDate, string newTitle, string newDescription, string newNote = "")

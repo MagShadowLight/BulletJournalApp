@@ -26,6 +26,6 @@ namespace BulletJournalApp.Core.Interface
         public void ChangeSchedule(string title, Schedule schedule);
         public void DeleteTask(string title);
         public void SaveTasks(string filename, List<Tasks> tasks);
-        public List<Tasks> LoadTasks(string filename);
+        public void LoadTasks(string filename);
     }
 }

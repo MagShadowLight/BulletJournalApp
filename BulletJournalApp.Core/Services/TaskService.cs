@@ -112,9 +112,27 @@ namespace BulletJournalApp.Core.Services
             return tasks.Where(s => s.Status == status).ToList();
         }
 
-        public List<Tasks> LoadTasks(string filename)
+        public void LoadTasks(string filename)
         {
-            throw new NotImplementedException();
+            var path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            using (StreamReader sr = new StreamReader(path))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var id = int.Parse(sr.ReadLine());
+                    var title = sr.ReadLine();
+                    var description = sr.ReadLine();
+                    var priority = (Priority)Enum.Parse(typeof(Priority), sr.ReadLine());
+                    var dueDate = DateTime.TryParse(sr.ReadLine(), out DateTime parsedDate) ? parsedDate : (DateTime?)null;
+                    var isCompleted = bool.Parse(sr.ReadLine());
+                    var notes = sr.ReadLine();
+                    var category = (Category)Enum.Parse(typeof(Category), sr.ReadLine());
+                    var status = (TasksStatus)Enum.Parse(typeof(TasksStatus), sr.ReadLine());
+                    var schedule = (Schedule)Enum.Parse(typeof(Schedule), sr.ReadLine());
+                    var task = new Tasks(dueDate, title, description, schedule, priority, category, notes, status, id, isCompleted);
+                    AddTask(task);
+                }
+            }
         }
 
         public void MarkTasksComplete(string title)
@@ -127,8 +145,8 @@ namespace BulletJournalApp.Core.Services
 
         public void SaveTasks(string filename, List<Tasks> tasks)
         {
-            var dir = Path.Combine("../", "../", "../", "Data", "Tasks");
-            var path = Path.Combine("../", "../", "../", "Data", "Tasks", $"{filename}.txt");
+            var dir = Path.Combine("Data", "Tasks");
+            var path = Path.Combine( "Data", "Tasks", $"{filename}.txt");
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
