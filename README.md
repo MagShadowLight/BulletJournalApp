@@ -45,6 +45,10 @@ It provides a simple and intuitive interface for creating and managing bullet jo
 1. Clone this repository
 2. Open 'BulletJournalApp.sln' in Visual Studio
 3. Run the project
+### Linux
+1. install dotnet-sdk8.0 package
+2. clone this repository
+3. use dotnet run on BulletJournalApp.Console
 
 ### Linux or Mac
 1. Clone this repository
