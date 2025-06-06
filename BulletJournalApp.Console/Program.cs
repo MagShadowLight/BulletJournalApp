@@ -30,7 +30,7 @@ namespace BulletJournalApp.Consoles
             consoleUI.Run();
         }
 
-        public void CreateFile()
+        public static void CreateFile()
         {
             string path = Path.Combine("Temp", "Log.txt");
             if (!File.Exists(path))
@@ -50,14 +50,14 @@ namespace BulletJournalApp.Consoles
             }
         }
 
-        public void CreateDirectory(string dir)
+        public static void CreateDirectory(string dir)
         {
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
         }
-        public void IfFileExists(int num, string path)
+        public static void IfFileExists(int num, string path)
         {
             if ((File.Exists(path)))
             {
