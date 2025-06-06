@@ -15,7 +15,7 @@ namespace BulletJournalApp.Consoles
         {
 
             var services = new ServiceCollection();
-
+            CreateFile();
             services.AddSingleton<ITaskService, TaskService>();
             services.AddSingleton<IFormatter, Formatter>();
             services.AddSingleton<IConsoleLogger, ConsoleLogger>();
