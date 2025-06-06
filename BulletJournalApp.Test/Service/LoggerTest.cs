@@ -72,10 +72,13 @@ namespace BulletJournalApp.Test.Service
         [Fact]
         public void When_Task_Were_Added_Successfully_Then_File_Logger_Should_Create_Log_In_Log_File()
         {
+            // Arrange
             var mockLogger = new Mock<IFileLogger>();
             var message = "Task added successfully";
             mockLogger.Setup(logger => logger.Log(message));
             var logger = new FileLogger();
+            var path = Path.Combine("Temp", "Log.txt");
+            CreateFile(path);
             // Act
             logger.Log(message);
             var fs = new FileStream(path, mode);
@@ -95,16 +98,18 @@ namespace BulletJournalApp.Test.Service
             var message = "Test Warning";
             mockLogger.Setup(logger => logger.Warn(message));
             var logger = new FileLogger();
+            var path = Path.Combine("Temp", "Log.txt");
+            CreateFile(path);
             // Act
             logger.Warn(message);
-            var fs = new FileStream(path,mode);
+            var fs = new FileStream(path, mode);
             using (StreamReader streamReader = new StreamReader(fs))
             {
                 string outputMessage = streamReader.ReadToEnd();
                 // Assert
                 Assert.Contains(message, outputMessage);
                 ResetStream(streamReader, fs);
-            }            
+            }
         }
         [Fact]
         public void When_Task_Failed_To_Add_Then_File_Logger_Should_Print_Error_In_Log_File()
@@ -114,6 +119,8 @@ namespace BulletJournalApp.Test.Service
             var message = "Failed to add task";
             mockLogger.Setup(logger => logger.Error(message));
             var logger = new FileLogger();
+            var path = Path.Combine("Temp", "Log.txt");
+            CreateFile(path);
             // Act
             logger.Error(message);
             var fs = new FileStream(path, mode);
@@ -122,8 +129,8 @@ namespace BulletJournalApp.Test.Service
                 string outputMessage = sr.ReadToEnd();
                 // Assert
                 Assert.Contains(message, outputMessage);
-                ResetStream(sr,fs);
-            }            
+                ResetStream(sr, fs);
+            }
         }
         public void ResetOutput()
         {
@@ -133,6 +140,18 @@ namespace BulletJournalApp.Test.Service
         {
             sr.Close();
             fs.Close();
+        }
+
+        public void CreateFile(string path)
+        {
+            if (!File.Exists(path))
+            {
+                if (!Directory.Exists("Temp"))
+                {
+                    Directory.CreateDirectory("Temp");
+                }
+                File.Create(path).Close();
+            }
         }
     }
 }

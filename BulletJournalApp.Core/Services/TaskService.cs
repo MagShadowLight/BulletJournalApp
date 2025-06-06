@@ -132,6 +132,7 @@ namespace BulletJournalApp.Core.Services
                     var task = new Tasks(dueDate, title, description, schedule, priority, category, notes, status, id, isCompleted);
                     AddTask(task);
                 }
+                sr.Dispose();
             }
         }
 
@@ -153,6 +154,7 @@ namespace BulletJournalApp.Core.Services
             }
             if (!File.Exists(path))
             {
+                
                 using (FileStream fs = File.Create(path))
                 {
                     foreach (var task in tasks)
@@ -168,6 +170,7 @@ namespace BulletJournalApp.Core.Services
                         WriteText(fs, task.Status.ToString());
                         WriteText(fs, task.schedule.ToString());
                     }
+                    fs.Close();
                 }
             }
             
