@@ -158,31 +158,16 @@ namespace BulletJournalApp.UI
 
         public void AddTask()
         {
-            Priority priorityoutput;
-            Category categoryoutput;
-            Schedule scheduleoutput;
-            DateTime dueDateOutput;
-            Console.Write("Enter the task title: ");
-            var title = Console.ReadLine();
-            Console.Write("Enter the task description: ");
-            var description = Console.ReadLine();
-            Console.Write("Enter the Due Date (Use MMM DD, YYYY): ");
-            var dueDate = Console.ReadLine();
-            Console.Write("Enter the Priority (Use (L)ow, (M)edium, or (H)igh: ");
-            var priority = Console.ReadLine()?.ToUpper();
-            Console.Write("Enter the Category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): ");
-            var category = Console.ReadLine()?.ToUpper();
-            Console.Write("Enter the Schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
-            var schedule = Console.ReadLine()?.ToUpper();
-            Console.WriteLine("Enter the Note for the task:");
-            var notes = Console.ReadLine();
+            var title = UserInput.GetStringInput("Enter the task title: ");
+            var description = UserInput.GetStringInput("Enter the task description: ");
             try
             {
-                priorityoutput = ConvertToPriority(priority);
-                categoryoutput = ConvertToCategory(category);
-                scheduleoutput = ConvertToSchedule(schedule);
-                dueDateOutput = DateTime.Parse(dueDate);
-                var task = new Tasks(dueDateOutput, title, description, scheduleoutput, priorityoutput, categoryoutput, notes);
+                var dueDate = UserInput.GetDateInput("Enter the Due Date (Use MMM DD, YYYY): ");
+                var priority = UserInput.GetPriorityInput("Enter the Priority (Use (L)ow, (M)edium, or (H)igh): ");
+                var category = UserInput.GetCategoryInput(("Enter the Category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): "));
+                var schedule = UserInput.GetScheduleInput("Enter the Schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
+                var notes = UserInput.GetStringInput("Enter the Note for the task: ");                
+                var task = new Tasks(dueDate, title, description, schedule, priority, category, notes);
                 if (_taskservice.AddTask(task))
                 {
                     _consolelogger.Log("Task added successfully");
@@ -198,45 +183,6 @@ namespace BulletJournalApp.UI
                 _filelogger.Error(ex.Message);
             }
         }
-
-        private Schedule ConvertToSchedule(string? schedule)
-        {
-            return schedule switch
-            {
-                "Y" => Schedule.Yearly,
-                "Q" => Schedule.Quarterly,
-                "M" => Schedule.Monthly,
-                "W" => Schedule.Weekly,
-                "D" => Schedule.Daily,
-                _ => throw new Exception("Invalid Schedule Input. Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily")
-            };
-        }
-
-        private Category ConvertToCategory(string? category)
-        {
-            return category switch
-            {
-                "N" => Category.None,
-                "E" => Category.Education,
-                "W" => Category.Works,
-                "H" => Category.Home,
-                "P" => Category.Personal,
-                "F" => Category.Financial,
-                _ => throw new Exception("Invalid Category Input. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, or (F)inancial")
-            };
-        }
-
-        private Priority ConvertToPriority(string? priority)
-        {
-            return priority switch
-            {
-                "L" => Priority.Low,
-                "M" => Priority.Medium,
-                "H" => Priority.High,
-                _ => throw new Exception("Invalid Priority Input. Use (L)ow, (M)edium, or (H)igh")
-            };
-        }
-
         public void ListAllTasks()
         {
             var tasks = _taskservice.ListAllTasks();
@@ -281,26 +227,24 @@ namespace BulletJournalApp.UI
         }
         public void ListTaskByPriority()
         {
-            Console.Write("Enter the Priority (Use (L)ow, (M)edium, or (H)igh): ");
-            var priorityinput = Console.ReadLine();
-            Priority priorityoutput;
+            Priority priority;
             try
             {
-               priorityoutput = ConvertToPriority(priorityinput);
+                priority = UserInput.GetPriorityInput("Enter the Priority (Use (L)ow, (M)edium, or (H)igh): ");               
             } catch (Exception ex)
             {
-                _consolelogger.Error("Invalid Priority Value. Use (L)ow, (M)edium, or (H)igh");
-                _filelogger.Error("Invalid Priority Value. Use (L)ow, (M)edium, or (H)igh");
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksByPriority(priorityoutput);
+            var tasks = _taskservice.ListTasksByPriority(priority);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
                 _filelogger.Error("No tasks found");
                 return;
             }
-            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")} with {priorityoutput.ToString()} Priority");
+            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")} with {priority.ToString()} Priority");
             foreach (var task in tasks)
             {
                 Console.WriteLine(_formatter.Format(task));
@@ -314,27 +258,25 @@ namespace BulletJournalApp.UI
         }
         public void ListTaskByCategory()
         {
-            Console.Write("Enter the Category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): ");
-            var categoryinput = Console.ReadLine();
-            Category categoryoutput;
+            Category category;
             try
             {
-                categoryoutput = ConvertToCategory(categoryinput);
+                category = UserInput.GetCategoryInput("Enter the Category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): ");
             }
             catch (Exception ex)
             {
-                _consolelogger.Error("Invalid Category Value");
-                _filelogger.Error("Invalid Category Value");
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksByCategory(categoryoutput);
+            var tasks = _taskservice.ListTasksByCategory(category);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
                 _filelogger.Error("No tasks found");
                 return;
             }
-            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")}");
+            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")} with {category.ToString()} Category");
             foreach (var task in tasks)
             {
                 _filelogger.Log($"Task: {task.Title}");
@@ -347,27 +289,25 @@ namespace BulletJournalApp.UI
         }
         public void ListTaskByStatus()
         {
-            Console.Write("Enter the Status of the Task (Use (T)oDo, (I)nProgress, (D)one, (O)verdue, (L)ate): ");
-            var statusinput = Console.ReadLine();
-            TasksStatus statusoutput;
+            TasksStatus status;
             try
             {
-                statusoutput = ConvertToStatus(statusinput);
+                 status = UserInput.GetStatusInput("Enter the Status of the Task (Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate): ");
             }
             catch (Exception ex)
             {
-                _consolelogger.Error("Invalid Status Value");
-                _filelogger.Error("Invalid Status Value");
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksByStatus(statusoutput);
+            var tasks = _taskservice.ListTasksByStatus(status);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
                 _filelogger.Error("No tasks found");
                 return;
             }
-            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")} with {statusoutput.ToString()} status");
+            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")} with {status.ToString()} status");
             foreach (var task in tasks)
             {
                 _filelogger.Log($"Task: {task}");
@@ -378,44 +318,27 @@ namespace BulletJournalApp.UI
                 }
             }
         }
-
-        private TasksStatus ConvertToStatus(string? status)
-        {
-            return status switch
-            {
-                "T" => TasksStatus.ToDo,
-                "I" => TasksStatus.InProgress,
-                "D" => TasksStatus.Done,
-                "O" => TasksStatus.Overdue,
-                "L" => TasksStatus.Late,
-                _ => throw new Exception("Invalid Status Input. Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate")
-            };
-        }
-
-        // 
         public void ListTaskBySchedule()
         {
-            Console.Write("Enter the Schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
-            var scheduleinput = Console.ReadLine();
-            Schedule scheduleoutput;
+            Schedule schedule;
             try
             {
-                scheduleoutput = ConvertToSchedule(scheduleinput);
+                schedule = UserInput.GetScheduleInput("Enter the Schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
             }
             catch (Exception ex)
             {
-                _consolelogger.Error("Invalid Schedule Value");
-                _filelogger.Error("Invalid Schedule Value");
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksBySchedule(scheduleoutput);
+            var tasks = _taskservice.ListTasksBySchedule(schedule);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
                 _filelogger.Error("No tasks found");
                 return;
             }
-            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")} with {scheduleoutput.ToString()} schedule");
+            _filelogger.Log($"Found {tasks.Count} {(tasks.Count == 1 ? "task" : "tasks")} with {schedule.ToString()} schedule");
             foreach (var task in tasks)
             {
                 _filelogger.Log($"Task: {task.Title}");
@@ -428,10 +351,8 @@ namespace BulletJournalApp.UI
         }
         public void FindTaskByTitle()
         {
-            Console.Write("Enter the title to search: ");
-            var title = Console.ReadLine();
+            var title = UserInput.GetStringInput("Enter the title to search: ");
             var task = _taskservice.FindTasksByTitle(title);
-
             if (task != null)
             {
                 Console.WriteLine("Found: " + _formatter.Format(task));
@@ -444,8 +365,7 @@ namespace BulletJournalApp.UI
         }
         public void MarkTasksComplete()
         {
-            Console.Write("Enter the title to mark task as complete: ");
-            var title = Console.ReadLine();
+            var title = UserInput.GetStringInput("Enter the title to mark task as complete: ");
             try
             {
                 _taskservice.MarkTasksComplete(title);
@@ -459,20 +379,14 @@ namespace BulletJournalApp.UI
         }
         public void UpdateTask()
         {
-            Console.Write("Enter the current title of task to update: ");
-            var oldtitle = Console.ReadLine();
-            Console.Write("Enter the new title: ");
-            var newtitle = Console.ReadLine();
-            Console.Write("Enter the new description: ");
-            var newdescription = Console.ReadLine();
-            Console.Write("Enter the new note: ");
-            var newnote = Console.ReadLine();
-            Console.Write("Enter the new due date: ");
-            var newstringduedate = Console.ReadLine();
+            var oldtitle = UserInput.GetStringInput("Enter the current title of task to update: ");
+            var newtitle = UserInput.GetStringInput("Enter the new title: ");
+            var newdescription = UserInput.GetStringInput("Enter the new description: ");
+            var newnote = UserInput.GetStringInput("Enter the new note: ");
             DateTime? newduedate;
             try
             {
-                newduedate = DateTime.Parse(newstringduedate);
+                newduedate = UserInput.GetDateInput("Enter the new due date (Use MMM DD, YYYY): ");
             } catch (Exception ex)
             {
                 newduedate = null;
@@ -490,15 +404,13 @@ namespace BulletJournalApp.UI
         }
         public void ChangeTaskPriority()
         {
-            Console.Write("Enter the title to change priority: ");
-            var title = Console.ReadLine();
+            var title = UserInput.GetStringInput("Enter the title of task to change priority: ");
             Console.Write("Enter the new priority (Use (L)ow, (M)edium, or (H)igh");
-            var priorityinput = Console.ReadLine();
-            Priority priorityoutput;
+            Priority priority;
             try
             {
-                priorityoutput = ConvertToPriority(priorityinput);
-                _taskservice.ChangePriority(title, priorityoutput);
+                priority = UserInput.GetPriorityInput("Enter the new priority (Use (L)ow, (M)edium, or (H)igh): ");
+                _taskservice.ChangePriority(title, priority);
                 _consolelogger.Log($"Task: {title} priority changed successfully");
                 _filelogger.Log($"Task: {title} priority changed successfully");
             } catch (Exception ex)
@@ -509,15 +421,12 @@ namespace BulletJournalApp.UI
         }
         public void ChangeTaskStatus()
         {
-            Console.Write("Enter the title of task to change Status: ");
-            var title = Console.ReadLine();
-            Console.Write("Enter the new status (Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate): ");
-            var statusinput = Console.ReadLine();
-            TasksStatus statusoutput;
+            var title = UserInput.GetStringInput("Enter the title of task to change Status: ");
+            TasksStatus status;
             try
             {
-                statusoutput = ConvertToStatus(statusinput);
-                _taskservice.ChangeStatus(title, statusoutput);
+                status = UserInput.GetStatusInput("Enter the new status (Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate): ");
+                _taskservice.ChangeStatus(title, status);
                 _consolelogger.Log($"Task: {title} status changed successfully");
                 _filelogger.Log($"Task: {title} status changed successfully");
             } catch (Exception ex)
@@ -528,15 +437,12 @@ namespace BulletJournalApp.UI
         }
         public void ChangeTaskCategory()
         {
-            Console.Write("Enter the task title to change Category: ");
-            var title = Console.ReadLine();
-            Console.Write("Enter the new category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): ");
-            var categoryinput = Console.ReadLine();
-            Category categoryoutput;
+            var title = UserInput.GetStringInput("Enter the task title to change Category: ");
+            Category category;
             try
             {
-                categoryoutput = ConvertToCategory(categoryinput);
-                _taskservice.ChangeCategory(title, categoryoutput);
+                category = UserInput.GetCategoryInput("Enter the new category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): ");
+                _taskservice.ChangeCategory(title, category);
                 _consolelogger.Log($"Task: {title} category changed successfully");
                 _filelogger.Log($"Task: {title} category changed successfully");
             } catch(Exception ex)
@@ -547,15 +453,12 @@ namespace BulletJournalApp.UI
         }
         public void ChangeTaskSchedule()
         {
-            Console.Write("Enter the task title to change Schedule: ");
-            var title = Console.ReadLine();
-            Console.Write("Enter the new schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
-            var scheduleinput = Console.ReadLine();
-            Schedule scheduleoutput;
+            var title = UserInput.GetStringInput("Enter the task title to change Schedule: ");
+            Schedule schedule;
             try
             {
-                scheduleoutput = ConvertToSchedule(scheduleinput);
-                _taskservice.ChangeSchedule(title, scheduleoutput);
+                schedule = UserInput.GetScheduleInput("Enter the new schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
+                _taskservice.ChangeSchedule(title, schedule);
                 _consolelogger.Log($"Task: {title} schedule changed successfully");
                 _filelogger.Log($"Task: {title} schedule changed successfully");
             }
@@ -567,8 +470,7 @@ namespace BulletJournalApp.UI
         }
         public void DeleteTask()
         {
-            Console.Write("Enter the title to delete: ");
-            var title = Console.ReadLine();
+            var title = UserInput.GetStringInput("Enter the title to delete: ");
             try
             {
                 _taskservice.DeleteTask(title);
@@ -582,14 +484,13 @@ namespace BulletJournalApp.UI
         }
         public void SaveTasks()
         {
-            Console.WriteLine("What the file name of the Tasks: ");
-            var filename = Console.ReadLine();
+            var filename = UserInput.GetStringInput("Enter the file name of the Tasks (without extension): ");
             Console.WriteLine("Creating File");
             string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
             if (File.Exists(path))
             {
-                Console.Write($"Are you sure you want to overwrite {filename}.txt");
-                var overwrite = Console.ReadLine()?.ToUpper();
+                Console.Write($"Are you sure you want to overwrite {filename}.txt?");
+                var overwrite = UserInput.GetStringInput(" (Y)es or (N)o: ").ToUpper();
                 if (overwrite != "Y")
                     throw new Exception("Cancelled to override tasks");
             }
@@ -608,8 +509,7 @@ namespace BulletJournalApp.UI
         }
         public void LoadTask()
         {
-            Console.Write("Enter the name of the file: ");
-            var filename = Console.ReadLine();
+            var filename = UserInput.GetStringInput("Enter the name of the file (without extension): ");
             string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
             if (!File.Exists(path))
             {
@@ -619,6 +519,88 @@ namespace BulletJournalApp.UI
             _taskservice.LoadTasks(filename);
             _consolelogger.Log("Tasks loaded successfully");
             _filelogger.Log("Tasks loaded successfully");
+        }
+    }
+
+    public class UserInput
+    {
+        public static string GetStringInput(string prompt)
+        {
+            Console.Write(prompt);
+            return Console.ReadLine();
+        }
+
+        public static DateTime GetDateInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            try
+            {
+                return DateTime.Parse(input);
+            }
+            catch (FormatException)
+            {
+                throw new FormatException("Invalid date format. Please use a valid date format.");
+            }
+        }
+
+        public static Priority GetPriorityInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine()?.ToUpper();
+            return input switch
+            {
+                "L" => Priority.Low,
+                "M" => Priority.Medium,
+                "H" => Priority.High,
+                _ => throw new Exception("Invalid Priority Input. Use (L)ow, (M)edium, or (H)igh")
+            };
+        }
+
+        public static Category GetCategoryInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine()?.ToUpper();
+            return input switch
+            {
+                "N" => Category.None,
+                "E" => Category.Education,
+                "W" => Category.Works,
+                "H" => Category.Home,
+                "P" => Category.Personal,
+                "F" => Category.Financial,
+                _ => throw new Exception("Invalid Category Input. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, or (F)inancial")
+            };
+        }
+
+        public static Schedule GetScheduleInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine()?.ToUpper();
+            return input switch
+            {
+                "Y" => Schedule.Yearly,
+                "Q" => Schedule.Quarterly,
+                "M" => Schedule.Monthly,
+                "W" => Schedule.Weekly,
+                "D" => Schedule.Daily,
+                _ => throw new Exception("Invalid Schedule Input. Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily")
+            };
+        }
+
+        public static TasksStatus GetStatusInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine()?.ToUpper();
+            return input switch
+            {
+                "T" => TasksStatus.ToDo,
+                "I" => TasksStatus.InProgress,
+                "D" => TasksStatus.Done,
+                "O" => TasksStatus.Overdue,
+                "L" => TasksStatus.Late,
+                _ => throw new Exception("Invalid Status Input. Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate")
+            };
         }
     }
 }
