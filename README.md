@@ -79,6 +79,3 @@ Please open an issue in Github if you find any bugs or have any suggestions for 
 
 ## Contributing
 If you want to contribute to this project, feel free to fork the repository and submit a pull request.
-
-## License
-This project is licensed under the Creative Commons Attribution Share Alike 4.0 International license. See the License.txt file for details.
