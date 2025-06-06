@@ -72,6 +72,3 @@ It provides a simple and intuitive interface for creating and managing bullet jo
 
 ## Issues
 Please open an issue in Github if you find any bugs or have any suggestions for improvements.
-
-## Contributing
-If you want to contribute to this project, feel free to fork the repository and submit a pull request.
