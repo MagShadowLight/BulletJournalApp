@@ -20,6 +20,11 @@ namespace BulletJournalApp.Consoles
             services.AddSingleton<IFormatter, Formatter>();
             services.AddSingleton<IConsoleLogger, ConsoleLogger>();
             services.AddSingleton<IFileLogger, FileLogger>();
+            services.AddSingleton<IFileService, FileService>();
+            services.AddSingleton<IScheduleService, ScheduleService>();
+            services.AddSingleton<IPriorityService, PriorityService>();
+            services.AddSingleton<ICategoryService, CategoryService>();
+            services.AddSingleton<ITasksStatusService, TasksStatusService>();
             services.AddSingleton<ConsoleUI>();
             services.AddSingleton<TaskManager>();
 

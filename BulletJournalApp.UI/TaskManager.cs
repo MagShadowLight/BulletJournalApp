@@ -17,12 +17,22 @@ namespace BulletJournalApp.UI
         private readonly IConsoleLogger _consolelogger;
         private readonly IFileLogger _filelogger;
         private readonly IFormatter _formatter;
-        public TaskManager(ITaskService taskservice, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter)
+        private readonly ITasksStatusService _statusservice;
+        private readonly IFileService _fileservice;
+        private readonly IScheduleService _scheduleservice;
+        private readonly IPriorityService _priorityservice;
+        private readonly ICategoryService _categoryservice;
+        public TaskManager(ITaskService taskservice, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITasksStatusService statusservice, IFileService fileservice, IScheduleService scheduleservice, IPriorityService priorityservice, ICategoryService categoryservice)
         {
             _taskservice = taskservice;
             _consolelogger = consolelogger;
             _filelogger = filelogger;
             _formatter = formatter;
+            _statusservice = statusservice;
+            _fileservice = fileservice;
+            _scheduleservice = scheduleservice;
+            _priorityservice = priorityservice;
+            _categoryservice = categoryservice;
         }
 
         public void TaskManagerUI()
@@ -237,7 +247,7 @@ namespace BulletJournalApp.UI
                 _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksByPriority(priority);
+            var tasks = _priorityservice.ListTasksByPriority(priority);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
@@ -269,7 +279,7 @@ namespace BulletJournalApp.UI
                 _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksByCategory(category);
+            var tasks = _categoryservice.ListTasksByCategory(category);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
@@ -300,7 +310,7 @@ namespace BulletJournalApp.UI
                 _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksByStatus(status);
+            var tasks = _statusservice.ListTasksByStatus(status);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
@@ -331,7 +341,7 @@ namespace BulletJournalApp.UI
                 _filelogger.Error(ex.Message);
                 return;
             }
-            var tasks = _taskservice.ListTasksBySchedule(schedule);
+            var tasks = _scheduleservice.ListTasksBySchedule(schedule);
             if (tasks.Count == 0)
             {
                 _consolelogger.Error("No tasks found");
@@ -410,7 +420,7 @@ namespace BulletJournalApp.UI
             try
             {
                 priority = UserInput.GetPriorityInput("Enter the new priority (Use (L)ow, (M)edium, or (H)igh): ");
-                _taskservice.ChangePriority(title, priority);
+                _priorityservice.ChangePriority(title, priority);
                 _consolelogger.Log($"Task: {title} priority changed successfully");
                 _filelogger.Log($"Task: {title} priority changed successfully");
             } catch (Exception ex)
@@ -426,7 +436,7 @@ namespace BulletJournalApp.UI
             try
             {
                 status = UserInput.GetStatusInput("Enter the new status (Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate): ");
-                _taskservice.ChangeStatus(title, status);
+                _statusservice.ChangeStatus(title, status);
                 _consolelogger.Log($"Task: {title} status changed successfully");
                 _filelogger.Log($"Task: {title} status changed successfully");
             } catch (Exception ex)
@@ -442,7 +452,7 @@ namespace BulletJournalApp.UI
             try
             {
                 category = UserInput.GetCategoryInput("Enter the new category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): ");
-                _taskservice.ChangeCategory(title, category);
+                _categoryservice.ChangeCategory(title, category);
                 _consolelogger.Log($"Task: {title} category changed successfully");
                 _filelogger.Log($"Task: {title} category changed successfully");
             } catch(Exception ex)
@@ -458,7 +468,7 @@ namespace BulletJournalApp.UI
             try
             {
                 schedule = UserInput.GetScheduleInput("Enter the new schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
-                _taskservice.ChangeSchedule(title, schedule);
+                _scheduleservice.ChangeSchedule(title, schedule);
                 _consolelogger.Log($"Task: {title} schedule changed successfully");
                 _filelogger.Log($"Task: {title} schedule changed successfully");
             }
@@ -498,7 +508,7 @@ namespace BulletJournalApp.UI
             try
             {
                 List<Tasks> tasks = _taskservice.ListAllTasks();
-                _taskservice.SaveTasks(filename, tasks);
+                _fileservice.SaveTasks(filename, tasks);
                 _filelogger.Log("File have successfully saved");
                 _consolelogger.Log($"File: {filename} have successfully saved");
             } catch (Exception ex)
@@ -516,7 +526,7 @@ namespace BulletJournalApp.UI
                 throw new Exception("File not found. Invalid file name. Try again.");
             }
             _filelogger.Log($"Loading tasks from {filename}");
-            _taskservice.LoadTasks(filename);
+            _fileservice.LoadTasks(filename);
             _consolelogger.Log("Tasks loaded successfully");
             _filelogger.Log("Tasks loaded successfully");
         }

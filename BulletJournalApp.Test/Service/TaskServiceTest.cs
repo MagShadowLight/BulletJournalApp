@@ -61,19 +61,20 @@ namespace BulletJournalApp.Test.Service
         public void When_There_Are_Tasks_With_Default_Priority_Then_It_Should_Return_Tasks_List_By_Default_Priority()
         {
             // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var priorityservice = new PriorityService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
             var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly);
             var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly);
             var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly);
             var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
-            service.AddTask(task4);
+            taskservice.AddTask(task1);
+            taskservice.AddTask(task2);
+            taskservice.AddTask(task3);
+            taskservice.AddTask(task4);
             // Act
-            service.ChangePriority(task2.Title, Priority.High);
-            service.ChangePriority(task4.Title, Priority.Low);
-            var mediumTasks = service.ListTasksByPriority(Priority.Medium);
+            priorityservice.ChangePriority(task2.Title, Priority.High);
+            priorityservice.ChangePriority(task4.Title, Priority.Low);
+            var mediumTasks = priorityservice.ListTasksByPriority(Priority.Medium);
             // Assert
             Assert.Equal(2, mediumTasks.Count);
             Assert.Contains(task1, mediumTasks);
@@ -83,18 +84,19 @@ namespace BulletJournalApp.Test.Service
         public void When_There_Are_Tasks_With_Category_Then_It_Should_Return_Tasks_List_By_Category()
         {
             // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var categoryservice = new CategoryService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
             var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.None);
             var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.None);
             var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.None);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
+            taskservice.AddTask(task1);
+            taskservice.AddTask(task2);
+            taskservice.AddTask(task3);
             // Act
-            service.ChangeCategory(task1.Title, Category.Personal);
-            service.ChangeCategory(task2.Title, Category.Home);
-            service.ChangeCategory(task3.Title, Category.Personal);
-            var personalTasks = service.ListTasksByCategory(Category.Personal);
+            categoryservice.ChangeCategory(task1.Title, Category.Personal);
+            categoryservice.ChangeCategory(task2.Title, Category.Home);
+            categoryservice.ChangeCategory(task3.Title, Category.Personal);
+            var personalTasks = categoryservice.ListTasksByCategory(Category.Personal);
             // Assert
             Assert.Equal(2, personalTasks.Count);
             Assert.Contains(task1, personalTasks);
@@ -104,17 +106,18 @@ namespace BulletJournalApp.Test.Service
         public void When_There_Are_Tasks_In_Progress_Then_It_Should_Returns_Only_In_Progress_Tasks()
         {
             // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var statusservice = new TasksStatusService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
             var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.Personal);
             var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.Home);
             var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Personal);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
+            taskservice.AddTask(task1);
+            taskservice.AddTask(task2);
+            taskservice.AddTask(task3);
             // Act
-            service.ChangeStatus(task1.Title, TasksStatus.InProgress);
-            service.ChangeStatus(task3.Title, TasksStatus.InProgress);
-            var WIPTasks = service.ListTasksByStatus(TasksStatus.InProgress);
+            statusservice.ChangeStatus(task1.Title, TasksStatus.InProgress);
+            statusservice.ChangeStatus(task3.Title, TasksStatus.InProgress);
+            var WIPTasks = statusservice.ListTasksByStatus(TasksStatus.InProgress);
             // Assert
             Assert.Equal(2, WIPTasks.Count);
             Assert.Contains(task1, WIPTasks);
@@ -124,19 +127,20 @@ namespace BulletJournalApp.Test.Service
         public void When_There_Are_Tasks_For_The_Week_Then_It_Should_Return_Only_Tasks_For_The_Week()
         {
             // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var scheduleservice = new ScheduleService(new Formatter(), new ConsoleLogger(), new FileLogger(), taskservice);
             var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.Personal);
             var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.Home);
             var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Personal);
             var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly, Priority.Medium, Category.Personal);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
-            service.AddTask(task4);
+            taskservice.AddTask(task1);
+            taskservice.AddTask(task2);
+            taskservice.AddTask(task3);
+            taskservice.AddTask(task4);
             // Act
-            service.ChangeSchedule(task1.Title, Schedule.Weekly);
-            service.ChangeSchedule(task4.Title, Schedule.Weekly);
-            var weeklyTasks = service.ListTasksBySchedule(Schedule.Weekly);
+            scheduleservice.ChangeSchedule(task1.Title, Schedule.Weekly);
+            scheduleservice.ChangeSchedule(task4.Title, Schedule.Weekly);
+            var weeklyTasks = scheduleservice.ListTasksBySchedule(Schedule.Weekly);
             // Assert
             Assert.Equal(2, weeklyTasks.Count);
             Assert.Contains(task1, weeklyTasks);
