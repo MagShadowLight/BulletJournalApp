@@ -415,7 +415,6 @@ namespace BulletJournalApp.UI
         public void ChangeTaskPriority()
         {
             var title = UserInput.GetStringInput("Enter the title of task to change priority: ");
-            Console.Write("Enter the new priority (Use (L)ow, (M)edium, or (H)igh");
             Priority priority;
             try
             {
