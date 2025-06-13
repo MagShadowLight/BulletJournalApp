@@ -1,5 +1,5 @@
-﻿using BulletJournalApp.Core.Models;
-using BulletJournalApp.Core.Models.Enum;
+﻿using BulletJournalApp.Library;
+using BulletJournalApp.Library.Enum;
 using BulletJournalApp.Core.Services;
 using System;
 using System.Collections.Generic;

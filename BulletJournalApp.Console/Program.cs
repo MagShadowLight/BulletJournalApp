@@ -48,7 +48,8 @@ namespace BulletJournalApp.Consoles
             {
                 int num = 0;
                 string newPath = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
-                IfFileExists(num, newPath);
+                num = IfFileExists(num, newPath);
+                newPath = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
                 File.Copy(path, newPath);
                 File.Delete(path);
                 File.Create(path).Close();
@@ -62,7 +63,7 @@ namespace BulletJournalApp.Consoles
                 Directory.CreateDirectory(dir);
             }
         }
-        public static void IfFileExists(int num, string path)
+        public static int IfFileExists(int num, string path)
         {
             if ((File.Exists(path)))
             {
@@ -72,7 +73,9 @@ namespace BulletJournalApp.Consoles
                     num++;
                     path = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
                 }
+                return num;
             }
+            return num;
         }
     }
 }

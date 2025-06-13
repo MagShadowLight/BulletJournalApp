@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletJournalApp.UI", "Bull
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletJournalApp.Consoles (Temp)", "BulletJournalApp.Console\BulletJournalApp.Consoles (Temp).csproj", "{8E63763D-AFE7-433E-B84E-8018150D5A08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletJournalApp.Library", "BulletJournalApp.Library\BulletJournalApp.Library.csproj", "{0EC39B34-737B-4C24-8C6F-5C2469B4A34C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8E63763D-AFE7-433E-B84E-8018150D5A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E63763D-AFE7-433E-B84E-8018150D5A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E63763D-AFE7-433E-B84E-8018150D5A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EC39B34-737B-4C24-8C6F-5C2469B4A34C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EC39B34-737B-4C24-8C6F-5C2469B4A34C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EC39B34-737B-4C24-8C6F-5C2469B4A34C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EC39B34-737B-4C24-8C6F-5C2469B4A34C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

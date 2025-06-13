@@ -1,6 +1,6 @@
 ﻿using BulletJournalApp.Core.Interface;
-using BulletJournalApp.Core.Models;
-using BulletJournalApp.Core.Models.Enum;
+using BulletJournalApp.Library;
+using BulletJournalApp.Library.Enum;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;

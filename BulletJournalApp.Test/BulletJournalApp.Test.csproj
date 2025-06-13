@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BulletJournalApp.Core\BulletJournalApp.Core.csproj" />
+    <ProjectReference Include="..\BulletJournalApp.Library\BulletJournalApp.Library.csproj" />
     <ProjectReference Include="..\BulletJournalApp.UI\BulletJournalApp.UI.csproj" />
   </ItemGroup>
 
