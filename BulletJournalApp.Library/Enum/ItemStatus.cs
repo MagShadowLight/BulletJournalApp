@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Library.Enum
 {
-    public enum Category
+    public enum ItemStatus
     {
-        None,
-        Education,
-        Works,
-        Home,
-        Personal,
-        Financial,
-        Transportation
+        NotBought,
+        Bought,
+        Ordered,
+        Arrived,
+        Delayed,
+        Cancelled,
+        Had,
+        Unknown
     }
 }
