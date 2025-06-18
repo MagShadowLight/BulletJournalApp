@@ -81,7 +81,7 @@ namespace BulletJournalApp.Core.Services
             WriteText(fs, task.Notes);
             WriteText(fs, task.Category.ToString());
             WriteText(fs, task.Status.ToString());
-            WriteText(fs, task.schedule.ToString());
+            WriteText(fs, task.Schedule.ToString());
         }
 
         public static Tasks LoadTasks(StreamReader sr)

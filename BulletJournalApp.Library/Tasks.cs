@@ -19,9 +19,9 @@ namespace BulletJournalApp.Library
         public string? Notes { get; set; }
         public Category Category { get; set; }
         public TasksStatus Status { get; set; }
-        public Schedule schedule { get; set; }
+        public Schedule Schedule { get; set; }
 
-        public Tasks(DateTime? dueDate, string title, string description, Schedule timely, Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
+        public Tasks(DateTime? dueDate, string title, string description, Schedule schedule, Priority priority = Priority.Medium, Category category = Category.None, string? notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
         {
             Validate(title, nameof(title));
             Validate(description, nameof(description));
@@ -32,7 +32,7 @@ namespace BulletJournalApp.Library
             Description = description;
             Priority = priority;
             Status = status;
-            schedule = timely;
+            Schedule = schedule;
             Notes = notes;
             Category = category;
             IsCompleted = iscompleted;
@@ -84,7 +84,7 @@ namespace BulletJournalApp.Library
 
         public void ChangeSchedule(Schedule timely)
         {
-            schedule = timely;
+            Schedule = timely;
         }
     }
 

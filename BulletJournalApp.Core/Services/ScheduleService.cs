@@ -36,7 +36,7 @@ namespace BulletJournalApp.Core.Services
         public List<Tasks> ListTasksBySchedule(Schedule schedule)
         {
             var tasks = _taskservice.ListAllTasks();
-            return tasks.Where(time => time.schedule == schedule).ToList();
+            return tasks.Where(time => time.Schedule == schedule).ToList();
         }
     }
 }

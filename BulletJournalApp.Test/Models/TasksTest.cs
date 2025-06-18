@@ -97,7 +97,7 @@ namespace BulletJournalApp.Test.Models
             // Arrange
             var task = new Tasks(null, "Task", "Do something", Schedule.Monthly);
             // Act // Assert
-            Assert.Equal(Schedule.Monthly, task.schedule);
+            Assert.Equal(Schedule.Monthly, task.Schedule);
         }
     }
 }

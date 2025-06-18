@@ -164,7 +164,7 @@ namespace BulletJournalApp.Test.UI
             tasks.Add(task2);
             tasks.Add(task3);
             // Act
-            scheduleMock.Setup(service => service.ListTasksBySchedule(schedule)).Returns(tasks.Where(t => t.schedule == schedule).ToList());
+            scheduleMock.Setup(service => service.ListTasksBySchedule(schedule)).Returns(tasks.Where(t => t.Schedule == schedule).ToList());
             using var userInput = new StringReader("7\nD\n0\nN\n0\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
