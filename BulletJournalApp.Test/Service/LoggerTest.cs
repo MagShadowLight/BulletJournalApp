@@ -13,7 +13,6 @@ namespace BulletJournalApp.Test.Service
     public class LoggerTest
     {
 
-        private string path = Path.Combine("../", "../", "../", "Temp", "Log.txt");
         private FileMode mode = FileMode.Open;
 
         [Fact]

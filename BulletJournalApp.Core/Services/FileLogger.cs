@@ -39,10 +39,10 @@ namespace BulletJournalApp.Core.Services
             }
         }
 
-        public void WriteText(FileStream fs, string usage, string message)
-        {
-            byte[] info = new UTF8Encoding(true).GetBytes($"[{usage}]: {message}\n");
-            fs.Write(info, 0, info.Length);
-        }
+        //public void WriteText(FileStream fs, string usage, string message)
+        //{
+        //    byte[] info = new UTF8Encoding(true).GetBytes($"[{usage}]: {message}\n");
+        //    fs.Write(info, 0, info.Length);
+        //}
     }
 }
