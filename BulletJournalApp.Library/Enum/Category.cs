@@ -13,6 +13,7 @@ namespace BulletJournalApp.Library.Enum
         Works,
         Home,
         Personal,
-        Financial
+        Financial,
+        Transportation
     }
 }

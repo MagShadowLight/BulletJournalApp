@@ -54,7 +54,7 @@ namespace BulletJournalApp.Test.Models
         public void When_Task_Was_Created_Then_It_Should_Assign_IsCompleted_To_False()
         {
             // Arrange
-            var task = new Tasks(DateTime.Now, "Task", "Do something", Schedule.Monthly,    Priority.Low, Category.None, "");
+            var task = new Tasks(DateTime.Now, "Task", "Do something", Schedule.Monthly, Priority.Low, Category.None, "");
             // Act // Assert
             Assert.False(task.IsCompleted);
         }
@@ -62,7 +62,7 @@ namespace BulletJournalApp.Test.Models
         public void When_Task_Was_Created_Then_It_Should_Have_Empty_Note()
         {
             // Arrange
-            var task = new Tasks(DateTime.Now, "Task", "Do something", Schedule.Monthly, Priority.Low, Category.None);
+            var task = new Tasks(DateTime.Now, "Task", "Do something", Schedule.Monthly, Priority.Low, Category.None, "");
             // Act // Assert
             Assert.Empty(task.Notes);
         }

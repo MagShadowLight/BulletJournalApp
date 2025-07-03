@@ -25,6 +25,7 @@ namespace BulletJournalApp.Core.Services
         }
         public void LoadTasks(string filename)
         {
+            Validate(filename, nameof(filename));
             var path = Path.Combine("Data", "Tasks", $"{filename}.txt");
             StreamRead(path);
         }
@@ -45,6 +46,7 @@ namespace BulletJournalApp.Core.Services
         {
             var dir = Path.Combine("Data", "Tasks");
             var path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            Validate(filename, nameof(filename));
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
@@ -64,6 +66,12 @@ namespace BulletJournalApp.Core.Services
                 }
                 fs.Close();
             }
+        }
+
+        public void Validate(string input, string fieldName)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                throw new ArgumentException($"{fieldName} cannot be blank");
         }
     }
     public class SaveAndLoadTasks
