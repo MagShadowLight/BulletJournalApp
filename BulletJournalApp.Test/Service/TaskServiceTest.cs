@@ -164,5 +164,81 @@ namespace BulletJournalApp.Test.Service
             // Assert
             Assert.Contains(task2.Title, task.Title);
         }
+
+        [Fact]
+        public void When_Creating_Tasks_Then_The_Tasks_Should_Be_Added()
+        {
+            // Arrange
+            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var task1 = new Tasks(DateTime.Now, "Test", "Test", Schedule.Monthly);
+            // Act
+            service.AddTask(task1);
+            var task = service.FindTasksByTitle("Test");
+            // Assert
+            Assert.Contains(task1.Title, task.Title);
+            Assert.Throws<ArgumentNullException>(() => service.AddTask(null));
+        }
+        [Fact]
+        public void When_Tasks_Marked_As_Complete_Then_It_Should_Succeed()
+        {
+            // Arrange
+            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly);
+            service.AddTask(task1);
+            service.AddTask(task2);
+            service.AddTask(task3);
+            // Act
+            service.MarkTasksComplete("Test 2");
+            var allTasks = service.ListAllTasks();
+            var incompleteTasks = service.ListIncompleteTasks();
+            // Assert
+            Assert.True(task2.IsCompleted);
+            Assert.Equal(3, allTasks.Count);
+            Assert.Equal(2, incompleteTasks.Count);
+            Assert.Throws<Exception>(() => service.MarkTasksComplete("Made Up Test"));
+        }
+        [Fact]
+        public void When_Tasks_Were_Updated_Then_It_Should_Succeed()
+        {
+            // Arrange
+            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly);
+            service.AddTask(task1);
+            service.AddTask(task2);
+            service.AddTask(task3);
+            // Act
+            service.UpdateTask("Test 2", "Updated Test", "Test with Updated Date", "", DateTime.Now);
+            var tasks = service.ListAllTasks();
+            var updatedTask = service.FindTasksByTitle("Updated Test");
+            // Assert
+            Assert.Contains("Updated Test", updatedTask.Title);
+            Assert.Equal(3, tasks.Count);
+            Assert.Throws<Exception>(() => service.UpdateTask("Fake Test", "Test", "Test", "", DateTime.Now));
+        }
+        [Fact]
+        public void When_Tasks_Were_Deleted_Then_It_Should_Succeed()
+        {
+            // Arrange
+            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly);
+            service.AddTask(task1);
+            service.AddTask(task2);
+            service.AddTask(task3);
+            // Act
+            service.DeleteTask("Test 3");
+            var tasks = service.ListAllTasks();
+            // Assert
+            Assert.Equal(2, tasks.Count());
+            Assert.Contains(task1, tasks);
+            Assert.Contains(task2, tasks);
+            Assert.DoesNotContain(task3, tasks);
+            Assert.Throws<Exception>(() => service.DeleteTask("Fake Test"));
+        }
     }
 }
