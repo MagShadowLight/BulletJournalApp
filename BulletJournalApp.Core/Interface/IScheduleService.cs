@@ -10,7 +10,8 @@ namespace BulletJournalApp.Core.Interface
 {
     public interface IScheduleService
     {
+        public List<Items> ListItemsBySchedule(Schedule schedule);
         public List<Tasks> ListTasksBySchedule(Schedule schedule);
-        public void ChangeSchedule(string title, Schedule schedule);
+        public void ChangeSchedule(string title, Entries entries, Schedule schedule);
     }
 }

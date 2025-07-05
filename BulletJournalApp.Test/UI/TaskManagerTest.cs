@@ -517,13 +517,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
             tasks.Add(task1);
             tasks.Add(task2);
-            categoryMock.Setup(service => service.ChangeCategory("Test Task 2", Category.Education));
+            categoryMock.Setup(service => service.ChangeCategory("Test Task 2", Entries.TASKS, Category.Education));
             // Act
             using var userInput = new StringReader("13\nTest Task 2\nE\n0\nN\n0\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            categoryMock.Verify(user => user.ChangeCategory("Test Task 2", Category.Education), Times.Once);
+            categoryMock.Verify(user => user.ChangeCategory("Test Task 2", Entries.TASKS, Category.Education), Times.Once);
         }
         [Fact]
         public void When_User_Tried_To_Change_Category_Then_It_Should_Throw_Exception()
@@ -536,13 +536,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
             tasks.Add(task1);
             tasks.Add(task2);
-            categoryMock.Setup(service => service.ChangeCategory("Test Task 2", Category.Education));
+            categoryMock.Setup(service => service.ChangeCategory("Test Task 2", Entries.TASKS, Category.Education));
             // Act
             using var userInput = new StringReader("13\nTest Task 2\nL\n0\nN\n0\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            categoryMock.Verify(user => user.ChangeCategory("Test Task 2", Category.Education), Times.Never);
+            categoryMock.Verify(user => user.ChangeCategory("Test Task 2", Entries.TASKS, Category.Education), Times.Never);
             Assert.Throws<NullReferenceException>(() => taskManager.TaskManagerUI());
         }
         [Fact]
@@ -556,13 +556,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
             tasks.Add(task1);
             tasks.Add(task2);
-            scheduleMock.Setup(service => service.ChangeSchedule("Test Task", Schedule.Yearly));
+            scheduleMock.Setup(service => service.ChangeSchedule("Test Task", Entries.TASKS, Schedule.Yearly));
             // Act
             using var userInput = new StringReader("14\nTest Task\nY\n0\nN\n0\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            scheduleMock.Verify(user => user.ChangeSchedule("Test Task", Schedule.Yearly), Times.Once);
+            scheduleMock.Verify(user => user.ChangeSchedule("Test Task", Entries.TASKS, Schedule.Yearly), Times.Once);
         }
         [Fact]
         public void When_User_Select_Tried_To_Schedule_Then_It_Should_Throws_Exception()
@@ -575,13 +575,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
             tasks.Add(task1);
             tasks.Add(task2);
-            scheduleMock.Setup(service => service.ChangeSchedule("Test Task", Schedule.Yearly));
+            scheduleMock.Setup(service => service.ChangeSchedule("Test Task", Entries.TASKS, Schedule.Yearly));
             // Act
             using var userInput = new StringReader("14\nTest Task\nA\n0\nN\n0\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            scheduleMock.Verify(user => user.ChangeSchedule("Test Task", Schedule.Yearly), Times.Never);
+            scheduleMock.Verify(user => user.ChangeSchedule("Test Task", Entries.TASKS, Schedule.Yearly), Times.Never);
             Assert.Throws<NullReferenceException>(() => taskManager.TaskManagerUI());
         }
         [Fact]

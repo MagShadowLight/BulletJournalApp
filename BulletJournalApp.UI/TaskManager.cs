@@ -451,7 +451,7 @@ namespace BulletJournalApp.UI
             try
             {
                 category = UserInput.GetCategoryInput("Enter the new category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): ");
-                _categoryservice.ChangeCategory(title, category);
+                _categoryservice.ChangeCategory(title, Entries.TASKS, category);
                 _consolelogger.Log($"Task: {title} category changed successfully");
                 _filelogger.Log($"Task: {title} category changed successfully");
             } catch(Exception ex)
@@ -467,7 +467,7 @@ namespace BulletJournalApp.UI
             try
             {
                 schedule = UserInput.GetScheduleInput("Enter the new schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
-                _scheduleservice.ChangeSchedule(title, schedule);
+                _scheduleservice.ChangeSchedule(title, Entries.TASKS, schedule);
                 _consolelogger.Log($"Task: {title} schedule changed successfully");
                 _filelogger.Log($"Task: {title} schedule changed successfully");
             }

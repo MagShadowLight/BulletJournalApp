@@ -10,7 +10,8 @@ namespace BulletJournalApp.Core.Interface
 {
     public interface ICategoryService
     {
+        public List<Items> ListItemsByCategory(Category category);
         public List<Tasks> ListTasksByCategory(Category category);
-        public void ChangeCategory(string title, Category category);
+        public void ChangeCategory(string title, Entries entries, Category category);
     }
 }
