@@ -14,7 +14,6 @@ namespace BulletJournalApp.Library.Enum
         Arrived,
         Delayed,
         Cancelled,
-        Had,
         Unknown
     }
 }
