@@ -12,6 +12,7 @@ namespace BulletJournalApp.UI
 {
     public class ShopListManager
     {
+        private Entries entries = Entries.ITEMS;
         private Boolean isRunning = true;
         private readonly IItemService _itemService;
         private readonly IConsoleLogger _consolelogger;
@@ -55,6 +56,7 @@ namespace BulletJournalApp.UI
                 Console.WriteLine("9. Delete Items");
                 Console.WriteLine("10. Load Items");
                 Console.WriteLine("0. Exit");
+                Console.Write("Choose your option: ");
                 var input = Console.ReadLine();
                 switch (input)
                 {
@@ -96,7 +98,9 @@ namespace BulletJournalApp.UI
                         break;
                     case "10":
                         _filelogger.Log("Loading item");
-                        LoadItem();
+                        _consolelogger.Warn("It's not ready yet");
+                        _filelogger.Log("This functionality is not ready");
+                        //LoadItem();
                         break;
                     case "0":
                         _filelogger.Log("Closing Shopping List Manager");
@@ -113,42 +117,255 @@ namespace BulletJournalApp.UI
 
         private void LoadItem()
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private void DeleteItem()
         {
-            //throw new NotImplementedException();
+            try
+            {
+                var name = _userinput.GetStringInput("Enter the name to delete item: ");
+                _itemService.DeleteItems(name);
+                Console.WriteLine("Item deleted successfully");
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
         }
 
         private void ChangeItemsOptions()
         {
-            //throw new NotImplementedException();
+            var input = _userinput.GetStringInput("Enter which options (Use (Sc)hedule, (St)atus, or (C)ategory: ");
+            switch (input)
+            {
+                case "Sc":
+                    ChangeItemSchedule();
+                    break;
+                case "St":
+                    ChangeItemStatus();
+                    break;
+                case "C":
+                    ChangeItemCategory();
+                    break;
+                default:
+                    _consolelogger.Error("Invalid choice. Try again.");
+                    _filelogger.Error("Invalid choice. Try again.");
+                    break;
+            }
+        }
+
+        private void ChangeItemCategory()
+        {
+            try
+            {
+                var name = _userinput.GetStringInput("Enter the name of the item to change category: ");
+                var newcategory = _userinput.GetCategoryInput("Enter the new category to update it: ");
+                _categoryservice.ChangeCategory(name, entries, newcategory);
+                Console.WriteLine("Item updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
+        }
+
+        private void ChangeItemStatus()
+        {
+            try
+            {
+                var name = _userinput.GetStringInput("Enter the name of the item to change status: ");
+                var newStatus = _userinput.GetItemStatusInput("Enter the new status to update it: ");
+                _statusservice.ChangeStatus(name, entries, newStatus);
+                Console.WriteLine("Item updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
+        }
+
+        private void ChangeItemSchedule()
+        {
+            try
+            {
+                var name = _userinput.GetStringInput("Enter the name of the item to change schedule: ");
+                var newschedule = _userinput.GetScheduleInput("Enter the new schedule to update it: ");
+                _scheduleservice.ChangeSchedule(name, entries, newschedule);
+                Console.WriteLine("Item updated successfully!");
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
         }
 
         private void UpdateItem()
         {
-            //throw new NotImplementedException();
+            try
+            {
+                var oldname = _userinput.GetStringInput("Enter the name of item to update: ");
+                var newname = _userinput.GetStringInput("Enter the new name of the item: ");
+                var newdesc = _userinput.GetStringInput("Enter the new description of the item: ");
+                var newnote = _userinput.GetStringInput("Enter the new note of the item: ");
+                _itemService.UpdateItems(oldname, newname, newdesc, newnote);
+                _filelogger.Log("Item updated successfully");
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
         }
 
         private void SearchItems()
         {
-            //throw new NotImplementedException();
+            try
+            {
+                var name = _userinput.GetStringInput("Enter the name of the item: ");
+                var item = _itemService.FindItemsByName(name);
+                if (item == null)
+                    throw new Exception("Item not found");
+                Console.WriteLine($"Found + {_formatter.FormatItems(item)}");
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
         }
 
         private void ListItemsByOptions()
         {
-            //throw new NotImplementedException();
+            var input = _userinput.GetStringInput("Which option do you want? (Sc)hedule, (St)atus, or (C)ategory: ");
+            switch (input)
+            {
+                case "Sc":
+                    ListItemsBySchedule();
+                    break;
+                case "St":
+                    ListItemsByStatus();
+                    break;
+                case "C":
+                    ListItemsByCategory();
+                    break;
+                default:
+                    _consolelogger.Error("Invalid choice. Try again.");
+                    _filelogger.Error("Invalid choice. Try again.");
+                    break;
+            }
+        }
+
+        private void ListItemsByCategory()
+        {
+            try
+            {
+                var category = _userinput.GetCategoryInput("Select which category. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial, (T)ransportation. ");
+                var items = _categoryservice.ListItemsByCategory(category);
+                if (items.Count == 0)
+                {
+                    _consolelogger.Error("No items found.");
+                    _filelogger.Error("No items found.");
+                    return;
+                }
+                _filelogger.Log($"Found {items.Count} {(items.Count == 1 ? "item" : "items")}");
+                foreach (var item in items)
+                {
+                    _filelogger.Log($"Item: {item.Name}");
+                    _formatter.FormatItems(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
+        }
+
+        private void ListItemsByStatus()
+        {
+            try
+            {
+                var status = _userinput.GetItemStatusInput("Select which status. Use (N)otBought, (B)ought, (O)rdered, (A)rrived, (D)elayed, (C)ancelled or empty for unknown: ");
+                var items = _statusservice.ListItemsByStatus(status);
+                if (items.Count == 0)
+                {
+                    _consolelogger.Error("No items found.");
+                    _filelogger.Error("No items found.");
+                    return;
+                }
+                _filelogger.Log($"Found {items.Count} {(items.Count == 1 ? "item" : "items")}");
+                foreach (var item in items)
+                {
+                    _filelogger.Log($"Item: {item.Name}");
+                    _formatter.FormatItems(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
+        }
+
+        private void ListItemsBySchedule()
+        {
+            try
+            {
+                var schedule = _userinput.GetScheduleInput("Select which schedule. Use (Y)early, (Q)uartly, (M)onthly, (W)eekly, or (D)aily. ");
+                var items = _scheduleservice.ListItemsBySchedule(schedule);
+                if (items.Count == 0)
+                {
+                    _consolelogger.Error("No items found.");
+                    _filelogger.Error("No items found.");
+                    return;
+                }
+                _filelogger.Log($"Found {items.Count} {(items.Count == 1 ? "item" : "items")}");
+                foreach (var item in items)
+                {
+                    _filelogger.Log($"Item: {item.Name}");
+                    _formatter.FormatItems(item);
+                }
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
         }
 
         private void ListNotOwnedItems()
         {
-            //throw new NotImplementedException();
+            var items = _itemService.GetItemsNotOwned();
+            if (items.Count == 0)
+            {
+                _consolelogger.Error("No items found.");
+                _filelogger.Error("No items found.");
+                return;
+            }
+            _filelogger.Log($"Found {items.Count} {(items.Count == 1 ? "item" : "items")}");
+            foreach (var item in items)
+            {
+                _filelogger.Log($"Item: {item.Name}");
+                _formatter.FormatItems(item);
+            }
         }
 
         private void ListOwnedItems()
         {
-            //throw new NotImplementedException();
+            var items = _itemService.GetItemsOwned();
+            if (items.Count == 0)
+            {
+                _consolelogger.Error("No items found.");
+                _filelogger.Error("No items found.");
+                return;
+            }
+            _filelogger.Log($"Found {items.Count} {(items.Count == 1 ? "item" : "items")}");
+            foreach (var item in items)
+            {
+                _filelogger.Log($"Item: {item.Name}");
+                _formatter.FormatItems(item);
+            }
         }
 
         private void ListAllItems()
@@ -158,6 +375,7 @@ namespace BulletJournalApp.UI
             {
                 _consolelogger.Error("No items found.");
                 _filelogger.Error("No items found.");
+                return;
             }
             _filelogger.Log($"Found {items.Count} {(items.Count == 1 ? "item" : "items")}");
             foreach ( var item in items )

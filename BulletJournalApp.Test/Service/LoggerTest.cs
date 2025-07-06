@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Service
 {
+    [Collection("Sequential")]
     public class LoggerTest
     {
 

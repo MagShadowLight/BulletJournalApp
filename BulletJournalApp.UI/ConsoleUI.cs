@@ -44,9 +44,10 @@ namespace BulletJournalApp.UI
                         _filelogger.Log("Task manager closed");
                         break;
                     case "2":
-                        _filelogger.Log("This option is not ready yet, Please come back when it updated with this function");
-                        Console.WriteLine("Work In Progress. Please come back later.");
+                        _filelogger.Log("Opening Shopping List Manager");
+                        Console.WriteLine("Opening Shopping List");
                         _shoplistmanager.UI();
+                        _filelogger.Log("Shopping List Closed");
                         break;
                     case "0":
                         _filelogger.Log("Quiting");
