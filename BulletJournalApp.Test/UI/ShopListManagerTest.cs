@@ -194,6 +194,27 @@ namespace BulletJournalApp.Test.UI
             ResetReader();
         }
         [Fact]
+        public void When_User_Selected_Mark_Item_As_Bought_Then_Item_Should_Be_Marked()
+        {
+            // Arrange
+            var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
+            var item1 = new Items("Test", "Test", Schedule.Monthly);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 0, Category.Financial);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var items = new List<Items>();
+            items.Add(item1);
+            items.Add(item2);
+            items.Add(item3);
+            // Act
+            itemMock.Setup(service => service.MarkItemsAsBought(item2.Name));
+            using var input = new StringReader("7\nTest2\n0");
+            Console.SetIn(input);
+            ui.UI();
+            // Assert
+            itemMock.Verify(user => user.MarkItemsAsBought(item2.Name), Times.Once());
+            ResetReader();
+        }
+        [Fact]
         public void When_User_Selected_Update_Item_Then_Items_Should_Update_With_New_Info()
         {
             // Arrange
@@ -207,7 +228,7 @@ namespace BulletJournalApp.Test.UI
             items.Add(item3);
             // Act
             itemMock.Setup(service => service.UpdateItems("Test2", "Updated Test", "new desc", "New Note"));
-            using var input = new StringReader("7\nTest2\nUpdated Test\nnew desc\nNew Note\n0");
+            using var input = new StringReader("8\nTest2\nUpdated Test\nnew desc\nNew Note\n0");
             Console.SetIn(input);
             ui.UI();
             // Assert
@@ -229,7 +250,7 @@ namespace BulletJournalApp.Test.UI
             items.Add(item3);
             // Act
             scheduleMock.Setup(service => service.ChangeSchedule("Test2", entries, schedule));
-            using var input = new StringReader("8\nSc\nTest2\nW\n0");
+            using var input = new StringReader("9\nSc\nTest2\nW\n0");
             Console.SetIn(input);
             ui.UI();
             // Assert
@@ -251,7 +272,7 @@ namespace BulletJournalApp.Test.UI
             items.Add(item3);
             // Act
             statusMock.Setup(service => service.ChangeStatus("Test2", entries, status));
-            using var input = new StringReader("8\nSt\nTest2\nD\n0");
+            using var input = new StringReader("9\nSt\nTest2\nD\n0");
             Console.SetIn(input);
             ui.UI();
             // Assert
@@ -273,7 +294,7 @@ namespace BulletJournalApp.Test.UI
             items.Add(item3);
             // Act
             categoryMock.Setup(service => service.ChangeCategory("Test2", entries, category));
-            using var input = new StringReader("8\nC\nTest2\nF\n0");
+            using var input = new StringReader("9\nC\nTest2\nF\n0");
             Console.SetIn(input);
             ui.UI();
             // Assert
@@ -294,7 +315,7 @@ namespace BulletJournalApp.Test.UI
             items.Add(item3);
             // Act
             itemMock.Setup(service => service.DeleteItems("Test2"));
-            using var input = new StringReader("9\nTest2\n0");
+            using var input = new StringReader("10\nTest2\n0");
             Console.SetIn(input);
             ui.UI();
             // Assert

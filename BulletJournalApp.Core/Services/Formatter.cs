@@ -13,7 +13,7 @@ namespace BulletJournalApp.Core.Services
         public string FormatItems(Items items)
         {
 
-            return $"[{items.Id}]: {items.Name}]\n" +
+            return $"[{items.Id}]: {items.Name}\n" +
                 $"- Description: {items.Description}\n" +
                 $"- Category: {items.Category.ToString()}\n" +
                 $"- Status: {items.Status.ToString()}\n" +

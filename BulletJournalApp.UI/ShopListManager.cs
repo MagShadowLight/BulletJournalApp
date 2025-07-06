@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BulletJournalApp.UI
 {
@@ -51,10 +52,11 @@ namespace BulletJournalApp.UI
                 Console.WriteLine("4. List Items Not Owned");
                 Console.WriteLine("5. List Items By:");
                 Console.WriteLine("6. Find Items By Name");
-                Console.WriteLine("7. Update Items");
-                Console.WriteLine("8. Change Items Status, Category, or Schedule");
-                Console.WriteLine("9. Delete Items");
-                Console.WriteLine("10. Load Items");
+                Console.WriteLine("7. Mark Items As Bought");
+                Console.WriteLine("8. Update Items");
+                Console.WriteLine("9. Change Items Status, Category, or Schedule");
+                Console.WriteLine("10. Delete Items");
+                Console.WriteLine("11. Load Items");
                 Console.WriteLine("0. Exit");
                 Console.Write("Choose your option: ");
                 var input = Console.ReadLine();
@@ -85,18 +87,22 @@ namespace BulletJournalApp.UI
                         SearchItems();
                         break;
                     case "7":
+                        _filelogger.Log("Marking item as bought");
+                        MarkItemAsBought();
+                        break;
+                    case "8":
                         _filelogger.Log("Updating item.");
                         UpdateItem();
                         break;
-                    case "8":
+                    case "9":
                         _filelogger.Log("Changing item status, schedule, or category.");
                         ChangeItemsOptions();
                         break;
-                    case "9":
+                    case "10":
                         _filelogger.Log("Deleting item");
                         DeleteItem();
                         break;
-                    case "10":
+                    case "11":
                         _filelogger.Log("Loading item");
                         _consolelogger.Warn("It's not ready yet");
                         _filelogger.Log("This functionality is not ready");
@@ -112,6 +118,20 @@ namespace BulletJournalApp.UI
                         _filelogger.Error("Invalid choice. Please try again with different option.");
                         break;
                 }
+            }
+        }
+
+        private void MarkItemAsBought()
+        {
+            try
+            {
+                var name = _userinput.GetStringInput("Enter the name of the item to mark it as bought: ");
+                _itemService.MarkItemsAsBought(name);
+                _consolelogger.Log("Item marked as bought.");
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
             }
         }
 
@@ -160,7 +180,7 @@ namespace BulletJournalApp.UI
             try
             {
                 var name = _userinput.GetStringInput("Enter the name of the item to change category: ");
-                var newcategory = _userinput.GetCategoryInput("Enter the new category to update it: ");
+                var newcategory = _userinput.GetCategoryInput("Enter the new category to update it. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial, (T)ransportation: ");
                 _categoryservice.ChangeCategory(name, entries, newcategory);
                 Console.WriteLine("Item updated successfully!");
             }
@@ -176,7 +196,7 @@ namespace BulletJournalApp.UI
             try
             {
                 var name = _userinput.GetStringInput("Enter the name of the item to change status: ");
-                var newStatus = _userinput.GetItemStatusInput("Enter the new status to update it: ");
+                var newStatus = _userinput.GetItemStatusInput("Enter the new status to update it. Use (N)otBought, (B)ought, (O)rdered, (A)rrived, (D)elayed, (C)ancelled or empty for unknown: ");
                 _statusservice.ChangeStatus(name, entries, newStatus);
                 Console.WriteLine("Item updated successfully!");
             }
@@ -192,7 +212,7 @@ namespace BulletJournalApp.UI
             try
             {
                 var name = _userinput.GetStringInput("Enter the name of the item to change schedule: ");
-                var newschedule = _userinput.GetScheduleInput("Enter the new schedule to update it: ");
+                var newschedule = _userinput.GetScheduleInput("Enter the new schedule to update it. Use (Y)early, (Q)uartly, (M)onthly, (W)eekly, or (D)aily: ");
                 _scheduleservice.ChangeSchedule(name, entries, newschedule);
                 Console.WriteLine("Item updated successfully!");
             } catch (Exception ex)
@@ -211,6 +231,7 @@ namespace BulletJournalApp.UI
                 var newdesc = _userinput.GetStringInput("Enter the new description of the item: ");
                 var newnote = _userinput.GetStringInput("Enter the new note of the item: ");
                 _itemService.UpdateItems(oldname, newname, newdesc, newnote);
+                _consolelogger.Log("Item updated successfully");
                 _filelogger.Log("Item updated successfully");
             } catch (Exception ex)
             {
@@ -227,7 +248,7 @@ namespace BulletJournalApp.UI
                 var item = _itemService.FindItemsByName(name);
                 if (item == null)
                     throw new Exception("Item not found");
-                Console.WriteLine($"Found + {_formatter.FormatItems(item)}");
+                Console.WriteLine($"Found: {_formatter.FormatItems(item)}");
             }
             catch (Exception ex)
             {
@@ -273,7 +294,7 @@ namespace BulletJournalApp.UI
                 foreach (var item in items)
                 {
                     _filelogger.Log($"Item: {item.Name}");
-                    _formatter.FormatItems(item);
+                    Console.WriteLine(_formatter.FormatItems(item));
                 }
             }
             catch (Exception ex)
@@ -299,7 +320,7 @@ namespace BulletJournalApp.UI
                 foreach (var item in items)
                 {
                     _filelogger.Log($"Item: {item.Name}");
-                    _formatter.FormatItems(item);
+                    Console.WriteLine(_formatter.FormatItems(item));
                 }
             }
             catch (Exception ex)
@@ -325,7 +346,7 @@ namespace BulletJournalApp.UI
                 foreach (var item in items)
                 {
                     _filelogger.Log($"Item: {item.Name}");
-                    _formatter.FormatItems(item);
+                    Console.WriteLine(_formatter.FormatItems(item));
                 }
             } catch (Exception ex)
             {
@@ -347,7 +368,7 @@ namespace BulletJournalApp.UI
             foreach (var item in items)
             {
                 _filelogger.Log($"Item: {item.Name}");
-                _formatter.FormatItems(item);
+                Console.WriteLine(_formatter.FormatItems(item));
             }
         }
 
@@ -364,7 +385,7 @@ namespace BulletJournalApp.UI
             foreach (var item in items)
             {
                 _filelogger.Log($"Item: {item.Name}");
-                _formatter.FormatItems(item);
+                Console.WriteLine(_formatter.FormatItems(item));
             }
         }
 
@@ -381,7 +402,7 @@ namespace BulletJournalApp.UI
             foreach ( var item in items )
             {
                 _filelogger.Log($"Item: {item.Name}");
-                _formatter.FormatItems( item );
+                Console.WriteLine(_formatter.FormatItems( item ));
             }
         }
 
