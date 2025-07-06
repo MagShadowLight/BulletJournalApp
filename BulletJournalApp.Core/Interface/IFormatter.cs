@@ -9,6 +9,7 @@ namespace BulletJournalApp.Core.Interface
 {
     public interface IFormatter
     {
-        public string Format(Tasks task);
+        public string FormatTasks(Tasks task);
+        public string FormatItems(Items items);
     }
 }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.UI
 {
+    [Collection("Sequential")]
     public class ConsoleUITest
     {
         private Mock<IConsoleLogger> consoleLoggerMock = new();

@@ -41,6 +41,7 @@ namespace BulletJournalApp.Core.Services
                 }
                 sr.Dispose();
             }
+            Console.SetIn(new StreamReader(Console.OpenStandardInput()));
         }
         public void SaveTasks(string filename, List<Tasks> tasks)
         {
@@ -66,6 +67,7 @@ namespace BulletJournalApp.Core.Services
                 }
                 fs.Close();
             }
+            Console.SetIn(new StreamReader(Console.OpenStandardInput()));
         }
 
         public void Validate(string input, string fieldName)

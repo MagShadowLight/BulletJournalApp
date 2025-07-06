@@ -13,12 +13,14 @@ namespace BulletJournalApp.UI
         private readonly TaskManager _taskManager;
         private readonly IFileLogger _filelogger;
         private readonly IConsoleLogger _consolelogger;
+        private readonly ShopListManager _shoplistmanager;
 
-        public ConsoleUI(TaskManager taskManager, IFileLogger filelogger, IConsoleLogger consolelogger)
+        public ConsoleUI(TaskManager taskManager, IFileLogger filelogger, IConsoleLogger consolelogger, ShopListManager shoplistmanager)
         {
             _filelogger = filelogger;
             _taskManager = taskManager;
             _consolelogger = consolelogger;
+            _shoplistmanager = shoplistmanager;
         }
         public void Run()
         {
@@ -42,8 +44,10 @@ namespace BulletJournalApp.UI
                         _filelogger.Log("Task manager closed");
                         break;
                     case "2":
-                        _filelogger.Log("This option is not ready yet, Please come back when it updated with this function");
-                        Console.WriteLine("Work In Progress. Please come back later.");
+                        _filelogger.Log("Opening Shopping List Manager");
+                        Console.WriteLine("Opening Shopping List");
+                        _shoplistmanager.UI();
+                        _filelogger.Log("Shopping List Closed");
                         break;
                     case "0":
                         _filelogger.Log("Quiting");

@@ -11,6 +11,8 @@ namespace BulletJournalApp.Test.Service
 {
     public class TaskServiceTest
     {
+        private TaskService _taskService = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
+        private ItemService _itemService = new ItemService(new ConsoleLogger(), new FileLogger());
         [Fact]
         public void When_There_Are_Tasks_Then_It_Should_Return_Tasks_List()
         {
@@ -84,18 +86,17 @@ namespace BulletJournalApp.Test.Service
         public void When_There_Are_Tasks_With_Category_Then_It_Should_Return_Tasks_List_By_Category()
         {
             // Arrange
-            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var categoryservice = new CategoryService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
+            var categoryservice = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
             var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.None);
             var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.None);
             var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.None);
-            taskservice.AddTask(task1);
-            taskservice.AddTask(task2);
-            taskservice.AddTask(task3);
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
             // Act
-            categoryservice.ChangeCategory(task1.Title, Category.Personal);
-            categoryservice.ChangeCategory(task2.Title, Category.Home);
-            categoryservice.ChangeCategory(task3.Title, Category.Personal);
+            categoryservice.ChangeCategory(task1.Title, Entries.TASKS, Category.Personal);
+            categoryservice.ChangeCategory(task2.Title, Entries.TASKS, Category.Home);
+            categoryservice.ChangeCategory(task3.Title, Entries.TASKS, Category.Personal);
             var personalTasks = categoryservice.ListTasksByCategory(Category.Personal);
             // Assert
             Assert.Equal(2, personalTasks.Count);
@@ -127,19 +128,18 @@ namespace BulletJournalApp.Test.Service
         public void When_There_Are_Tasks_For_The_Week_Then_It_Should_Return_Only_Tasks_For_The_Week()
         {
             // Arrange
-            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var scheduleservice = new ScheduleService(new Formatter(), new ConsoleLogger(), new FileLogger(), taskservice);
+            var scheduleservice = new ScheduleService(new Formatter(), new ConsoleLogger(), new FileLogger(), _taskService, _itemService);
             var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.Personal);
             var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.Home);
             var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Personal);
             var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly, Priority.Medium, Category.Personal);
-            taskservice.AddTask(task1);
-            taskservice.AddTask(task2);
-            taskservice.AddTask(task3);
-            taskservice.AddTask(task4);
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            _taskService.AddTask(task4);
             // Act
-            scheduleservice.ChangeSchedule(task1.Title, Schedule.Weekly);
-            scheduleservice.ChangeSchedule(task4.Title, Schedule.Weekly);
+            scheduleservice.ChangeSchedule(task1.Title, Entries.TASKS, Schedule.Weekly);
+            scheduleservice.ChangeSchedule(task4.Title, Entries.TASKS, Schedule.Weekly);
             var weeklyTasks = scheduleservice.ListTasksBySchedule(Schedule.Weekly);
             // Assert
             Assert.Equal(2, weeklyTasks.Count);

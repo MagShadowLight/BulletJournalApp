@@ -16,22 +16,41 @@ namespace BulletJournalApp.Core.Services
         private readonly ITaskService _taskservice;
         private readonly IConsoleLogger _consolelogger;
         private readonly IFileLogger _filelogger;
+        private readonly IItemService _itemservice;
 
-        public CategoryService(ITaskService taskService, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter)
+        public CategoryService(IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITaskService taskService,  IItemService itemservice)
         {
             _taskservice = taskService;
             _consolelogger = consolelogger;
             _filelogger = filelogger;
             _formatter = formatter;
+            _itemservice = itemservice;
+        }
+
+        public void ChangeCategory(string title, Entries entries, Category category)
+        {
+            switch (entries)
+            {
+                case Entries.TASKS:
+                    var task = _taskservice.FindTasksByTitle(title);
+                    if (task == null)
+                        throw new Exception("Cannot find task");
+                    task.ChangeCategory(category);
+                    break;
+                case Entries.ITEMS:
+                    var item = _itemservice.FindItemsByName(title);
+                    if (item == null)
+                        throw new Exception("Cannot find task");
+                    item.ChangeCategory(category);
+                    break;
+            }
             
         }
 
-        public void ChangeCategory(string title, Category category)
+        public List<Items> ListItemsByCategory(Category category)
         {
-            var task = _taskservice.FindTasksByTitle(title);
-            if (task == null)
-                throw new Exception("Cannot find task");
-            task.ChangeCategory(category);
+            var items = _itemservice.GetAllItems();
+            return items.Where(cat => cat.Category == category).ToList();
         }
 
         public List<Tasks> ListTasksByCategory(Category category)

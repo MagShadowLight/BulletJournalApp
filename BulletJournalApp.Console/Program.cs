@@ -1,6 +1,7 @@
 ﻿using BulletJournalApp.Core.Interface;
 using BulletJournalApp.Core.Services;
 using BulletJournalApp.UI;
+using BulletJournalApp.UI.Util;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -25,8 +26,12 @@ namespace BulletJournalApp.Consoles
             services.AddSingleton<IPriorityService, PriorityService>();
             services.AddSingleton<ICategoryService, CategoryService>();
             services.AddSingleton<ITasksStatusService, TasksStatusService>();
-            services.AddSingleton<ConsoleUI>();
+            services.AddSingleton<IItemStatusService, ItemStatusService>();
+            services.AddSingleton<IUserInput, UserInput>();
+            services.AddSingleton<IItemService, ItemService>();
+            services.AddSingleton<ShopListManager>();
             services.AddSingleton<TaskManager>();
+            services.AddSingleton<ConsoleUI>();
 
             var serviceProvider = services.BuildServiceProvider();
             var consoleUI = serviceProvider.GetRequiredService<ConsoleUI>();
