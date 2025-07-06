@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Core.Interface
 {
-    public interface IFormatter
+    public interface IFileService
     {
-        public string FormatTasks(Tasks task);
-        public string FormatItems(Items items);
+        public void SaveTasks(string filename, List<Tasks> tasks);
+        public void LoadTasks(string filename);
     }
 }

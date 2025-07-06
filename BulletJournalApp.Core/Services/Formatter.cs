@@ -1,5 +1,5 @@
 ﻿using BulletJournalApp.Core.Interface;
-using BulletJournalApp.Core.Models;
+using BulletJournalApp.Library;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,19 @@ namespace BulletJournalApp.Core.Services
 {
     public class Formatter : IFormatter
     {
-        public string Format(Tasks task)
+        public string FormatItems(Items items)
+        {
+
+            return $"[{items.Id}]: {items.Name}\n" +
+                $"- Description: {items.Description}\n" +
+                $"- Category: {items.Category.ToString()}\n" +
+                $"- Status: {items.Status.ToString()}\n" +
+                $"- Note: {items.Notes}\n" +
+                $"- Date Added: {items.DateAdded}\n" +
+                $"{(items.DateBought != null ? $"- Date Bought: {items.DateBought}" : "")}";
+        }
+
+        public string FormatTasks(Tasks task)
         {
             return $"[{task.Id}]: {task.Title}\n" +
                 $"- Description: {task.Description}\n" +

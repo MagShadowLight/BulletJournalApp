@@ -1,5 +1,5 @@
-﻿using BulletJournalApp.Core.Models;
-using BulletJournalApp.Core.Models.Enum;
+﻿using BulletJournalApp.Library;
+using BulletJournalApp.Library.Enum;
 using BulletJournalApp.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace BulletJournalApp.Test.Service
             var service = new Formatter();
             var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
-            var result = service.Format(tasks);
+            var result = service.FormatTasks(tasks);
             // Assert
             Assert.Contains(tasks.Title, result);
         }
@@ -29,7 +29,7 @@ namespace BulletJournalApp.Test.Service
             var service = new Formatter();
             var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
-            var result = service.Format(tasks);
+            var result = service.FormatTasks(tasks);
             // Assert
             Assert.Contains(tasks.Description, result);
         }
@@ -40,7 +40,7 @@ namespace BulletJournalApp.Test.Service
             var service = new Formatter();
             var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Medium);
             // Act
-            var result = service.Format(task);
+            var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(task.Priority.ToString(), result);
         }
@@ -51,7 +51,7 @@ namespace BulletJournalApp.Test.Service
             var service = new Formatter();
             var task = new Tasks(DateTime.Parse("6-10-2025"), "Test Task", "meow", Schedule.Monthly);
             // Act
-            var result = service.Format(task);
+            var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(task.DueDate.ToString(), result);
         }
@@ -62,7 +62,7 @@ namespace BulletJournalApp.Test.Service
             var service = new Formatter();
             var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
-            var result = service.Format(task);
+            var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(task.Status.ToString(), result);
         }
@@ -73,7 +73,7 @@ namespace BulletJournalApp.Test.Service
             var service = new Formatter();
             var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Low);
             // Act
-            var result = service.Format(task);
+            var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(task.Category.ToString(), result);
         }
@@ -84,7 +84,7 @@ namespace BulletJournalApp.Test.Service
             var service = new Formatter();
             var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Low, Category.None, "Test Note");
             // Act
-            var result = service.Format(task);
+            var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(task.Notes, result);
         }
@@ -96,7 +96,7 @@ namespace BulletJournalApp.Test.Service
             var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
             var message = task.IsCompleted ? "" : "Incomplete";
-            var result = service.Format(task);
+            var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(message, result);
         }
@@ -109,7 +109,7 @@ namespace BulletJournalApp.Test.Service
             task.MarkComplete();
             // Act
             var message = task.IsCompleted ? "Completed" : "";
-            var result = service.Format(task);
+            var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(message, result);
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Core.Models.Enum
+namespace BulletJournalApp.Library.Enum
 {
     public enum Category
     {
@@ -13,6 +13,7 @@ namespace BulletJournalApp.Core.Models.Enum
         Works,
         Home,
         Personal,
-        Financial
+        Financial,
+        Transportation
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BulletJournalApp.Core.Interface;
 using BulletJournalApp.Core.Services;
 using BulletJournalApp.UI;
+using BulletJournalApp.UI.Util;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -20,8 +21,17 @@ namespace BulletJournalApp.Consoles
             services.AddSingleton<IFormatter, Formatter>();
             services.AddSingleton<IConsoleLogger, ConsoleLogger>();
             services.AddSingleton<IFileLogger, FileLogger>();
-            services.AddSingleton<ConsoleUI>();
+            services.AddSingleton<IFileService, FileService>();
+            services.AddSingleton<IScheduleService, ScheduleService>();
+            services.AddSingleton<IPriorityService, PriorityService>();
+            services.AddSingleton<ICategoryService, CategoryService>();
+            services.AddSingleton<ITasksStatusService, TasksStatusService>();
+            services.AddSingleton<IItemStatusService, ItemStatusService>();
+            services.AddSingleton<IUserInput, UserInput>();
+            services.AddSingleton<IItemService, ItemService>();
+            services.AddSingleton<ShopListManager>();
             services.AddSingleton<TaskManager>();
+            services.AddSingleton<ConsoleUI>();
 
             var serviceProvider = services.BuildServiceProvider();
             var consoleUI = serviceProvider.GetRequiredService<ConsoleUI>();
@@ -43,7 +53,8 @@ namespace BulletJournalApp.Consoles
             {
                 int num = 0;
                 string newPath = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
-                IfFileExists(num, newPath);
+                num = IfFileExists(num, newPath);
+                newPath = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
                 File.Copy(path, newPath);
                 File.Delete(path);
                 File.Create(path).Close();
@@ -57,7 +68,7 @@ namespace BulletJournalApp.Consoles
                 Directory.CreateDirectory(dir);
             }
         }
-        public static void IfFileExists(int num, string path)
+        public static int IfFileExists(int num, string path)
         {
             if ((File.Exists(path)))
             {
@@ -67,7 +78,9 @@ namespace BulletJournalApp.Consoles
                     num++;
                     path = Path.Combine("Temp", $"Log{DateTime.Today.Month.ToString()}-{DateTime.Today.Day.ToString()}-{DateTime.Today.Year.ToString()}-{num}.txt");
                 }
+                return num;
             }
+            return num;
         }
     }
 }

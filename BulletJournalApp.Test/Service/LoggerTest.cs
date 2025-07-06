@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Service
 {
+    [Collection("Sequential")]
     public class LoggerTest
     {
 
-        private string path = Path.Combine("../", "../", "../", "Temp", "Log.txt");
         private FileMode mode = FileMode.Open;
 
         [Fact]
@@ -135,11 +135,13 @@ namespace BulletJournalApp.Test.Service
         public void ResetOutput()
         {
             Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+            Console.SetIn(new StreamReader(Console.OpenStandardInput()));
         }
         public void ResetStream(StreamReader sr, FileStream fs)
         {
             sr.Close();
             fs.Close();
+            Console.SetIn(new StreamReader(Console.OpenStandardInput()));
         }
 
         public void CreateFile(string path)

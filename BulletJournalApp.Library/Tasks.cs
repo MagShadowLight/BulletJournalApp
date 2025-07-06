@@ -1,4 +1,4 @@
-﻿using BulletJournalApp.Core.Models.Enum;
+﻿using BulletJournalApp.Library.Enum;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Core.Models
+namespace BulletJournalApp.Library
 {
     public class Tasks
     {
