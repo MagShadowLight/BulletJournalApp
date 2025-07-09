@@ -16,7 +16,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
+            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
             // Act
             var result = service.FormatTasks(tasks);
             // Assert
@@ -27,7 +27,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
+            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
             // Act
             var result = service.FormatTasks(tasks);
             // Assert
@@ -38,7 +38,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Medium);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -49,7 +49,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(DateTime.Parse("6-10-2025"), "Test Task", "meow", Schedule.Monthly);
+            var task = new Tasks(DateTime.Parse("6-10-2025"), "Test Task", "meow", Schedule.Monthly, false);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -60,7 +60,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -71,7 +71,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Low);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -82,7 +82,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Low, Category.None, "Test Note");
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.None, "Test Note");
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -93,7 +93,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Assert
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
             // Act
             var message = task.IsCompleted ? "" : "Incomplete";
             var result = service.FormatTasks(task);
@@ -105,7 +105,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Assert
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
             task.MarkComplete();
             // Act
             var message = task.IsCompleted ? "Completed" : "";

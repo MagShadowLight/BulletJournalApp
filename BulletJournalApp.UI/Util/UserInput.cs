@@ -32,6 +32,18 @@ namespace BulletJournalApp.UI.Util
             }
         }
 
+        public bool GetBooleanInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine().ToUpper();
+            return input switch
+            {
+                "Y" => true,
+                "N" => false,
+                _ => throw new FormatException("Invalid Boolean Property.")
+            };
+        }
+
         public Priority GetPriorityInput(string prompt)
         {
             Console.Write(prompt);
@@ -106,6 +118,33 @@ namespace BulletJournalApp.UI.Util
                 "C" => ItemStatus.Cancelled,
                 _ => ItemStatus.Unknown
             };
+        }
+
+        public int GetIntInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            
+            if (int.TryParse(input, out int num))
+            {
+                return num;
+            } else
+            {
+                throw new FormatException("Invalid Number");
+            }
+        }
+
+        public DateTime GetOptionalDateInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            if (DateTime.TryParse(input, out DateTime date))
+            {
+                return date;
+            } else
+            {
+                return DateTime.MinValue;
+            }
         }
     }
 }
