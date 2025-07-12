@@ -2,7 +2,7 @@
 name: Bug Report
 about: This template is for bug report
 title: "[BUG}"
-labels: bug, invalid
+labels: bug
 assignees: MagShadowLight
 
 ---
