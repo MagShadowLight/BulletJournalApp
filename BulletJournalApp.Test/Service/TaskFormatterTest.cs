@@ -16,7 +16,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
+            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
             var result = service.FormatTasks(tasks);
             // Assert
@@ -27,7 +27,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
+            var tasks = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
             var result = service.FormatTasks(tasks);
             // Assert
@@ -38,7 +38,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Medium);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -49,7 +49,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(DateTime.Parse("6-10-2025"), "Test Task", "meow", Schedule.Monthly, false);
+            var task = new Tasks(DateTime.Parse("6-10-2025"), "Test Task", "meow", Schedule.Monthly);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -60,7 +60,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -71,7 +71,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Low);
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -82,7 +82,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.None, "Test Note");
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, Priority.Low, Category.None, "Test Note");
             // Act
             var result = service.FormatTasks(task);
             // Assert
@@ -93,7 +93,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Assert
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             // Act
             var message = task.IsCompleted ? "" : "Incomplete";
             var result = service.FormatTasks(task);
@@ -105,46 +105,10 @@ namespace BulletJournalApp.Test.Service
         {
             // Assert
             var service = new Formatter();
-            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly, false);
+            var task = new Tasks(null, "Test Task", "meow", Schedule.Monthly);
             task.MarkComplete();
             // Act
             var message = task.IsCompleted ? "Completed" : "";
-            var result = service.FormatTasks(task);
-            // Assert
-            Assert.Contains(message, result);
-        }
-        [Fact]
-        public void When_Tasks_Are_Repeated_Then_Formatter_Should_Display_That_Task_Is_Repeating()
-        {
-            // Arrange
-            var service = new Formatter();
-            var task = new Tasks(DateTime.Parse("Jul 11, 2025"), "Test", "Test", Schedule.Monthly, true, 7, DateTime.MinValue);
-            // Act
-            var message = task.IsRepeatable ? "Repeating Task" : "";
-            var result = service.FormatTasks(task);
-            // Assert
-            Assert.Contains(message, result);
-        }
-        [Fact]
-        public void When_Tasks_Are_Not_Repeated_Then_Formatter_Should_Display_Empty_Line()
-        {
-            // Arrange
-            var service = new Formatter();
-            var task = new Tasks(DateTime.Parse("Jul 11, 2025"), "Test", "Test", Schedule.Monthly, false);
-            // Act
-            var message = task.IsRepeatable ? "Repeat" : "Repeat: N/A";
-            var result = service.FormatTasks(task);
-            // Assert
-            Assert.Contains(message, result);
-        }
-        [Fact]
-        public void When_Tasks_Are_Repeating_With_End_Date_Then_Formatter_Should_Display_That_It_Was_Repeating_Until_That_Date()
-        {
-            // Arrange
-            var service = new Formatter();
-            var task = new Tasks(DateTime.Parse("Jul 11, 2025"), "Test", "Test", Schedule.Monthly, true, 7, DateTime.Parse("Aug 8, 2025"));
-            // Act
-            var message = task.IsRepeatable ? "Repeating until" : "";
             var result = service.FormatTasks(task);
             // Assert
             Assert.Contains(message, result);

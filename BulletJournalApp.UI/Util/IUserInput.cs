@@ -16,8 +16,5 @@ namespace BulletJournalApp.UI.Util
         public Schedule GetScheduleInput(string prompt);
         public TasksStatus GetTaskStatusInput(string prompt);
         public ItemStatus GetItemStatusInput(string prompt);
-        public bool GetBooleanInput(string prompt);
-        public int GetIntInput(string prompt);
-        public DateTime GetOptionalDateInput(string prompt);
     }
 }
