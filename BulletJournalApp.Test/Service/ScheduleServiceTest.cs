@@ -18,7 +18,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new ScheduleService(new Formatter(), new ConsoleLogger(), new FileLogger(), _taskService, _itemService);
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
             _taskService.AddTask(task1);
             // Act
             service.ChangeSchedule("Test 1", Entries.TASKS, Schedule.Daily);

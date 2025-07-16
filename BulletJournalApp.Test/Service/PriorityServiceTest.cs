@@ -17,7 +17,7 @@ namespace BulletJournalApp.Test.Service
             // Arrange
             var service1 = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
             var service2 = new PriorityService(service1, new ConsoleLogger(), new FileLogger(), new Formatter());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
             service1.AddTask(task1);
             // Act
             service2.ChangePriority("Test 1", Priority.Low);
