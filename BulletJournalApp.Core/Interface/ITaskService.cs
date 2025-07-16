@@ -15,7 +15,7 @@ namespace BulletJournalApp.Core.Interface
         public List<Tasks> ListIncompleteTasks();
         public Tasks FindTasksByTitle(string title);
         public void MarkTasksComplete(string title);
-        public void UpdateTask(string oldTitle, string newTitle, string newDescription, string newNote, DateTime? newDueDate);
+        public void UpdateTask(string oldTitle, string newTitle, string newDescription, string newNote, bool repeat, DateTime? newDueDate, int newRepeatDay = 7, DateTime newEndRepeatDate = new DateTime());
         public void DeleteTask(string title);
     }
 }

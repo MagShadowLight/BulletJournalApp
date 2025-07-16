@@ -20,8 +20,11 @@ namespace BulletJournalApp.Library
         public Category Category { get; set; }
         public TasksStatus Status { get; set; }
         public Schedule schedule { get; set; }
+        public bool IsRepeatable { get; set; }
+        public int RepeatDays { get; set; }
+        public DateTime EndRepeatDate { get; set; }
 
-        public Tasks(DateTime? dueDate, string title, string description, Schedule timely, Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
+        public Tasks(DateTime? dueDate, string title, string description, Schedule timely, bool isrepeatable, int repeatdays = 7, DateTime endRepeatDate = new DateTime(), Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
         {
             Validate(title, nameof(title));
             Validate(description, nameof(description));
@@ -36,9 +39,12 @@ namespace BulletJournalApp.Library
             Notes = notes;
             Category = category;
             IsCompleted = iscompleted;
+            IsRepeatable = isrepeatable;
+            RepeatDays = repeatdays;
+            EndRepeatDate = endRepeatDate;
         }
 
-        public void Update(DateTime? newDueDate, string newTitle, string newDescription, string newNote = "")
+        public void Update(DateTime? newDueDate, string newTitle, string newDescription, bool isrepeatable, string newNote = "", int repeatdays = 7, DateTime endrepeatdate = new DateTime())
         {
             Validate(newTitle, nameof(newTitle));
             Validate(newDescription, nameof(newDescription));
@@ -47,6 +53,9 @@ namespace BulletJournalApp.Library
             Description = newDescription;
             Notes = newNote;
             DueDate = newDueDate;
+            IsRepeatable = isrepeatable;
+            RepeatDays = repeatdays;
+            EndRepeatDate = endrepeatdate;
         }
         
         public void ChangePriority (Priority newpriority = Priority.Medium)
@@ -85,6 +94,20 @@ namespace BulletJournalApp.Library
         public void ChangeSchedule(Schedule timely)
         {
             schedule = timely;
+        }
+
+        public void RepeatTask()
+        {
+            var newDueDate = DueDate.Value;
+            newDueDate = newDueDate.AddDays(RepeatDays);
+            var remainder = EndRepeatDate.CompareTo(newDueDate);
+            if (remainder < 0 && EndRepeatDate != DateTime.MinValue)
+            {
+                IsRepeatable = false;
+                return;
+            }
+            DueDate = newDueDate;
+            IsCompleted = false;
         }
     }
 
