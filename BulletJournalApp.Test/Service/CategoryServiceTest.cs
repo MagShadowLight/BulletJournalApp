@@ -18,7 +18,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service2 = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var task = new Tasks(DateTime.Now, "Test", "Test", Schedule.Monthly);
+            var task = new Tasks(DateTime.Now, "Test", "Test", Schedule.Monthly, false);
             _taskService.AddTask(task);
             // Act // Assert
             Assert.Throws<Exception>(() => service2.ChangeCategory("", Entries.TASKS, Category.Home));

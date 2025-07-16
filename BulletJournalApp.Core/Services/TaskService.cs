@@ -64,13 +64,15 @@ namespace BulletJournalApp.Core.Services
             if (task == null)
                 throw new Exception("Cannot find task");
             task.IsCompleted = true;
+            if (task.IsRepeatable)
+                task.RepeatTask();
         }
-        public void UpdateTask(string oldTitle, string newTitle, string newDescription, string newNote, DateTime? newDueDate)
+        public void UpdateTask(string oldTitle, string newTitle, string newDescription, string newNote, bool repeat, DateTime? newDueDate, int newRepeatDay = 7, DateTime newEndRepeatDate = new DateTime())
         {
             var task = FindTasksByTitle(oldTitle);
             if (task == null)
                 throw new Exception("Cannot find task");
-            task.Update(newDueDate, newTitle, newDescription, newNote);
+            task.Update(newDueDate, newTitle, newDescription, repeat, newNote);
         }
     }
 }

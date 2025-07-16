@@ -106,7 +106,7 @@ namespace BulletJournalApp.Core.Services
             var category = (Category)Enum.Parse(typeof(Category), sr.ReadLine());
             var status = (TasksStatus)Enum.Parse(typeof(TasksStatus), sr.ReadLine());
             var schedule = (Schedule)Enum.Parse(typeof(Schedule), sr.ReadLine());
-            return new Tasks(dueDate, title, description, schedule, priority, category, notes, status, id, isCompleted);
+            return new Tasks(dueDate, title, description, schedule, false, 7, new DateTime(), priority, category, notes, status, id, isCompleted);
         }
 
         private static void WriteText(FileStream fs, string text)
