@@ -50,7 +50,7 @@ namespace BulletJournalApp.UI
                         _filelogger.Log("Shopping List Closed");
                         break;
                     case "0":
-                        _filelogger.Log("Quiting");
+                        _filelogger.Log("Quitting");
                         Console.WriteLine("Goodbye");
                         _filelogger.Log($"Exited Bullet Journal App at {DateTime.Now.ToString()}");
                         return;
