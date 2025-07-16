@@ -34,7 +34,22 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             // Act
-            using var input = new StringReader("1\nTest Task\nmeow\nJun 10, 2025\nL\nN\nM\n\n0\nN");
+            using var input = new StringReader("1\nTest Task\nmeow\nJun 10, 2025\nL\nN\nM\n\nN\n0\nN");
+            Console.SetIn(input);
+            taskManager.TaskManagerUI();
+            // Assert
+            taskMock.Verify(user => user.AddTask(It.Is<Tasks>(task => task.Title == "Test Task" && task.Description == "meow")), Times.Once());
+            //input.Close();
+            ResetReader();
+        }
+        [Fact]
+        public async void When_Tasks_Were_Added_With_Repeating_Date_Then_It_Should_Succeed()
+        {
+            // Arrange
+            var mockService = new Mock<ITaskService>();
+            var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
+            // Act
+            using var input = new StringReader("1\nTest Task\nmeow\nJun 10, 2025\nL\nN\nM\n\nY\n7\nJul 31, 2025\n0\nN");
             Console.SetIn(input);
             taskManager.TaskManagerUI();
             // Assert
@@ -49,8 +64,8 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test 1", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             // Act
@@ -70,9 +85,9 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test 1", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "mrow", Schedule.Monthly);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "mrrp", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "mrow", Schedule.Monthly, false);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "mrrp", Schedule.Monthly, false);
             task2.MarkComplete();
             tasks.Add(task1);
             tasks.Add(task2);
@@ -95,9 +110,9 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, Priority.Low);
-            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, Priority.Low);
-            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, Priority.Medium);
+            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low);
+            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low);
+            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
@@ -119,10 +134,10 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, Priority.Low, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, Priority.Low, Category.Personal);
-            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Home);
-            var task4 = new Tasks(DateTime.Now, "Test task 4", "mriaw", Schedule.Monthly, Priority.Medium, Category.Financial);
+            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.Personal);
+            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.Personal);
+            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
+            var task4 = new Tasks(DateTime.Now, "Test task 4", "mriaw", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Financial);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
@@ -171,10 +186,10 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, Priority.Low, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, Priority.Low, Category.Personal);
-            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Home);
-            var task4 = new Tasks(DateTime.Now, "Test task 4", "mriaw", Schedule.Monthly, Priority.Medium, Category.Financial);
+            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.Personal);
+            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.Personal);
+            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
+            var task4 = new Tasks(DateTime.Now, "Test task 4", "mriaw", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Financial);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
@@ -197,10 +212,10 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, Priority.Low, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, Priority.Low, Category.Personal);
-            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Home);
-            var task4 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Home);
+            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.Personal);
+            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low, Category.Personal);
+            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
+            var task4 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
             task1.ChangeStatus(TasksStatus.Overdue);
             task3.ChangeStatus(TasksStatus.Overdue);
             task4.ChangeStatus(TasksStatus.Late);
@@ -316,9 +331,9 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Daily);
-            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Daily);
+            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Daily, false);
+            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Daily, false);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
@@ -338,7 +353,7 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
-            var task = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
+            var task = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
             taskMock.Setup(service => service.MarkTasksComplete("Test Task"));
             // Act
             using var userInput = new StringReader("8\nTest Task\n0\nN\n");
@@ -372,9 +387,9 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, new UserInput());
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task 1", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Meow", "meow", Schedule.Monthly);
-            var task3 = new Tasks(DateTime.Now, "Test Task 3", "meow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test Task 1", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Meow", "meow", Schedule.Monthly, false);
+            var task3 = new Tasks(DateTime.Now, "Test Task 3", "meow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
@@ -410,17 +425,17 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            taskMock.Setup(service => service.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", DateTime.Parse("Jun 6, 2025")));
+            taskMock.Setup(service => service.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, DateTime.Parse("Jun 6, 2025"), default, default));
             // Act
-            using var userInput = new StringReader("10\nTest Task 2\nUpdated Task\nUpdated Description\nUpdated Note\nJun 6, 2025\n0\nN\n");
+            using var userInput = new StringReader("10\nTest Task 2\nUpdated Task\nUpdated Description\nUpdated Note\nJun 6, 2025\n\n0\nN\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            taskMock.Verify(user => user.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", DateTime.Parse("Jun 6, 2025")), Times.Once);
+            taskMock.Verify(user => user.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, DateTime.Parse("Jun 6, 2025"), 7, default), Times.Once);
             //userInput.Close();
             ResetReader();
         }
@@ -431,17 +446,17 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            taskMock.Setup(service => service.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", null));
+            taskMock.Setup(service => service.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, null, default, default));
             // Act
-            using var userInput = new StringReader("10\nTest Task 2\nUpdated Task\nUpdated Description\nUpdated Note\n\n0\nN\n");
+            using var userInput = new StringReader("10\nTest Task 2\nUpdated Task\nUpdated Description\nUpdated Note\n\n\n0\nN\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            taskMock.Verify(user => user.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", null), Times.Once);
+            taskMock.Verify(user => user.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, null, 7, default), Times.Once);
             //userInput.Close();
             ResetReader();
         }
@@ -473,8 +488,8 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             priorityMock.Setup(service => service.ChangePriority("Test Task 2", Priority.High));
@@ -514,8 +529,8 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             statusMock.Setup(service => service.ChangeStatus("Test Task 1", TasksStatus.InProgress));
@@ -556,8 +571,8 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             categoryMock.Setup(service => service.ChangeCategory("Test Task 2", Entries.TASKS, Category.Education));
@@ -598,8 +613,8 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             scheduleMock.Setup(service => service.ChangeSchedule("Test Task", Entries.TASKS, Schedule.Yearly));
@@ -640,10 +655,10 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly);
-            var task3 = new Tasks(DateTime.Now, "Test Task 3", "mrrp", Schedule.Daily);
-            var task4 = new Tasks(DateTime.Now, "Test Task 4", "mriaw", Schedule.Yearly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
+            var task3 = new Tasks(DateTime.Now, "Test Task 3", "mrrp", Schedule.Daily, false);
+            var task4 = new Tasks(DateTime.Now, "Test Task 4", "mriaw", Schedule.Yearly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
@@ -693,8 +708,8 @@ namespace BulletJournalApp.Test.UI
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var path = Path.Combine("test");
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             fileservice.SaveTasks(path, tasks);
@@ -715,8 +730,8 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             fileMock.Setup(service => service.SaveTasks(It.IsAny<string>(), It.IsAny<List<Tasks>>()));
@@ -737,8 +752,8 @@ namespace BulletJournalApp.Test.UI
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
 
             var tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly);
+            var task1 = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
             fileMock.Setup(service => service.SaveTasks(It.IsAny<string>(), It.IsAny<List<Tasks>>()));
@@ -900,9 +915,9 @@ namespace BulletJournalApp.Test.UI
             var mockService = new Mock<ITaskService>();
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             List<Tasks> tasks = new List<Tasks>();
-            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, Priority.Low);
-            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, Priority.Low);
-            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, Priority.Medium);
+            var task1 = new Tasks(DateTime.Now, "Test task 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low);
+            var task2 = new Tasks(DateTime.Now, "Test task 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Low);
+            var task3 = new Tasks(DateTime.Now, "Test task 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);

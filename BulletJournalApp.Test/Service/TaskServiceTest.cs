@@ -18,8 +18,8 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false);
             task2.MarkComplete();
             // Act
             service.AddTask(task1);
@@ -35,9 +35,9 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false);
+            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false);
             // Act
             service.AddTask(task1);
             service.AddTask(task2);
@@ -65,10 +65,10 @@ namespace BulletJournalApp.Test.Service
             // Arrange
             var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
             var priorityservice = new PriorityService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly);
-            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false);
+            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false);
+            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly, false);
             taskservice.AddTask(task1);
             taskservice.AddTask(task2);
             taskservice.AddTask(task3);
@@ -87,9 +87,9 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var categoryservice = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.None);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.None);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.None);
+            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.None);
+            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.None);
+            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.None);
             _taskService.AddTask(task1);
             _taskService.AddTask(task2);
             _taskService.AddTask(task3);
@@ -109,9 +109,9 @@ namespace BulletJournalApp.Test.Service
             // Arrange
             var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
             var statusservice = new TasksStatusService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.Home);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Personal);
+            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
+            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
+            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
             taskservice.AddTask(task1);
             taskservice.AddTask(task2);
             taskservice.AddTask(task3);
@@ -129,10 +129,10 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var scheduleservice = new ScheduleService(new Formatter(), new ConsoleLogger(), new FileLogger(), _taskService, _itemService);
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, Priority.Medium, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.Home);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Personal);
-            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly, Priority.Medium, Category.Personal);
+            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
+            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
+            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
+            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
             _taskService.AddTask(task1);
             _taskService.AddTask(task2);
             _taskService.AddTask(task3);
@@ -151,10 +151,10 @@ namespace BulletJournalApp.Test.Service
         {
             // Assert
             var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Weekly, Priority.Medium, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, Priority.Medium, Category.Home);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, Priority.Medium, Category.Personal);
-            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Weekly, Priority.Medium, Category.Personal);
+            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Weekly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
+            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
+            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
+            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Weekly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
             service.AddTask(task1);
             service.AddTask(task2);
             service.AddTask(task3);
@@ -170,7 +170,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test", "Test", Schedule.Monthly);
+            var task1 = new Tasks(DateTime.Now, "Test", "Test", Schedule.Monthly, false);
             // Act
             service.AddTask(task1);
             var task = service.FindTasksByTitle("Test");
@@ -183,20 +183,35 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily, false);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly, false);
+            var repeatingTask = new Tasks(DateTime.Today, "Repeating Test Task", "Test", Schedule.Monthly, true, 7, new DateTime(), Priority.Medium, Category.None, "", TasksStatus.ToDo, 0, false);
+            var repeatingTaskWithEnd = new Tasks(DateTime.Today, "RepeatingTestTaskWithEnd", "Test", Schedule.Monthly, true, 7, DateTime.Today.AddDays(28), Priority.Medium, Category.None, "", TasksStatus.ToDo, 0, false);
             service.AddTask(task1);
             service.AddTask(task2);
             service.AddTask(task3);
+            service.AddTask(repeatingTask);
+            service.AddTask(repeatingTaskWithEnd);
             // Act
             service.MarkTasksComplete("Test 2");
+            service.MarkTasksComplete("Repeating Test Task");
+            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
+            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
+            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
+            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
+            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
             var allTasks = service.ListAllTasks();
             var incompleteTasks = service.ListIncompleteTasks();
             // Assert
             Assert.True(task2.IsCompleted);
-            Assert.Equal(3, allTasks.Count);
-            Assert.Equal(2, incompleteTasks.Count);
+            Assert.Equal(5, allTasks.Count);
+            Assert.Equal(3, incompleteTasks.Count);
+            Assert.Equal(DateTime.Today.AddDays(7), repeatingTask.DueDate);
+            Assert.False(repeatingTask.IsCompleted);
+            Assert.Equal(repeatingTaskWithEnd.EndRepeatDate, repeatingTaskWithEnd.DueDate);
+            Assert.True(repeatingTaskWithEnd.IsCompleted);
+            Assert.False(repeatingTaskWithEnd.IsRepeatable);
             Assert.Throws<Exception>(() => service.MarkTasksComplete("Made Up Test"));
         }
         [Fact]
@@ -204,29 +219,29 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily, false);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly, false);
             service.AddTask(task1);
             service.AddTask(task2);
             service.AddTask(task3);
             // Act
-            service.UpdateTask("Test 2", "Updated Test", "Test with Updated Date", "", DateTime.Now);
+            service.UpdateTask("Test 2", "Updated Test", "Test with Updated Date", "", false, DateTime.Now);
             var tasks = service.ListAllTasks();
             var updatedTask = service.FindTasksByTitle("Updated Test");
             // Assert
             Assert.Contains("Updated Test", updatedTask.Title);
             Assert.Equal(3, tasks.Count);
-            Assert.Throws<Exception>(() => service.UpdateTask("Fake Test", "Test", "Test", "", DateTime.Now));
+            Assert.Throws<Exception>(() => service.UpdateTask("Fake Test", "Test", "Test", "", false, DateTime.Now));
         }
         [Fact]
         public void When_Tasks_Were_Deleted_Then_It_Should_Succeed()
         {
             // Arrange
             var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily, false);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly, false);
             service.AddTask(task1);
             service.AddTask(task2);
             service.AddTask(task3);
