@@ -99,8 +99,6 @@ namespace BulletJournalApp.Library
         public void RepeatTask()
         {
             var newDueDate = DueDate.Value;
-            if (newDueDate.Equals(null))
-                return;
             newDueDate = newDueDate.AddDays(RepeatDays);
             var remainder = EndRepeatDate.CompareTo(newDueDate);
             if (remainder < 0 && EndRepeatDate != DateTime.MinValue)

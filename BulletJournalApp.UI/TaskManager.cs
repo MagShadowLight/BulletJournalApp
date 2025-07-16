@@ -431,9 +431,6 @@ namespace BulletJournalApp.UI
                     newRepeat = temptask.IsRepeatable;
                     newRepeatDay = temptask.RepeatDays;
                     newEndRepeatDate = temptask.EndRepeatDate;
-                } else
-                {
-                    newRepeat = false;
                 }
             }
             try

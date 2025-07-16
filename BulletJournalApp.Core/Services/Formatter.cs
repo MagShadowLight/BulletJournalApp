@@ -32,7 +32,7 @@ namespace BulletJournalApp.Core.Services
                 $"- Category: {task.Category.ToString()}\n" +
                 $"- Note: {task.Notes}\n" +
                 $"{(task.IsCompleted ? "Completed": "Incomplete")}\n" +
-                $"{(task.IsRepeatable ? (task.EndRepeatDate == DateTime.MinValue ? "Repeating Task" : $"Repeating until {task.EndRepeatDate}") : "")}";
+                $"{(task.IsRepeatable ? (task.EndRepeatDate == DateTime.MinValue ? "Repeating Task" : $"Repeating until {task.EndRepeatDate}") : "Repeat: N/A")}";
         }
     }
 }

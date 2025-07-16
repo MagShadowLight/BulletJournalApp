@@ -113,5 +113,41 @@ namespace BulletJournalApp.Test.Service
             // Assert
             Assert.Contains(message, result);
         }
+        [Fact]
+        public void When_Tasks_Are_Repeated_Then_Formatter_Should_Display_That_Task_Is_Repeating()
+        {
+            // Arrange
+            var service = new Formatter();
+            var task = new Tasks(DateTime.Parse("Jul 11, 2025"), "Test", "Test", Schedule.Monthly, true, 7, DateTime.MinValue);
+            // Act
+            var message = task.IsRepeatable ? "Repeating Task" : "";
+            var result = service.FormatTasks(task);
+            // Assert
+            Assert.Contains(message, result);
+        }
+        [Fact]
+        public void When_Tasks_Are_Not_Repeated_Then_Formatter_Should_Display_Empty_Line()
+        {
+            // Arrange
+            var service = new Formatter();
+            var task = new Tasks(DateTime.Parse("Jul 11, 2025"), "Test", "Test", Schedule.Monthly, false);
+            // Act
+            var message = task.IsRepeatable ? "Repeat" : "Repeat: N/A";
+            var result = service.FormatTasks(task);
+            // Assert
+            Assert.Contains(message, result);
+        }
+        [Fact]
+        public void When_Tasks_Are_Repeating_With_End_Date_Then_Formatter_Should_Display_That_It_Was_Repeating_Until_That_Date()
+        {
+            // Arrange
+            var service = new Formatter();
+            var task = new Tasks(DateTime.Parse("Jul 11, 2025"), "Test", "Test", Schedule.Monthly, true, 7, DateTime.Parse("Aug 8, 2025"));
+            // Act
+            var message = task.IsRepeatable ? "Repeating until" : "";
+            var result = service.FormatTasks(task);
+            // Assert
+            Assert.Contains(message, result);
+        }
     }
 }
