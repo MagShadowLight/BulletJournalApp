@@ -422,8 +422,11 @@ namespace BulletJournalApp.UI
             {
                 temptask = _taskservice.FindTasksByTitle(oldtitle);
                 newRepeat = _userinput.GetBooleanInput("Do you want to make this task a repeat? (Y)es, (N)o, or leave it blank to keep it the same. ");
-                newRepeatDay = _userinput.GetIntInput("How many Days per task completed do you want to make it a repeat? ");
-                newEndRepeatDate = _userinput.GetOptionalDateInput("Enter the date to end the repeat: ");
+                if (newRepeat)
+                {
+                    newRepeatDay = _userinput.GetIntInput("How many Days per task completed do you want to make it a repeat? ");
+                    newEndRepeatDate = _userinput.GetOptionalDateInput("Enter the date to end the repeat: ");
+                }
             } catch (Exception ex)
             {
                 if (temptask != null)
