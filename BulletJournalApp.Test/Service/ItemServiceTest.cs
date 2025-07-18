@@ -17,9 +17,9 @@ namespace BulletJournalApp.Test.Service
             // Arrange
             List<Items> items;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test 2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test 3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test 2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test 3", "Test", Schedule.Monthly, 1);
             // Act
             service.AddItems(item1);
             service.AddItems(item2);
@@ -30,8 +30,8 @@ namespace BulletJournalApp.Test.Service
             Assert.Contains(item1, items);
             Assert.Contains(item2, items);
             Assert.Contains(item3, items);
-            Assert.Throws<ArgumentNullException>(() => service.AddItems(new Items("", "Test", Schedule.Monthly)));
-            Assert.Throws<Exception>(() => service.AddItems(new Items("Test", "Test", Schedule.Monthly)));
+            Assert.Throws<ArgumentNullException>(() => service.AddItems(new Items("", "Test", Schedule.Monthly, 1)));
+            Assert.Throws<Exception>(() => service.AddItems(new Items("Test", "Test", Schedule.Monthly, 1)));
         }
         [Fact]
         public void When_Items_Were_Marked_As_Owned_Then_It_Should_Return_Only_Owned_Items()
@@ -40,9 +40,9 @@ namespace BulletJournalApp.Test.Service
             List<Items> AllItems;
             List<Items> OwnedItems;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);
@@ -65,9 +65,9 @@ namespace BulletJournalApp.Test.Service
             List<Items> AllItems;
             List<Items> UnOwnedItems;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);
@@ -89,9 +89,9 @@ namespace BulletJournalApp.Test.Service
             // Assert
             List<Items> items;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);
@@ -113,9 +113,9 @@ namespace BulletJournalApp.Test.Service
             // Assert
             List<Items> items;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);

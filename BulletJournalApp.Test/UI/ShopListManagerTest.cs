@@ -45,9 +45,9 @@ namespace BulletJournalApp.Test.UI
         public async void When_User_Selected_To_List_All_Items_Then_It_Should_Return_Lists_Of_Items()
         {
             // Arrange
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -67,9 +67,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             item2.MarkAsBought();
             var items = new List<Items>();
             items.Add(item1);
@@ -89,9 +89,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             item2.MarkAsBought();
             var items = new List<Items>();
             items.Add(item1);
@@ -112,9 +112,9 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var schedule = Schedule.Daily;
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Daily);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Daily, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -134,9 +134,9 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var status = ItemStatus.Delayed;
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly, 0, Category.None, ItemStatus.Delayed);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.Delayed);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -156,9 +156,9 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var category = Category.Financial;
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly, 0, Category.Financial);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1, 0, Category.Financial);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -177,9 +177,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly, 0, Category.Financial);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1, 0, Category.Financial);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -198,9 +198,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly, 0, Category.Financial);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1, 0, Category.Financial);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -219,9 +219,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly, 0, Category.Financial);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1, 0, Category.Financial);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -241,9 +241,9 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var schedule = Schedule.Weekly;
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -263,9 +263,9 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var status = ItemStatus.Delayed;
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -285,9 +285,9 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var category = Category.Financial;
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -306,9 +306,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -327,9 +327,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var shopListManager = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);
@@ -350,9 +350,9 @@ namespace BulletJournalApp.Test.UI
             var taskMock = new Mock<ITaskService>();
             var shopListManager = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, UserInput);
             var fileService = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), taskMock.Object, new ItemService(consoleLoggerMock.Object, fileLoggerMock.Object));
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             var items = new List<Items>();
             items.Add(item1);
             items.Add(item2);

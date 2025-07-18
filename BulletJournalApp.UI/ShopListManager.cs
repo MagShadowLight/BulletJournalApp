@@ -490,7 +490,7 @@ namespace BulletJournalApp.UI
                 var schedule = _userinput.GetScheduleInput("Enter the Schedule. Use (D)aily, (W)eekly, (M)onthly, (Q)uarterly, or (Y)early. ");
                 var category = _userinput.GetCategoryInput("Enter the Category. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inanical, or (T)ransportion. ");
                 var note = _userinput.GetStringInput("Enter the note: ");
-                _itemService.AddItems(new Items(name, description, schedule, 0, category, ItemStatus.NotBought, note, DateTime.Now));
+                _itemService.AddItems(new Items(name, description, schedule, 1, 0, category, ItemStatus.NotBought, note, DateTime.Now));
                 Console.WriteLine("Item have been added successfully");
                 _filelogger.Log("Item added successfully");
             } catch (Exception ex)

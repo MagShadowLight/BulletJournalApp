@@ -164,7 +164,7 @@ namespace BulletJournalApp.Core.Services
             var note = sr.ReadLine();
             var dateAdded = DateTime.TryParse(sr.ReadLine(), out DateTime parsedAddedDate) ? parsedAddedDate : DateTime.MinValue;
             var dateBought = DateTime.TryParse(sr.ReadLine(), out DateTime parsedBoughtDate) ? parsedBoughtDate : DateTime.MinValue;
-            return new Items(name, description, schedule, id, category, status, note, dateAdded, dateBought);
+            return new Items(name, description, schedule, id, 1, category, status, note, dateAdded, dateBought);
         }
 
         private static void WriteText(FileStream fs, string text)
