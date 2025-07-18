@@ -322,6 +322,50 @@ namespace BulletJournalApp.Test.UI
             itemMock.Verify(user => user.DeleteItems("Test2"), Times.Once);
             ResetReader();
         }
+        [Fact]
+        public void When_User_Selected_To_Save_Items_List_Then_Items_Should_Be_Saved()
+        {
+            // Arrange
+            var shopListManager = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
+            var item1 = new Items("Test", "Test", Schedule.Monthly);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var items = new List<Items>();
+            items.Add(item1);
+            items.Add(item2);
+            items.Add(item3);
+            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.ITEMS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()));
+            // Act
+            using var input = new StringReader("11\n1\nFakeItem\n0");
+            Console.SetIn(input);
+            shopListManager.UI();
+            // Assert
+            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.ITEMS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()), Times.Once);
+            ResetReader();
+        }
+        [Fact]
+        public void When_User_Selected_To_Load_Items_Then_Items_Should_Be_Loaded()
+        {
+            // Assert
+            var taskMock = new Mock<ITaskService>();
+            var shopListManager = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, UserInput);
+            var fileService = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), taskMock.Object, new ItemService(consoleLoggerMock.Object, fileLoggerMock.Object));
+            var item1 = new Items("Test", "Test", Schedule.Monthly);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var items = new List<Items>();
+            items.Add(item1);
+            items.Add(item2);
+            items.Add(item3);
+            fileService.SaveFunction("Test", Entries.ITEMS, null, items);
+            fileMock.Setup(service => service.LoadFunction(It.IsAny<string>(), Entries.ITEMS));
+            // Act
+            using var input = new StringReader("11\n2\nTest\n0");
+            Console.SetIn(input);
+            shopListManager.UI();
+            // Assert
+            fileMock.Verify(user => user.LoadFunction(It.IsAny<string>(), Entries.ITEMS), Times.Once);
+        }
         public void ResetReader()
         {
             Console.SetIn(new StreamReader(Console.OpenStandardInput()));
