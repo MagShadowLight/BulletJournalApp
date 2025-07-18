@@ -31,7 +31,7 @@ namespace BulletJournalApp.Library
             Status = status;
             Notes = note;
             DateAdded = dateadded ?? DateTime.Today;
-            DateBought = datebought;
+            DateBought = datebought ?? DateTime.MinValue;
         }
 
         public void Update(string newname, string newdescription, string? newnote)

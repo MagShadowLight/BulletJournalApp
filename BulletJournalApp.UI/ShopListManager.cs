@@ -1,4 +1,5 @@
 ﻿using BulletJournalApp.Core.Interface;
+using BulletJournalApp.Core.Services;
 using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
 using BulletJournalApp.UI.Util;
@@ -56,7 +57,7 @@ namespace BulletJournalApp.UI
                 Console.WriteLine("8. Update Items");
                 Console.WriteLine("9. Change Items Status, Category, or Schedule");
                 Console.WriteLine("10. Delete Items");
-                Console.WriteLine("11. Load Items");
+                Console.WriteLine("11. File Management Options");
                 Console.WriteLine("0. Exit");
                 Console.Write("Choose your option: ");
                 var input = Console.ReadLine();
@@ -103,10 +104,10 @@ namespace BulletJournalApp.UI
                         DeleteItem();
                         break;
                     case "11":
-                        _filelogger.Log("Loading item");
-                        _consolelogger.Warn("It's not ready yet");
-                        _filelogger.Log("This functionality is not ready");
-                        //LoadItem();
+                        _filelogger.Log("Opening the file management");
+                        
+                        _filelogger.Warn ("Work in Progress");
+                        FileManageOption();
                         break;
                     case "0":
                         _filelogger.Log("Closing Shopping List Manager");
@@ -118,6 +119,71 @@ namespace BulletJournalApp.UI
                         _filelogger.Error("Invalid choice. Please try again with different option.");
                         break;
                 }
+            }
+        }
+
+        private void FileManageOption()
+        {
+            Console.WriteLine("Which option do you want?");
+            Console.WriteLine("1. Save");
+            Console.WriteLine("2. Load");
+            var input = _userinput.GetIntInput("Choose an Option: ");
+            switch (input)
+            {
+                case 1:
+                    _filelogger.Log("Saving items");
+                    try
+                    {
+                        SaveItems();
+                    } catch (Exception ex)
+                    {
+                        _consolelogger.Error(ex.Message);
+                        _filelogger.Error(ex.Message);
+                    }
+                    break;
+                case 2:
+                    _filelogger.Log("Loading items");
+                    try
+                    {
+                        LoadItem();
+                    } catch (Exception ex)
+                    {
+                        _consolelogger.Error(ex.Message);
+                        _filelogger.Error(ex.Message);
+                    }
+                    break;
+                default:
+                    _consolelogger.Error("Invalid choice. Try again");
+                    _filelogger.Error("Invalid choice. Try again");
+                    break;
+            }
+        
+        }
+
+        private void SaveItems()
+        {
+            var filename = _userinput.GetStringInput("What the name of the file you want (without extension): ");
+            Console.WriteLine("Creating File");
+            string path = Path.Combine("Data", Entries.ITEMS.ToString(), $"{filename}.txt");
+            if (File.Exists(path))
+            {
+                Console.Write($"Are you sure you want to overwrite {filename}.txt?");
+                var overwrite = _userinput.GetStringInput(" (Y)es or (N)o: ").ToUpper();
+                if (overwrite != "Y")
+                    throw new Exception("Cancelled to override tasks");
+            }
+            _filelogger.Log($"Saving to {filename}");
+            try
+            {
+                List<Items> items = _itemService.GetAllItems();
+                _fileservice.SaveFunction(filename, Entries.ITEMS, null, items);
+                _filelogger.Log("File have successfully saved");
+                _consolelogger.Log($"File: {filename} have successfully saved");
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
             }
         }
 
@@ -137,7 +203,16 @@ namespace BulletJournalApp.UI
 
         private void LoadItem()
         {
-            throw new NotImplementedException();
+            var filename = _userinput.GetStringInput("Enter the name of the file (without extension): ");
+            string path = Path.Combine("Data", Entries.ITEMS.ToString(), $"{filename}.txt");
+            if (!File.Exists(path))
+            {
+                throw new Exception("File not found. Invalid file name. Try again.");
+            }
+            _filelogger.Log($"Loading items from {filename}");
+            _fileservice.LoadFunction(filename, Entries.ITEMS);
+            _consolelogger.Log("Items loaded successfully");
+            _filelogger.Log("Items loaded successfully");
         }
 
         private void DeleteItem()

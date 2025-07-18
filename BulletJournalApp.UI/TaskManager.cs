@@ -530,7 +530,7 @@ namespace BulletJournalApp.UI
         {
             var filename = _userinput.GetStringInput("Enter the file name of the Tasks (without extension): ");
             Console.WriteLine("Creating File");
-            string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            string path = Path.Combine("Data", Entries.TASKS.ToString(), $"{filename}.txt");
             if (File.Exists(path))
             {
                 Console.Write($"Are you sure you want to overwrite {filename}.txt?");
@@ -542,7 +542,7 @@ namespace BulletJournalApp.UI
             try
             {
                 List<Tasks> tasks = _taskservice.ListAllTasks();
-                _fileservice.SaveTasks(filename, tasks);
+                _fileservice.SaveFunction(filename, Entries.TASKS, tasks, null);
                 _filelogger.Log("File have successfully saved");
                 _consolelogger.Log($"File: {filename} have successfully saved");
             } catch (Exception ex)
@@ -554,13 +554,13 @@ namespace BulletJournalApp.UI
         public void LoadTask()
         {
             var filename = _userinput.GetStringInput("Enter the name of the file (without extension): ");
-            string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            string path = Path.Combine("Data", Entries.TASKS.ToString(), $"{filename}.txt");
             if (!File.Exists(path))
             {
                 throw new Exception("File not found. Invalid file name. Try again.");
             }
             _filelogger.Log($"Loading tasks from {filename}");
-            _fileservice.LoadTasks(filename);
+            _fileservice.LoadFunction(filename, Entries.TASKS);
             _consolelogger.Log("Tasks loaded successfully");
             _filelogger.Log("Tasks loaded successfully");
         }

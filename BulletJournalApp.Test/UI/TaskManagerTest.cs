@@ -27,6 +27,8 @@ namespace BulletJournalApp.Test.UI
         private Mock<ITaskService> taskMock = new();
         private Mock<UserInput> inputMock = new();
         private UserInput userinput = new UserInput();
+        private Mock<IItemService> itemMock = new();
+        private ItemService itemService = new ItemService(new ConsoleLogger(), new FileLogger());
         [Fact]
         public async void When_Tasks_Were_Added_Then_It_Should_Succeed()
         {
@@ -704,7 +706,7 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var mockService = new Mock<ITaskService>();
             var service =  new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var fileservice = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), service);
+            var fileservice = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), service, itemService);
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var path = Path.Combine("test");
             var tasks = new List<Tasks>();
@@ -712,14 +714,14 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            fileservice.SaveTasks(path, tasks);
-            fileMock.Setup(service => service.LoadTasks("test"));
+            fileservice.SaveFunction(path, Entries.TASKS, tasks, null);
+            fileMock.Setup(service => service.LoadFunction("test", Entries.TASKS));
             // Act
             using var userInput = new StringReader("16\ntest\n0\nN\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            fileMock.Verify(user => user.LoadTasks(It.IsAny<string>()), Times.Once);
+            fileMock.Verify(user => user.LoadFunction(It.IsAny<string>(), Entries.TASKS), Times.Once);
             //userInput.Close();
             ResetReader();
         }
@@ -734,13 +736,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            fileMock.Setup(service => service.SaveTasks(It.IsAny<string>(), It.IsAny<List<Tasks>>()));
+            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()));
             // Act
             using var userInput = new StringReader("0\nY\ntest\nY\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            fileMock.Verify(user => user.SaveTasks(It.IsAny<string>(), It.IsAny<List<Tasks>>()), Times.Once);
+            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()), Times.Once);
             //userInput.Close();
             ResetReader();
         }
@@ -756,13 +758,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            fileMock.Setup(service => service.SaveTasks(It.IsAny<string>(), It.IsAny<List<Tasks>>()));
+            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()));
             // Act
             using var userInput = new StringReader("0\nC\n0\nN\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            fileMock.Verify(user => user.SaveTasks(It.IsAny<string>(), It.IsAny<List<Tasks>>()), Times.Never);
+            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()), Times.Never);
             //userInput.Close();
             ResetReader();
         }

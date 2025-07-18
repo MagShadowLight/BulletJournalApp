@@ -1,4 +1,5 @@
 ﻿using BulletJournalApp.Library;
+using BulletJournalApp.Library.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace BulletJournalApp.Core.Interface
 {
     public interface IFileService
     {
-        public void SaveTasks(string filename, List<Tasks> tasks);
-        public void LoadTasks(string filename);
+        public void SaveFunction(string filename, Entries entries, List<Tasks>? tasks, List<Items>? items);
+        public void LoadFunction(string filename, Entries entries);
     }
 }

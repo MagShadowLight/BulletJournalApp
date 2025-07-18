@@ -84,12 +84,12 @@ namespace BulletJournalApp.Test.Models
             Assert.Equal(DateTime.Parse("Jun 20, 2025"), item.DateBought);
         }
         [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_DateBought_As_Null()
+        public void When_Creating_An_Items_Then_It_Should_Initalize_DateBought_As_Min_Value()
         {
             // Arrange
             Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, Category.Works, ItemStatus.Bought, "Test note", DateTime.Parse("Jun 10, 2025"));
             // Act // Assert
-            Assert.Null(item.DateBought);
+            Assert.Equal(DateTime.MinValue, item.DateBought);
         }
         [Fact]
         public void When_There_Is_Items_Then_It_Should_Update_With_New_Name()
