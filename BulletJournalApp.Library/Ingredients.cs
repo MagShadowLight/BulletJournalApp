@@ -48,14 +48,14 @@ namespace BulletJournalApp.Library
 
         public void ValidateQuantity(int quantity)
         {
-            if (quantity < 0)
+            if (quantity <= 0)
                 throw new ArgumentOutOfRangeException($"Invalid quantity number. {quantity} is not greater than zero");
         }
 
         public void ValidatePrice(double price)
         {
             if (price < 0)
-                throw new ArgumentOutOfRangeException($"Invalid price. {price} is not greater than zero");
+                throw new ArgumentOutOfRangeException($"Invalid price. {price} must be greater than zero or equal to zero");
         }
         public void ValidateMeasurements(string measurements)
         {
@@ -74,7 +74,8 @@ namespace BulletJournalApp.Library
                 !measurements.Contains("pints") &&
                 !measurements.Contains("cup") &&
                 !measurements.Contains("cups") &&
-                !measurements.Contains("liter")
+                !measurements.Contains("liter") &&
+                !measurements.Contains("N/A")
                 )
             {
                 throw new FormatException($"Invalid measurement. {measurements} is not valid measurement");
