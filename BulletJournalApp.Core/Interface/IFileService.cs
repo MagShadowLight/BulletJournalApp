@@ -10,7 +10,7 @@ namespace BulletJournalApp.Core.Interface
 {
     public interface IFileService
     {
-        public void SaveFunction(string filename, Entries entries, List<Tasks>? tasks, List<Items>? items);
+        public void SaveFunction(string filename, Entries entries, List<Tasks>? tasks, List<Items>? items, List<Meals>? meals);
         public void LoadFunction(string filename, Entries entries);
     }
 }

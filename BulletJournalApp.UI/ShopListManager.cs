@@ -176,7 +176,7 @@ namespace BulletJournalApp.UI
             try
             {
                 List<Items> items = _itemService.GetAllItems();
-                _fileservice.SaveFunction(filename, Entries.ITEMS, null, items);
+                _fileservice.SaveFunction(filename, Entries.ITEMS, null, items, null);
                 _filelogger.Log("File have successfully saved");
                 _consolelogger.Log($"File: {filename} have successfully saved");
             }

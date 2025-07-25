@@ -201,5 +201,46 @@ namespace BulletJournalApp.Test.UI
             // Assert
             timeOfDayMock.Verify(user => user.GetMealsByTimeOfDay(TimeOfDay.Lunch), Times.Once);
         }
+        [Fact]
+        public void When_User_Selected_To_Save_Meals_Lists_Then_It_Should_Be_Saved()
+        {
+            // Arrange
+            List<Meals> meals = new List<Meals>();
+            var ingredients = SetIngredientsList();
+            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
+            meals.Add(mealTest);
+            var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            // Act
+            mealMock.Setup(service => service.GetAllMeals()).Returns(meals);
+            fileMock.Setup(user => user.SaveFunction("Faketest", Entries.MEALS, null, null, meals));
+            using var input = new StringReader("7\n1\nFaketest\n0");
+            Console.SetIn(input);
+            ui.MealPlanUI();
+            // Assert
+            fileMock.Verify(user => user.SaveFunction("Faketest", Entries.MEALS, null, null, meals), Times.Once);
+        }
+        [Fact]
+        public void When_User_Selected_To_Load_Meals_Lists_Then_It_Should_Be_Loaded()
+        {
+            // Arrange
+            List<Meals> meals = new List<Meals>();
+            var ingredients = SetIngredientsList();
+            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
+            meals.Add(mealTest);
+            var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            var taskservice = new Mock<ITaskService>();
+            var itemservice = new Mock<IItemService>();
+            var service = new FileService(formatterMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, taskservice.Object, itemservice.Object, mealMock.Object);
+            service.SaveFunction("test", Entries.MEALS, null, null, meals);
+            // Act
+            mealMock.Setup(service => service.GetAllMeals()).Returns(meals);
+            fileMock.Setup(user => user.LoadFunction("test", Entries.MEALS));
+            
+            using var input = new StringReader("7\n2\ntest\n0");
+            Console.SetIn(input);
+            ui.MealPlanUI();
+            // Assert
+            fileMock.Verify(user => user.LoadFunction("test", Entries.MEALS), Times.Once);
+        }
     }
 }

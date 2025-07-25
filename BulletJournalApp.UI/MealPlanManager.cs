@@ -99,7 +99,65 @@ namespace BulletJournalApp.UI
 
         public void MealFileManager()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Which option do you want: ");
+            Console.WriteLine("1. Save ");
+            Console.WriteLine("2. Load. ");
+            Console.Write("Choose an option: ");
+            var input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    SaveMeals();
+                    break;
+                case "2":
+                    LoadMeals();
+                    break;
+                default:
+                    _consolelogger.Error("Invalid choice. Try again.");
+                    _filelogger.Error("Invalid choice. Try again.");
+                    break;
+            }
+        }
+
+        private void LoadMeals()
+        {
+            var filename = _userInput.GetStringInput("Enter the name of the file (without extension): ");
+            string path = Path.Combine("Data", Entries.MEALS.ToString(), $"{filename}.txt");
+            if (!File.Exists(path))
+            {
+                throw new Exception("File not found. Invalid file name. Try again.");
+            }
+            _filelogger.Log($"Loading items from {filename}");
+            _fileservice.LoadFunction(filename, Entries.MEALS);
+            _consolelogger.Log("Items loaded successfully");
+            _filelogger.Log("Items loaded successfully");
+        }
+
+        private void SaveMeals()
+        {
+            var filename = _userInput.GetStringInput("Enter the file name without the extension: ");
+            Console.WriteLine("Creating File");
+            string path = Path.Combine("Data", Entries.MEALS.ToString(), $"{filename}.txt");
+            if (File.Exists(path))
+            {
+                Console.Write($"Are you sure you want to overwrite {filename}.txt?");
+                var overwrite = _userInput.GetStringInput(" (Y)es or (N)o: ").ToUpper();
+                if (overwrite != "Y")
+                    throw new Exception("Cancelled to override tasks");
+            }
+            _filelogger.Log($"Saving to {filename}");
+            try
+            {
+                List<Meals> meals = _mealService.GetAllMeals();
+                _fileservice.SaveFunction(filename, Entries.MEALS, null, null, meals);
+                _filelogger.Log("File have successfully saved");
+                _consolelogger.Log($"File: {filename} have successfully saved");
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
         }
 
         public void DeleteMeal()

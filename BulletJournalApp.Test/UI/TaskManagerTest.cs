@@ -705,8 +705,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var mockService = new Mock<ITaskService>();
+            var mockServiceFake = new Mock<IMealService>();
             var service =  new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var fileservice = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), service, itemService);
+            var fileservice = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), service, itemService, mockServiceFake.Object);
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
             var path = Path.Combine("test");
             var tasks = new List<Tasks>();
@@ -714,7 +715,7 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            fileservice.SaveFunction(path, Entries.TASKS, tasks, null);
+            fileservice.SaveFunction(path, Entries.TASKS, tasks, null, null);
             fileMock.Setup(service => service.LoadFunction("test", Entries.TASKS));
             // Act
             using var userInput = new StringReader("16\ntest\n0\nN\n");
@@ -736,13 +737,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()));
+            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()));
             // Act
             using var userInput = new StringReader("0\nY\ntest\nY\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()), Times.Once);
+            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()), Times.Once);
             //userInput.Close();
             ResetReader();
         }
@@ -758,13 +759,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Weekly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()));
+            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()));
             // Act
             using var userInput = new StringReader("0\nC\n0\nN\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()), Times.Never);
+            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()), Times.Never);
             //userInput.Close();
             ResetReader();
         }
