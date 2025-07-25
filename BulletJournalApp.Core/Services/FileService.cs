@@ -25,6 +25,7 @@ namespace BulletJournalApp.Core.Services
             _filelogger = filelogger;
             _taskservice = taskService;
             _itemservice = itemservice;
+            _mealservice = mealService;
         }
         public void LoadFunction(string filename, Entries entries)
         {
@@ -199,6 +200,11 @@ namespace BulletJournalApp.Core.Services
             WriteText(fs, meal.TimeOfDay.ToString());
             WriteText(fs, meal.MealDate.ToString());
             WriteText(fs, meal.MealTime.ToString());
+            foreach (var ingredient in meal.Ingredients)
+            {
+                SaveIngredients(ingredient, fs);
+            }
+            WriteText(fs, "End");
         }
 
         internal static Meals LoadMeals(StreamReader sr)
@@ -209,7 +215,34 @@ namespace BulletJournalApp.Core.Services
             var timeofday = (TimeOfDay)Enum.Parse(typeof(TimeOfDay), sr.ReadLine());
             var mealdate = DateTime.TryParse(sr.ReadLine(), out DateTime parsedMealDate) ? parsedMealDate : DateTime.MinValue;
             var mealtime = DateTime.TryParse(sr.ReadLine(), out DateTime parsedMealTime) ? parsedMealTime : DateTime.MinValue;
-            return new Meals(name, description, new List<Ingredients>(), mealdate, mealtime, id, timeofday);
+            var ingredients = LoadListOfIngredients(sr);
+            var meal = new Meals(name, description, ingredients, mealdate, mealtime, id, timeofday);
+            Console.WriteLine(meal);
+            return meal;
+        }
+
+        internal static void SaveIngredients(Ingredients ingredient, FileStream fs)
+        {
+            WriteText(fs, "------------------------");
+            WriteText(fs, ingredient.Name);
+            WriteText(fs, ingredient.Quantity.ToString());
+            WriteText(fs, ingredient.Price.ToString());
+            WriteText(fs, ingredient.Measurements);
+        }
+
+        internal static List<Ingredients> LoadListOfIngredients(StreamReader sr)
+        {
+            var ingredients = new List<Ingredients>();
+            while(!sr.ReadLine().Equals("End"))
+            {
+                var name = sr.ReadLine();
+                var quantity = int.Parse(sr.ReadLine());
+                var price = double.Parse(sr.ReadLine());
+                var measurement = sr.ReadLine();
+                var ingredient = new Ingredients(name, quantity, price, measurement);
+                ingredients.Add(ingredient);
+            }
+            return ingredients;
         }
     }
 }
