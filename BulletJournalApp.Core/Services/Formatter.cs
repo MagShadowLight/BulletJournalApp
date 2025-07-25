@@ -39,21 +39,23 @@ namespace BulletJournalApp.Core.Services
         {
             var ingredients = "";
             meal.Ingredients.ForEach(ingredient => {
-                ingredients += FormatIngredient(ingredient);
+                var i = meal.Ingredients.IndexOf(ingredient) + 1; 
+                ingredients += FormatIngredient(ingredient, i);
             });
             return $"[{meal.Id}]: {meal.Name}\n" +
                 $"- Description: {meal.Description}\n" +
                 $"- Time of day: {meal.TimeOfDay.ToString()}\n" +
                 $"- Meal Date: {meal.MealDate.ToShortDateString()}\n" +
                 $"- Meal Time: {meal.MealTime.ToShortTimeString()}\n" +
-                $"- Ingredients: {ingredients}";
+                $"- Ingredients: \n{ingredients}";
         }
-        public string FormatIngredient(Ingredients ingredient)
+        public string FormatIngredient(Ingredients ingredient, int i)
         {
-            return $"- Name: {ingredient.Name}\n" +
-                $"- Quantity: {ingredient.Quantity}\n" +
-                $"- Price: ${ingredient.Price}\n" +
-                $"- Measurement: {ingredient.Measurements}\n";
+            return $"Ingredient #{i}: \n" +
+                $"  - Name: {ingredient.Name}\n" +
+                $"  - Quantity: {ingredient.Quantity}\n" +
+                $"  - Price: ${ingredient.Price}\n" +
+                $"  - Measurement: {ingredient.Measurements}\n";
         }
     }
 }

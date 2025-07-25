@@ -377,7 +377,8 @@ namespace BulletJournalApp.UI
             }
             foreach(var ingredient in ingredients)
             {
-                Console.WriteLine(mealPlan._formatter.FormatIngredient(ingredient));
+                
+                Console.WriteLine(mealPlan._formatter.FormatIngredient(ingredient, ingredients.IndexOf(ingredient)+1));
             }
         }
 
