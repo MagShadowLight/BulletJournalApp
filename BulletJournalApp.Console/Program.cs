@@ -38,7 +38,6 @@ namespace BulletJournalApp.Consoles
             services.AddSingleton<ShopListManager>();
             services.AddSingleton<TaskManager>();
             services.AddSingleton<ConsoleUI>();
-            Console.WriteLine(services.Count);
 
             var serviceProvider = services.BuildServiceProvider();
             var consoleUI = serviceProvider.GetRequiredService<ConsoleUI>();
