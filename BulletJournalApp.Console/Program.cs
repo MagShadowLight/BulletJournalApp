@@ -17,6 +17,8 @@ namespace BulletJournalApp.Consoles
 
             var services = new ServiceCollection();
             CreateFile();
+            
+
             services.AddSingleton<ITaskService, TaskService>();
             services.AddSingleton<IFormatter, Formatter>();
             services.AddSingleton<IConsoleLogger, ConsoleLogger>();
@@ -29,9 +31,14 @@ namespace BulletJournalApp.Consoles
             services.AddSingleton<IItemStatusService, ItemStatusService>();
             services.AddSingleton<IUserInput, UserInput>();
             services.AddSingleton<IItemService, ItemService>();
+            services.AddSingleton<ITimeOfDayService, TimeOfDayService>();
+            services.AddSingleton<IMealService, MealService>();
+            services.AddSingleton<IIngredientService, IngredientService>();
+            services.AddSingleton<MealPlanManager>();
             services.AddSingleton<ShopListManager>();
             services.AddSingleton<TaskManager>();
             services.AddSingleton<ConsoleUI>();
+            Console.WriteLine(services.Count);
 
             var serviceProvider = services.BuildServiceProvider();
             var consoleUI = serviceProvider.GetRequiredService<ConsoleUI>();

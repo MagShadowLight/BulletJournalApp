@@ -11,8 +11,8 @@ namespace BulletJournalApp.Core.Services
 {
     public class TimeOfDayService : ITimeOfDayService
     {
-        private readonly MealService _mealservice = new MealService();
-        public TimeOfDayService(MealService mealService)
+        private readonly IMealService _mealservice;
+        public TimeOfDayService(IMealService mealService)
         {
             _mealservice = mealService;
         }

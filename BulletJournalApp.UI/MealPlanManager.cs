@@ -121,16 +121,23 @@ namespace BulletJournalApp.UI
 
         private void LoadMeals()
         {
-            var filename = _userInput.GetStringInput("Enter the name of the file (without extension): ");
-            string path = Path.Combine("Data", Entries.MEALS.ToString(), $"{filename}.txt");
-            if (!File.Exists(path))
+            try
             {
-                throw new Exception("File not found. Invalid file name. Try again.");
+                var filename = _userInput.GetStringInput("Enter the name of the file (without extension): ");
+                string path = Path.Combine("Data", Entries.MEALS.ToString(), $"{filename}.txt");
+                if (!File.Exists(path))
+                {
+                    throw new Exception("File not found. Invalid file name. Try again.");
+                }
+                _filelogger.Log($"Loading items from {filename}");
+                _fileservice.LoadFunction(filename, Entries.MEALS);
+                _consolelogger.Log("Items loaded successfully");
+                _filelogger.Log("Items loaded successfully");
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
             }
-            _filelogger.Log($"Loading items from {filename}");
-            _fileservice.LoadFunction(filename, Entries.MEALS);
-            _consolelogger.Log("Items loaded successfully");
-            _filelogger.Log("Items loaded successfully");
         }
 
         private void SaveMeals()
@@ -162,13 +169,21 @@ namespace BulletJournalApp.UI
 
         public void DeleteMeal()
         {
-            var name = _userInput.GetStringInput("Enter the name of the meal to delete: ");
-            var meal = _mealService.FindMealsByName(name);
-            foreach(var mealItem in meal.Ingredients)
+            try
             {
-                _ingredientService.DeleteIngredient(mealItem.Name);
+                var name = _userInput.GetStringInput("Enter the name of the meal to delete: ");
+                var meal = _mealService.FindMealsByName(name);
+                if (meal != null && meal.Ingredients.Count != 0)
+                    foreach (var mealItem in meal.Ingredients)
+                    {
+                        _ingredientService.DeleteIngredient(mealItem.Name);
+                    }
+                _mealService.DeleteMeals(name);
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
             }
-            _mealService.DeleteMeals(name);
         }
 
         public void UpdateMeal()
@@ -180,48 +195,60 @@ namespace BulletJournalApp.UI
             Console.WriteLine("4. Ingredients");
             Console.Write("Choose an options: ");
             var input = Console.ReadLine();
-            switch (input)
+            try
             {
-                case "1":
-                    var oldname = _userInput.GetStringInput("Enter the name of the meal to change the name and description: ");
-                    var newname = _userInput.GetStringInput("Enter the new name for the meal: ");
-                    var newdescription = _userInput.GetStringInput("Enter the new description for the meal: ");
-                    _mealService.UpdateMeals(oldname, newname, newdescription);
-                    _consolelogger.Log("Meal updated successfully");
-                    break;
-                case "2":
-                    var name1 = _userInput.GetStringInput("Enter the name of the meal to change the time of day: ");
-                    var timeofday = _userInput.GetTimeOfDayInput("Enter the time of the day (Use (B)reakfast, (L)unch, (Di)nner, (S)nacks, or (De)ssert or leave it blank: ");
-                    _timeOfDayService.ChangeTimeOfDay(name1, timeofday);
-                    _consolelogger.Log("Meal updated successfully");
-                    break;
-                case "3":
-                    var name2 = _userInput.GetStringInput("Enter the name of the meal to change the date and time: ");
-                    var newdate = _userInput.GetDateInput("Enter the new date for the meal: ");
-                    var newtime = _userInput.GetDateInput("Enter the new time for the meal: ");
-                    _mealService.ChangeMealDateTime(name2, newdate, newtime);
-                    _consolelogger.Log("Meal updated successfully");
-                    break;
-                case "4":
-                    var name3 = _userInput.GetStringInput("What the name to change the ingredients: ");
-                    var meal = _mealService.FindMealsByName(name3);
-                    var ingredients = meal.Ingredients;
-                    ingredients = IngredientManager.IngredientManagerUI(this, meal);
-                    _mealService.ChangeMealIngredients(name3, ingredients);
-                    _consolelogger.Log("Meal updated successfully");
-                    break;
-                default:
-                    _consolelogger.Log("Invalid choice. Try again");
-                    break;
+                switch (input)
+                {
+                    case "1":
+                        var oldname = _userInput.GetStringInput("Enter the name of the meal to change the name and description: ");
+                        var newname = _userInput.GetStringInput("Enter the new name for the meal: ");
+                        var newdescription = _userInput.GetStringInput("Enter the new description for the meal: ");
+                        _mealService.UpdateMeals(oldname, newname, newdescription);
+                        _consolelogger.Log("Meal updated successfully");
+                        break;
+                    case "2":
+                        var name1 = _userInput.GetStringInput("Enter the name of the meal to change the time of day: ");
+                        var timeofday = _userInput.GetTimeOfDayInput("Enter the time of the day (Use (B)reakfast, (L)unch, (Di)nner, (S)nacks, or (De)ssert or leave it blank: ");
+                        _timeOfDayService.ChangeTimeOfDay(name1, timeofday);
+                        _consolelogger.Log("Meal updated successfully");
+                        break;
+                    case "3":
+                        var name2 = _userInput.GetStringInput("Enter the name of the meal to change the date and time: ");
+                        var newdate = _userInput.GetDateInput("Enter the new date for the meal: ");
+                        var newtime = _userInput.GetDateInput("Enter the new time for the meal: ");
+                        _mealService.ChangeMealDateTime(name2, newdate, newtime);
+                        _consolelogger.Log("Meal updated successfully");
+                        break;
+                    case "4":
+                        var name3 = _userInput.GetStringInput("What the name to change the ingredients: ");
+                        var meal = _mealService.FindMealsByName(name3);
+                        if (meal == null)
+                            throw new ArgumentNullException($"Meal: {name3} not found");
+                        var ingredients = meal.Ingredients;
+                        ingredients = IngredientManager.IngredientManagerUI(this, meal);
+                        _mealService.ChangeMealIngredients(name3, ingredients);
+                        _consolelogger.Log("Meal updated successfully");
+                        break;
+                    default:
+                        _consolelogger.Error("Invalid choice. Try again");
+                        break;
+                }
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
             }
-            
-
         }
 
         public void SearchMeal()
         {
             var name = _userInput.GetStringInput("Enter the name to search for specific meal: ");
             var meal = _mealService.FindMealsByName(name);
+            if (meal == null)
+            {
+                _consolelogger.Error($"meal: {name} not found.");
+                return;
+            }
             Console.WriteLine($"Found: {_formatter.FormatMeals(meal)}");
         }
 
@@ -229,6 +256,11 @@ namespace BulletJournalApp.UI
         {
             var timeofday = _userInput.GetTimeOfDayInput("Enter the time of the day (Use (B)reakfast, (L)unch, (Di)nner, (S)nacks, or (De)ssert or leave it blank: ");
             var meals = _timeOfDayService.GetMealsByTimeOfDay(timeofday);
+            if (meals.Count == 0)
+            {
+                _consolelogger.Error("No meals found");
+                return;
+            }
             foreach (var meal in meals)
             {
                 Console.WriteLine(_formatter.FormatMeals(meal));
@@ -238,6 +270,11 @@ namespace BulletJournalApp.UI
         public void ListAllMeals()
         {
             var meals = _mealService.GetAllMeals();
+            if (meals.Count == 0)
+            {
+                _consolelogger.Error("No meals found");
+                return;
+            }
             foreach ( var meal in meals )
             {
                 Console.WriteLine(_formatter.FormatMeals(meal));
@@ -246,18 +283,25 @@ namespace BulletJournalApp.UI
 
         public void AddMeal()
         {
-            var name = _userInput.GetStringInput("Enter the name of the meal: ");
-            var description = _userInput.GetStringInput("Enter the description of the meal: ");
-            var timeOfDay = _userInput.GetTimeOfDayInput("Enter the time of the day (Use (B)reakfast, (L)unch, (Di)nner, (S)nacks, or (De)ssert or leave it blank");
-            var mealDate = _userInput.GetDateInput("Enter the date for the meal like July 1, 2001: ");
-            var mealTime = _userInput.GetDateInput("Enter the time for the meal like 12:00 PM: ");
-            _filelogger.Log("Opening ingredient manager");
-            List<Ingredients> ingredients = IngredientManager.IngredientManagerUI(this, null);
-            var meal = new Meals(name, description, ingredients, mealDate, mealTime, 0, timeOfDay);
-            _filelogger.Log("Ingredient manager closed");
-            _mealService.AddMeal(meal);
-            _filelogger.Log("Meal added successfully");
-            _consolelogger.Log("Meal added successfully");
+            try
+            {
+                var name = _userInput.GetStringInput("Enter the name of the meal: ");
+                var description = _userInput.GetStringInput("Enter the description of the meal: ");
+                var timeOfDay = _userInput.GetTimeOfDayInput("Enter the time of the day (Use (B)reakfast, (L)unch, (Di)nner, (S)nacks, or (De)ssert or leave it blank");
+                var mealDate = _userInput.GetDateInput("Enter the date for the meal like July 1, 2001: ");
+                var mealTime = _userInput.GetDateInput("Enter the time for the meal like 12:00 PM: ");
+                _filelogger.Log("Opening ingredient manager");
+                List<Ingredients> ingredients = IngredientManager.IngredientManagerUI(this, null);
+                var meal = new Meals(name, description, ingredients, mealDate, mealTime, 0, timeOfDay);
+                _filelogger.Log("Ingredient manager closed");
+                _mealService.AddMeal(meal);
+                _filelogger.Log("Meal added successfully");
+                _consolelogger.Log("Meal added successfully");
+            } catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
         }
 
 
@@ -271,8 +315,6 @@ namespace BulletJournalApp.UI
         private static readonly IUserInput _userInput = new UserInput();
         private static readonly IIngredientService _ingredientService = new IngredientService();
         private static List<Ingredients> ingredients = new List<Ingredients>();
-
-        internal IngredientManager() { }
 
         public static List<Ingredients> IngredientManagerUI(MealPlanManager mealPlan, Meals? meal)
         {
@@ -328,6 +370,11 @@ namespace BulletJournalApp.UI
         private static void GetAllIngredients(MealPlanManager mealPlan)
         {
             var ingredients = mealPlan._ingredientService.GetAllIngredients();
+            if (ingredients.Count == 0)
+            {
+                _consolelogger.Error("No Ingredients found");
+                return;
+            }
             foreach(var ingredient in ingredients)
             {
                 Console.WriteLine(mealPlan._formatter.FormatIngredient(ingredient));
@@ -336,39 +383,61 @@ namespace BulletJournalApp.UI
 
         private static void DeleteIngredient(MealPlanManager mealPlan)
         {
-            var name = _userInput.GetStringInput("Enter the name of the ingredient to delete: ");
-            mealPlan._ingredientService.DeleteIngredient(name);
-            var ingredient = ingredients.Find(x => x.Name == name);
-            ingredients.Remove(ingredient);
-            _consolelogger.Log("Ingredient deleted successfully");
+            try
+            {
+                var name = _userInput.GetStringInput("Enter the name of the ingredient to delete: ");
+                var ingredient = ingredients.FirstOrDefault(x => x.Name.Equals(name));
+                var i = ingredients.IndexOf(ingredient);
+                ingredients.Remove(ingredient);
+                mealPlan._ingredientService.DeleteIngredient(name);
+                _consolelogger.Log("Ingredient deleted successfully");
+            } catch (Exception ex)
+            {
+                mealPlan._consolelogger.Error(ex.Message);
+                mealPlan._filelogger.Error(ex.Message);
+            }
         }
 
         private static void EditIngredient(MealPlanManager mealPlan)
         {
-            var oldname = _userInput.GetStringInput("Enter the name of the ingredient to update: ");
-            var newname = _userInput.GetStringInput("Enter the new name of the ingredient: ");
-            var newquantity = _userInput.GetIntInput("Enter the new quantity: ");
-            var newprice = _userInput.GetDoubleInput("Enter the new price: ");
-            var newmeasurement = _userInput.GetStringInput("Enter the new measurement for the ingredients (Must be specific to measurement in kitchen or type in N/A): ");
-            mealPlan._ingredientService.ChangeIngredients(oldname, newname, newquantity, newprice, newmeasurement);
-            var ingredient = new Ingredients(newname, newquantity, newprice, newmeasurement);
-            var oldingredient = ingredients.Find(x => x.Name == oldname);
-            ingredients.Remove(oldingredient);
-            ingredients.Add(ingredient);
-            _consolelogger.Log("Ingredient updated successfully");
+            try
+            {
+                var oldname = _userInput.GetStringInput("Enter the name of the ingredient to update: ");
+                var newname = _userInput.GetStringInput("Enter the new name of the ingredient: ");
+                var newquantity = _userInput.GetIntInput("Enter the new quantity: ");
+                var newprice = _userInput.GetDoubleInput("Enter the new price: ");
+                var newmeasurement = _userInput.GetStringInput("Enter the new measurement for the ingredients (Must be specific to measurement in kitchen or type in N/A): ");
+                Ingredients oldingredient = ingredients.Find(x => x.Name.Equals(oldname, StringComparison.OrdinalIgnoreCase));
+                mealPlan._ingredientService.ChangeIngredients(oldname, newname, newquantity, newprice, newmeasurement);
+                var ingredient = new Ingredients(newname, newquantity, newprice, newmeasurement);
+                ingredients.Remove(oldingredient);
+                ingredients.Add(ingredient);
+                _consolelogger.Log("Ingredient updated successfully");
+            } catch (Exception ex)
+            {
+                mealPlan._consolelogger.Error(ex.Message);
+                mealPlan._filelogger.Error(ex.Message);
+            }
         }
 
         private static void AddIngredients(MealPlanManager mealPlan)
         {
-            var name = _userInput.GetStringInput("Enter the name of the ingredient: ");
-            var quantity = _userInput.GetIntInput("Enter the quantity of the ingredient: ");
-            var price = _userInput.GetDoubleInput("Enter the price of the ingredient: ");
-            var measurement = _userInput.GetStringInput("Enter the measurements of the ingredient: (Must be specific to measurement in the kitchen like cups or type in N/A): ");
-            var ingredient = new Ingredients(name, quantity, price, measurement);
-            mealPlan._ingredientService.AddIngredient(ingredient);
-            ingredients.Add(ingredient);
-            mealPlan._filelogger.Log("Ingredient added successfully");
-            _consolelogger.Log("Ingredient added successfully");
+            try
+            {
+                var name = _userInput.GetStringInput("Enter the name of the ingredient: ");
+                var quantity = _userInput.GetIntInput("Enter the quantity of the ingredient: ");
+                var price = _userInput.GetDoubleInput("Enter the price of the ingredient: ");
+                var measurement = _userInput.GetStringInput("Enter the measurements of the ingredient: (Must be specific to measurement in the kitchen like cups or type in N/A): ");
+                var ingredient = new Ingredients(name, quantity, price, measurement);
+                ingredients.Add(ingredient);
+                mealPlan._ingredientService.AddIngredient(ingredient);
+                mealPlan._filelogger.Log("Ingredient added successfully");
+                _consolelogger.Log("Ingredient added successfully");
+            } catch (Exception ex)
+            {
+               mealPlan._consolelogger.Error(ex.Message);
+               mealPlan._filelogger.Error(ex.Message);
+            }
         }
     }
 }
