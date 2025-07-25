@@ -334,13 +334,13 @@ namespace BulletJournalApp.Test.UI
             items.Add(item1);
             items.Add(item2);
             items.Add(item3);
-            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.ITEMS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()));
+            fileMock.Setup(service => service.SaveFunction(It.IsAny<string>(), Entries.ITEMS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()));
             // Act
             using var input = new StringReader("11\n1\nFakeItem\n0");
             Console.SetIn(input);
             shopListManager.UI();
             // Assert
-            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.ITEMS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>()), Times.Once);
+            fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.ITEMS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()), Times.Once);
             ResetReader();
         }
         [Fact]
@@ -349,7 +349,8 @@ namespace BulletJournalApp.Test.UI
             // Assert
             var taskMock = new Mock<ITaskService>();
             var shopListManager = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, UserInput);
-            var fileService = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), taskMock.Object, new ItemService(consoleLoggerMock.Object, fileLoggerMock.Object));
+            var meal = new Mock<IMealService>();
+            var fileService = new FileService(new Formatter(), new ConsoleLogger(), new FileLogger(), taskMock.Object, new ItemService(consoleLoggerMock.Object, fileLoggerMock.Object), meal.Object);
             var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
             var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
             var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
@@ -357,7 +358,7 @@ namespace BulletJournalApp.Test.UI
             items.Add(item1);
             items.Add(item2);
             items.Add(item3);
-            fileService.SaveFunction("Test", Entries.ITEMS, null, items);
+            fileService.SaveFunction("Test", Entries.ITEMS, null, items, null);
             fileMock.Setup(service => service.LoadFunction(It.IsAny<string>(), Entries.ITEMS));
             // Act
             using var input = new StringReader("11\n2\nTest\n0");

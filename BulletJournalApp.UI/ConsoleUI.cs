@@ -14,13 +14,15 @@ namespace BulletJournalApp.UI
         private readonly IFileLogger _filelogger;
         private readonly IConsoleLogger _consolelogger;
         private readonly ShopListManager _shoplistmanager;
+        private readonly MealPlanManager _mealplanmanager;
 
-        public ConsoleUI(TaskManager taskManager, IFileLogger filelogger, IConsoleLogger consolelogger, ShopListManager shoplistmanager)
+        public ConsoleUI(TaskManager taskManager, IFileLogger filelogger, IConsoleLogger consolelogger, ShopListManager shoplistmanager, MealPlanManager mealplanmanager)
         {
             _filelogger = filelogger;
             _taskManager = taskManager;
             _consolelogger = consolelogger;
             _shoplistmanager = shoplistmanager;
+            _mealplanmanager = mealplanmanager;
         }
         public void Run()
         {
@@ -32,6 +34,7 @@ namespace BulletJournalApp.UI
                 Console.WriteLine("Select which one to open");
                 Console.WriteLine("1. To Do List");
                 Console.WriteLine("2. Shopping List");
+                Console.WriteLine("3. Meal Plan");
                 Console.WriteLine("0: Quit");
                 Console.Write("Choose an option: ");
                 var input = Console.ReadLine();
@@ -47,6 +50,12 @@ namespace BulletJournalApp.UI
                         _filelogger.Log("Opening Shopping List Manager");
                         Console.WriteLine("Opening Shopping List");
                         _shoplistmanager.UI();
+                        _filelogger.Log("Shopping List Closed");
+                        break;
+                    case "3":
+                        _filelogger.Log("Opening Meal Plan Manager");
+                        Console.WriteLine("Opening Meal Plan");
+                        _mealplanmanager.MealPlanUI();
                         _filelogger.Log("Shopping List Closed");
                         break;
                     case "0":

@@ -545,7 +545,7 @@ namespace BulletJournalApp.UI
             try
             {
                 List<Tasks> tasks = _taskservice.ListAllTasks();
-                _fileservice.SaveFunction(filename, Entries.TASKS, tasks, null);
+                _fileservice.SaveFunction(filename, Entries.TASKS, tasks, null, null);
                 _filelogger.Log("File have successfully saved");
                 _consolelogger.Log($"File: {filename} have successfully saved");
             } catch (Exception ex)

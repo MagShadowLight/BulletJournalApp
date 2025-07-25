@@ -19,5 +19,7 @@ namespace BulletJournalApp.UI.Util
         public bool GetBooleanInput(string prompt);
         public int GetIntInput(string prompt);
         public DateTime GetOptionalDateInput(string prompt);
+        public TimeOfDay GetTimeOfDayInput(string prompt);
+        public double GetDoubleInput(string prompt);
     }
 }

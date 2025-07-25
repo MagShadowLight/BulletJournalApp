@@ -35,5 +35,25 @@ namespace BulletJournalApp.Core.Services
                 $"{(task.IsCompleted ? "Completed": "Incomplete")}\n" +
                 $"{(task.IsRepeatable ? (task.EndRepeatDate == DateTime.MinValue ? "Repeating Task" : $"Repeating until {task.EndRepeatDate}") : "Repeat: N/A")}";
         }
+        public string FormatMeals(Meals meal)
+        {
+            var ingredients = "";
+            meal.Ingredients.ForEach(ingredient => {
+                ingredients += FormatIngredient(ingredient);
+            });
+            return $"[{meal.Id}]: {meal.Name}\n" +
+                $"- Description: {meal.Description}\n" +
+                $"- Time of day: {meal.TimeOfDay.ToString()}\n" +
+                $"- Meal Date: {meal.MealDate.ToShortDateString()}\n" +
+                $"- Meal Time: {meal.MealTime.ToShortTimeString()}\n" +
+                $"- Ingredients: {ingredients}";
+        }
+        public string FormatIngredient(Ingredients ingredient)
+        {
+            return $"- Name: {ingredient.Name}\n" +
+                $"- Quantity: {ingredient.Quantity}\n" +
+                $"- Price: ${ingredient.Price}\n" +
+                $"- Measurement: {ingredient.Measurements}\n";
+        }
     }
 }

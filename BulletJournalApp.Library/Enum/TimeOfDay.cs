@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Library.Enum
 {
-    public enum Entries
+    public enum TimeOfDay
     {
-        TASKS,
-        ITEMS,
-        MEALS
+        None,
+        Breakfast,
+        Lunch,
+        Dinner,
+        Snacks,
+        Dessert
     }
 }

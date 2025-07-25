@@ -17,7 +17,8 @@ namespace BulletJournalApp.Core.Services
         private readonly IFileLogger _filelogger;
         private readonly IItemService _itemservice;
         private readonly List<Tasks> tasks = new();
-        public FileService(IFormatter formatter, IConsoleLogger consolelogger, IFileLogger filelogger, ITaskService taskService, IItemService itemservice)
+        private readonly IMealService _mealservice;
+        public FileService(IFormatter formatter, IConsoleLogger consolelogger, IFileLogger filelogger, ITaskService taskService, IItemService itemservice, IMealService mealService)
         {
             _formatter = formatter;
             _consolelogger = consolelogger;
@@ -46,13 +47,17 @@ namespace BulletJournalApp.Core.Services
                             var item = DataManagement.LoadItems(sr);
                             _itemservice.AddItems(item);
                             break;
+                        case Entries.MEALS:
+                            var meal = DataManagement.LoadMeals(sr);
+                            _mealservice.AddMeal(meal);
+                            break;
                     }
                 }
                 sr.Dispose();
             }
             Console.SetIn(new StreamReader(Console.OpenStandardInput()));
         }
-        public void SaveFunction(string filename, Entries entries, List<Tasks>? tasks, List<Items>? items)
+        public void SaveFunction(string filename, Entries entries, List<Tasks>? tasks, List<Items>? items, List<Meals>? meals)
         {
             var dir = Path.Combine("Data", entries.ToString());
             var path = Path.Combine("Data", entries.ToString(), $"{filename}.txt");
@@ -63,10 +68,10 @@ namespace BulletJournalApp.Core.Services
             }
             if (!File.Exists(path))
             {
-                StreamWrite(tasks, items, entries, path);
+                StreamWrite(tasks, items, meals, entries, path);
             }
         }
-        public void StreamWrite(List<Tasks>? tasks, List<Items>? items, Entries entries, string path)
+        public void StreamWrite(List<Tasks>? tasks, List<Items>? items, List<Meals>? meals, Entries entries, string path)
         {
             switch (entries)
             {
@@ -87,6 +92,17 @@ namespace BulletJournalApp.Core.Services
                         foreach (var item in items)
                         {
                             DataManagement.SaveItems(item, fs);
+                        }
+                        fs.Close();
+                    }
+                    Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+                    break;
+                case Entries.MEALS:
+                    using (FileStream fs = File.Create(path))
+                    {
+                        foreach (var meal in meals)
+                        {
+                            DataManagement.SaveMeals(meal, fs);
                         }
                         fs.Close();
                     }
@@ -173,6 +189,27 @@ namespace BulletJournalApp.Core.Services
         {
             byte[] info = new UTF8Encoding(true).GetBytes($"{text}\n");
             fs.Write(info, 0, info.Length);
+        }
+
+        internal static void SaveMeals(Meals meal, FileStream fs)
+        {
+            WriteText(fs, meal.Id.ToString());
+            WriteText(fs, meal.Name);
+            WriteText(fs, meal.Description);
+            WriteText(fs, meal.TimeOfDay.ToString());
+            WriteText(fs, meal.MealDate.ToString());
+            WriteText(fs, meal.MealTime.ToString());
+        }
+
+        internal static Meals LoadMeals(StreamReader sr)
+        {
+            var id = int.Parse(sr.ReadLine());
+            var name = sr.ReadLine();
+            var description = sr.ReadLine();
+            var timeofday = (TimeOfDay)Enum.Parse(typeof(TimeOfDay), sr.ReadLine());
+            var mealdate = DateTime.TryParse(sr.ReadLine(), out DateTime parsedMealDate) ? parsedMealDate : DateTime.MinValue;
+            var mealtime = DateTime.TryParse(sr.ReadLine(), out DateTime parsedMealTime) ? parsedMealTime : DateTime.MinValue;
+            return new Meals(name, description, new List<Ingredients>(), mealdate, mealtime, id, timeofday);
         }
     }
 }
