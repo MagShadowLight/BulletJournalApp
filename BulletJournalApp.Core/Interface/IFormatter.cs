@@ -11,5 +11,7 @@ namespace BulletJournalApp.Core.Interface
     {
         public string FormatTasks(Tasks task);
         public string FormatItems(Items items);
+        public string FormatMeals(Meals meal);
+        public string FormatIngredient(Ingredients ingredient);
     }
 }

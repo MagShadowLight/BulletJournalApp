@@ -146,5 +146,32 @@ namespace BulletJournalApp.UI.Util
                 return DateTime.MinValue;
             }
         }
+
+        public TimeOfDay GetTimeOfDayInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine().ToUpper();
+            return input switch
+            {
+                "B" => TimeOfDay.Breakfast,
+                "L" => TimeOfDay.Lunch,
+                "DI" => TimeOfDay.Dinner,
+                "S" => TimeOfDay.Snacks,
+                "DE" => TimeOfDay.Dessert,
+                _ => TimeOfDay.None
+            };
+        }
+
+        public double GetDoubleInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            if (double.TryParse(input, out double num)) {
+                return num;
+            } else
+            {
+                throw new FormatException("Invalid Number");
+            }
+        }
     }
 }

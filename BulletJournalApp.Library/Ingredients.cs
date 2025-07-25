@@ -75,7 +75,7 @@ namespace BulletJournalApp.Library
                 !measurements.Contains("cup") &&
                 !measurements.Contains("cups") &&
                 !measurements.Contains("liter") &&
-                !measurements.Contains("N/A")
+                !measurements.Contains("n/a")
                 )
             {
                 throw new FormatException($"Invalid measurement. {measurements} is not valid measurement");
