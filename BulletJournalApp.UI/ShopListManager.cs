@@ -105,8 +105,6 @@ namespace BulletJournalApp.UI
                         break;
                     case "11":
                         _filelogger.Log("Opening the file management");
-                        
-                        _filelogger.Warn ("Work in Progress");
                         FileManageOption();
                         break;
                     case "0":
@@ -127,37 +125,31 @@ namespace BulletJournalApp.UI
             Console.WriteLine("Which option do you want?");
             Console.WriteLine("1. Save");
             Console.WriteLine("2. Load");
-            var input = _userinput.GetIntInput("Choose an Option: ");
-            switch (input)
+            try
             {
-                case 1:
-                    _filelogger.Log("Saving items");
-                    try
-                    {
+                var input = _userinput.GetIntInput("Choose an Option: ");
+                switch (input)
+                {
+                    case 1:
+                        _filelogger.Log("Saving items");
                         SaveItems();
-                    } catch (Exception ex)
-                    {
-                        _consolelogger.Error(ex.Message);
-                        _filelogger.Error(ex.Message);
-                    }
-                    break;
-                case 2:
-                    _filelogger.Log("Loading items");
-                    try
-                    {
+                        break;
+                    case 2:
+                        _filelogger.Log("Loading items");
                         LoadItem();
-                    } catch (Exception ex)
-                    {
-                        _consolelogger.Error(ex.Message);
-                        _filelogger.Error(ex.Message);
-                    }
-                    break;
-                default:
-                    _consolelogger.Error("Invalid choice. Try again");
-                    _filelogger.Error("Invalid choice. Try again");
-                    break;
+                        break;
+                    default:
+                        _consolelogger.Error("Invalid choice. Try again");
+                        _filelogger.Error("Invalid choice. Try again");
+                        break;
+                }
             }
-        
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
+
         }
 
         private void SaveItems()
