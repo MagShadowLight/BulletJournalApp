@@ -17,9 +17,9 @@ namespace BulletJournalApp.Test.Service
             // Arrange
             List<Items> items;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test 2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test 3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test 2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test 3", "Test", Schedule.Monthly, 1);
             // Act
             service.AddItems(item1);
             service.AddItems(item2);
@@ -30,8 +30,8 @@ namespace BulletJournalApp.Test.Service
             Assert.Contains(item1, items);
             Assert.Contains(item2, items);
             Assert.Contains(item3, items);
-            Assert.Throws<ArgumentNullException>(() => service.AddItems(new Items("", "Test", Schedule.Monthly)));
-            Assert.Throws<Exception>(() => service.AddItems(new Items("Test", "Test", Schedule.Monthly)));
+            Assert.Throws<ArgumentNullException>(() => service.AddItems(new Items("", "Test", Schedule.Monthly, 1)));
+            Assert.Throws<Exception>(() => service.AddItems(new Items("Test", "Test", Schedule.Monthly, 1)));
         }
         [Fact]
         public void When_Items_Were_Marked_As_Owned_Then_It_Should_Return_Only_Owned_Items()
@@ -40,9 +40,9 @@ namespace BulletJournalApp.Test.Service
             List<Items> AllItems;
             List<Items> OwnedItems;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);
@@ -65,9 +65,9 @@ namespace BulletJournalApp.Test.Service
             List<Items> AllItems;
             List<Items> UnOwnedItems;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);
@@ -89,23 +89,23 @@ namespace BulletJournalApp.Test.Service
             // Assert
             List<Items> items;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);
             // Act
-            service.UpdateItems("Test3", "Updated Test", "Updated Description", "New Note");
+            service.UpdateItems("Test3", "Updated Test", "Updated Description", "New Note", 1);
             items = service.GetAllItems();
             // Assert
             Assert.Equal(3, items.Count);
             Assert.Contains("Updated Test", item3.Name);
             Assert.Contains("Updated Description", item3.Description);
             Assert.Contains("New Note", item3.Notes);
-            Assert.Throws<Exception>(() => service.UpdateItems("Fake Item", "Invalid Item", "Test", ""));
-            Assert.Throws<Exception>(() => service.UpdateItems("Test2", "Test", "Test", ""));
-            Assert.Throws<ArgumentNullException>(() => service.UpdateItems("Test2", "", "Test", ""));
+            Assert.Throws<Exception>(() => service.UpdateItems("Fake Item", "Invalid Item", "Test", "", 1));
+            Assert.Throws<Exception>(() => service.UpdateItems("Test2", "Test", "Test", "", 1));
+            Assert.Throws<ArgumentNullException>(() => service.UpdateItems("Test2", "", "Test", "", 1));
         }
         [Fact]
         public void When_Items_Were_Deleted_Then_It_Should_Succeed()
@@ -113,9 +113,9 @@ namespace BulletJournalApp.Test.Service
             // Assert
             List<Items> items;
             var service = new ItemService(new ConsoleLogger(), new FileLogger());
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             service.AddItems(item1);
             service.AddItems(item2);
             service.AddItems(item3);

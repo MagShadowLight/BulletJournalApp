@@ -127,6 +127,7 @@ namespace BulletJournalApp.Core.Services
             WriteText(fs, items.Id.ToString());
             WriteText(fs, items.Name);
             WriteText(fs, items.Description);
+            WriteText(fs, items.Quantity.ToString());
             WriteText(fs, items.Schedule.ToString());
             WriteText(fs, items.Category.ToString());
             WriteText(fs, items.Status.ToString());
@@ -158,13 +159,14 @@ namespace BulletJournalApp.Core.Services
             var id = int.Parse(sr.ReadLine());
             var name = sr.ReadLine();
             var description = sr.ReadLine();
+            var quantity = int.Parse(sr.ReadLine());
             var schedule = (Schedule)Enum.Parse(typeof(Schedule), sr.ReadLine());
             var category = (Category)Enum.Parse(typeof(Category), sr.ReadLine());
             var status = (ItemStatus)Enum.Parse(typeof (ItemStatus), sr.ReadLine());
             var note = sr.ReadLine();
             var dateAdded = DateTime.TryParse(sr.ReadLine(), out DateTime parsedAddedDate) ? parsedAddedDate : DateTime.MinValue;
             var dateBought = DateTime.TryParse(sr.ReadLine(), out DateTime parsedBoughtDate) ? parsedBoughtDate : DateTime.MinValue;
-            return new Items(name, description, schedule, id, category, status, note, dateAdded, dateBought);
+            return new Items(name, description, schedule, quantity, id, category, status, note, dateAdded, dateBought);
         }
 
         private static void WriteText(FileStream fs, string text)

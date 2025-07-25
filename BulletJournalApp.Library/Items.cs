@@ -18,11 +18,13 @@ namespace BulletJournalApp.Library
         public string? Notes { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime? DateBought { get; set; }
+        public int Quantity { get; set; }
 
-        public Items(string name, string description, Schedule schedule, int id = 0, Category category = Category.None, ItemStatus status = ItemStatus.NotBought, string note = "", DateTime? dateadded = null, DateTime? datebought = null)
+        public Items(string name, string description, Schedule schedule, int quantity, int id = 0, Category category = Category.None, ItemStatus status = ItemStatus.NotBought, string note = "", DateTime? dateadded = null, DateTime? datebought = null)
         {
             Validate(name, nameof(name));
             Validate(description, nameof(description));
+            ValidateQuantity(quantity);
             Id = id;
             Name = name;
             Description = description;
@@ -32,15 +34,17 @@ namespace BulletJournalApp.Library
             Notes = note;
             DateAdded = dateadded ?? DateTime.Today;
             DateBought = datebought ?? DateTime.MinValue;
+            Quantity = quantity;
         }
 
-        public void Update(string newname, string newdescription, string? newnote)
+        public void Update(string newname, string newdescription, string? newnote, int newquantity)
         {
-            Validate(newnote, nameof(newnote));
+            Validate(newname, nameof(newname));
             Validate(newdescription, nameof(newdescription));
             Name = newname;
             Description = newdescription;
             Notes = newnote;
+            Quantity = newquantity;
         }
 
         public void ChangeCategory(Category newcategory)
@@ -68,6 +72,13 @@ namespace BulletJournalApp.Library
         {
             if (string.IsNullOrEmpty(input))
                 throw new ArgumentNullException($"{fieldname} cannot be blank or null");
+        }
+        public void ValidateQuantity(int quantity)
+        {
+            if (quantity < 0)
+            {
+                throw new ArgumentOutOfRangeException("Invalid quantity number. Quantity must be greater than zero");
+            }
         }
     }
 }

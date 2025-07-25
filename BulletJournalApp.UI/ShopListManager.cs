@@ -162,7 +162,10 @@ namespace BulletJournalApp.UI
                 Console.Write($"Are you sure you want to overwrite {filename}.txt?");
                 var overwrite = _userinput.GetStringInput(" (Y)es or (N)o: ").ToUpper();
                 if (overwrite != "Y")
+                {
                     throw new Exception("Cancelled to override tasks");
+                }
+                File.Delete(path);
             }
             _filelogger.Log($"Saving to {filename}");
             try
@@ -297,7 +300,8 @@ namespace BulletJournalApp.UI
                 var newname = _userinput.GetStringInput("Enter the new name of the item: ");
                 var newdesc = _userinput.GetStringInput("Enter the new description of the item: ");
                 var newnote = _userinput.GetStringInput("Enter the new note of the item: ");
-                _itemService.UpdateItems(oldname, newname, newdesc, newnote);
+                var newquantity = _userinput.GetIntInput("Enter the new quantity of the item: ");
+                _itemService.UpdateItems(oldname, newname, newdesc, newnote, newquantity);
                 _consolelogger.Log("Item updated successfully");
                 _filelogger.Log("Item updated successfully");
             } catch (Exception ex)
@@ -479,10 +483,11 @@ namespace BulletJournalApp.UI
             {
                 var name = _userinput.GetStringInput("Enter the item name: ");
                 var description = _userinput.GetStringInput("Enter the item description: ");
+                var quantity = _userinput.GetIntInput("Enter the quantity of the item: ");
                 var schedule = _userinput.GetScheduleInput("Enter the Schedule. Use (D)aily, (W)eekly, (M)onthly, (Q)uarterly, or (Y)early. ");
                 var category = _userinput.GetCategoryInput("Enter the Category. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inanical, or (T)ransportion. ");
                 var note = _userinput.GetStringInput("Enter the note: ");
-                _itemService.AddItems(new Items(name, description, schedule, 0, category, ItemStatus.NotBought, note, DateTime.Now));
+                _itemService.AddItems(new Items(name, description, schedule, quantity, 0, category, ItemStatus.NotBought, note, DateTime.Now));
                 Console.WriteLine("Item have been added successfully");
                 _filelogger.Log("Item added successfully");
             } catch (Exception ex)

@@ -29,9 +29,9 @@ namespace BulletJournalApp.Test.Service
             // Arrange
             List<Items> items;
             var service2 = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             _itemService.AddItems(item1);
             _itemService.AddItems(item2);
             _itemService.AddItems(item3);
@@ -54,9 +54,9 @@ namespace BulletJournalApp.Test.Service
             List<Items> HomeItems;
             Category category = Category.Home;
             var service2 = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var item1 = new Items("Test", "Test", Schedule.Monthly);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly);
+            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
             _itemService.AddItems(item1);
             _itemService.AddItems(item2);
             _itemService.AddItems(item3);

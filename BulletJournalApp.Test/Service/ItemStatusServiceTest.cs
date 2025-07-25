@@ -12,9 +12,9 @@ namespace BulletJournalApp.Test.Service
     public class ItemStatusServiceTest
     {
         private ItemService _itemService = new ItemService(new ConsoleLogger(), new FileLogger());
-        public Items item1 = new Items("Test", "Test", Schedule.Monthly);
-        public Items item2 = new Items("Test2", "Test", Schedule.Monthly);
-        public Items item3 = new Items("Test3", "Test", Schedule.Monthly);
+        public Items item1 = new Items("Test", "Test", Schedule.Monthly, 1);
+        public Items item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
+        public Items item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
         [Fact]
         public void When_User_Change_Status_Then_Items_Should_Update_With_New_Status()
         {
