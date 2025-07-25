@@ -62,13 +62,13 @@ namespace BulletJournalApp.Core.Services
             item.MarkAsBought();
         }
 
-        public void UpdateItems(string oldName, string newName, string newDescription, string newNotes)
+        public void UpdateItems(string oldName, string newName, string newDescription, string newNotes, int newQuantity)
         {
             var item = FindItemsByName(oldName);
             if (item == null)
                 throw new Exception($"{oldName} not found");
             ValidateDuplication(newName);
-            item.Update(newName, newDescription, newNotes);
+            item.Update(newName, newDescription, newNotes, newQuantity);
         }
         private void ValidateDuplication(string name)
         {

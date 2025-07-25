@@ -34,7 +34,7 @@ namespace BulletJournalApp.Test.UI
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
             // Act
-            using var input = new StringReader("1\nTest\nTest\nM\nH\nTest\n0");
+            using var input = new StringReader("1\nTest\nTest\n1\nM\nH\nTest\n0");
             Console.SetIn(input);
             ui.UI();
             // Assert
@@ -227,12 +227,12 @@ namespace BulletJournalApp.Test.UI
             items.Add(item2);
             items.Add(item3);
             // Act
-            itemMock.Setup(service => service.UpdateItems("Test2", "Updated Test", "new desc", "New Note"));
-            using var input = new StringReader("8\nTest2\nUpdated Test\nnew desc\nNew Note\n0");
+            itemMock.Setup(service => service.UpdateItems("Test2", "Updated Test", "new desc", "New Note", 1));
+            using var input = new StringReader("8\nTest2\nUpdated Test\nnew desc\nNew Note\n1\n0");
             Console.SetIn(input);
             ui.UI();
             // Assert
-            itemMock.Verify(user => user.UpdateItems("Test2", "Updated Test", "new desc", "New Note"), Times.Once);
+            itemMock.Verify(user => user.UpdateItems("Test2", "Updated Test", "new desc", "New Note", 1), Times.Once);
             ResetReader();
         }
         [Fact]

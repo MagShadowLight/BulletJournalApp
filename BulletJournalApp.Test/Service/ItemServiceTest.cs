@@ -96,16 +96,16 @@ namespace BulletJournalApp.Test.Service
             service.AddItems(item2);
             service.AddItems(item3);
             // Act
-            service.UpdateItems("Test3", "Updated Test", "Updated Description", "New Note");
+            service.UpdateItems("Test3", "Updated Test", "Updated Description", "New Note", 1);
             items = service.GetAllItems();
             // Assert
             Assert.Equal(3, items.Count);
             Assert.Contains("Updated Test", item3.Name);
             Assert.Contains("Updated Description", item3.Description);
             Assert.Contains("New Note", item3.Notes);
-            Assert.Throws<Exception>(() => service.UpdateItems("Fake Item", "Invalid Item", "Test", ""));
-            Assert.Throws<Exception>(() => service.UpdateItems("Test2", "Test", "Test", ""));
-            Assert.Throws<ArgumentNullException>(() => service.UpdateItems("Test2", "", "Test", ""));
+            Assert.Throws<Exception>(() => service.UpdateItems("Fake Item", "Invalid Item", "Test", "", 1));
+            Assert.Throws<Exception>(() => service.UpdateItems("Test2", "Test", "Test", "", 1));
+            Assert.Throws<ArgumentNullException>(() => service.UpdateItems("Test2", "", "Test", "", 1));
         }
         [Fact]
         public void When_Items_Were_Deleted_Then_It_Should_Succeed()

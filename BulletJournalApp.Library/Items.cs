@@ -37,13 +37,14 @@ namespace BulletJournalApp.Library
             Quantity = quantity;
         }
 
-        public void Update(string newname, string newdescription, string? newnote)
+        public void Update(string newname, string newdescription, string? newnote, int newquantity)
         {
             Validate(newname, nameof(newname));
             Validate(newdescription, nameof(newdescription));
             Name = newname;
             Description = newdescription;
             Notes = newnote;
+            Quantity = newquantity;
         }
 
         public void ChangeCategory(Category newcategory)

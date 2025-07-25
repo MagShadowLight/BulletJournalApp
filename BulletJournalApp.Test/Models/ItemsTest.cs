@@ -107,7 +107,7 @@ namespace BulletJournalApp.Test.Models
             // Arrange
             Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
             // Act
-            item.Update("Updated Item", "This is an updated test item", "Updated note");
+            item.Update("Updated Item", "This is an updated test item", "Updated note", 5);
             // Assert
             Assert.Equal("Updated Item", item.Name);
         }
@@ -164,8 +164,8 @@ namespace BulletJournalApp.Test.Models
             items.Add(item1);
             items.Add(item2);
             // Assert
-            Assert.Throws<ArgumentNullException>(() => item1.Update("", "Mrow", ""));
-            Assert.Throws<ArgumentNullException>(() => item2.Update("Mrrp", "", ""));
+            Assert.Throws<ArgumentNullException>(() => item1.Update("", "Mrow", "", 1));
+            Assert.Throws<ArgumentNullException>(() => item2.Update("Mrrp", "", "", 1));
         }
     }
 }

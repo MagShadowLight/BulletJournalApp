@@ -10,16 +10,17 @@ namespace BulletJournalApp.Core.Services
 {
     public class Formatter : IFormatter
     {
-        public string FormatItems(Items items)
+        public string FormatItems(Items item)
         {
 
-            return $"[{items.Id}]: {items.Name}\n" +
-                $"- Description: {items.Description}\n" +
-                $"- Category: {items.Category.ToString()}\n" +
-                $"- Status: {items.Status.ToString()}\n" +
-                $"- Note: {items.Notes}\n" +
-                $"- Date Added: {items.DateAdded}\n" +
-                $"{(items.DateBought != DateTime.MinValue ? $"- Date Bought: {items.DateBought}" : "")}";
+            return $"[{item.Id}]: {item.Name}\n" +
+                $"- Description: {item.Description}\n" +
+                $"- Quantity: {item.Quantity}\n" +
+                $"- Category: {item.Category.ToString()}\n" +
+                $"- Status: {item.Status.ToString()}\n" +
+                $"- Note: {item.Notes}\n" +
+                $"- Date Added: {item.DateAdded}\n" +
+                $"{(item.DateBought != DateTime.MinValue ? $"- Date Bought: {item.DateBought}" : "")}";
         }
 
         public string FormatTasks(Tasks task)
