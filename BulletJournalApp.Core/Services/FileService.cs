@@ -159,7 +159,7 @@ namespace BulletJournalApp.Core.Services
             var title = sr.ReadLine();
             var description = sr.ReadLine();
             var priority = (Priority)Enum.Parse(typeof(Priority), sr.ReadLine());
-            var dueDate = DateTime.TryParse(sr.ReadLine(), out DateTime parsedDate) ? parsedDate : (DateTime?)null;
+            var dueDate = DateTime.TryParse(sr.ReadLine(), out DateTime parsedDate) ? parsedDate : (DateTime)DateTime.MinValue;
             var isCompleted = bool.Parse(sr.ReadLine());
             var notes = sr.ReadLine();
             var category = (Category)Enum.Parse(typeof(Category), sr.ReadLine());

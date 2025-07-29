@@ -14,7 +14,7 @@ namespace BulletJournalApp.Library
         public string Title { get; set; }
         public string Description { get; set; }
         public Priority Priority { get; set; }
-        public DateTime? DueDate { get; set; }
+        public DateTime DueDate { get; set; }
         public bool IsCompleted { get; set; }
         public string? Notes { get; set; }
         public Category Category { get; set; }
@@ -24,7 +24,7 @@ namespace BulletJournalApp.Library
         public int RepeatDays { get; set; }
         public DateTime EndRepeatDate { get; set; }
 
-        public Tasks(DateTime? dueDate, string title, string description, Schedule timely, bool isrepeatable, int repeatdays = 7, DateTime endRepeatDate = new DateTime(), Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
+        public Tasks(DateTime dueDate, string title, string description, Schedule timely, bool isrepeatable, int repeatdays = 7, DateTime endRepeatDate = new DateTime(), Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
         {
             Validate(title, nameof(title));
             Validate(description, nameof(description));
@@ -44,7 +44,7 @@ namespace BulletJournalApp.Library
             EndRepeatDate = endRepeatDate;
         }
 
-        public void Update(DateTime? newDueDate, string newTitle, string newDescription, bool isrepeatable, string newNote = "", int repeatdays = 7, DateTime endrepeatdate = new DateTime())
+        public void Update(DateTime newDueDate, string newTitle, string newDescription, bool isrepeatable, string newNote = "", int repeatdays = 7, DateTime endrepeatdate = new DateTime())
         {
             Validate(newTitle, nameof(newTitle));
             Validate(newDescription, nameof(newDescription));
@@ -77,9 +77,9 @@ namespace BulletJournalApp.Library
         }
         public bool IsOverdue()
         {
-            if (!IsCompleted && DueDate != null)
+            if (!IsCompleted && DueDate != DateTime.MinValue)
             {
-                return DueDate.Value < DateTime.Now;
+                return DueDate < DateTime.Now;
             } else
             {
                 return false;
@@ -98,7 +98,7 @@ namespace BulletJournalApp.Library
 
         public void RepeatTask()
         {
-            var newDueDate = DueDate.Value;
+            var newDueDate = DueDate;
             newDueDate = newDueDate.AddDays(RepeatDays);
             var remainder = EndRepeatDate.CompareTo(newDueDate);
             if (remainder < 0 && EndRepeatDate != DateTime.MinValue)

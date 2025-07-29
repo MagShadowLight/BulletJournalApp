@@ -416,7 +416,7 @@ namespace BulletJournalApp.UI
                 newduedate = _userinput.GetDateInput("Enter the new due date (Use MMM DD, YYYY): ");
             } catch (Exception ex)
             {
-                newduedate = null;
+                newduedate = DateTime.MinValue;
             }
             try
             {
@@ -441,7 +441,7 @@ namespace BulletJournalApp.UI
             }
             try
             {
-                _taskservice.UpdateTask(oldtitle, newtitle, newdescription, newnote, newRepeat, newduedate, newRepeatDay, newEndRepeatDate);
+                _taskservice.UpdateTask(oldtitle, newtitle, newdescription, newnote, newRepeat, newduedate.Value, newRepeatDay, newEndRepeatDate);
                 _consolelogger.Log($"Task: {oldtitle} updated successfully");
                 _filelogger.Log($"Task: {oldtitle} updated successfully");
             } catch (Exception ex)

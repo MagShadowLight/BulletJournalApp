@@ -67,7 +67,7 @@ namespace BulletJournalApp.Core.Services
             if (task.IsRepeatable)
                 task.RepeatTask();
         }
-        public void UpdateTask(string oldTitle, string newTitle, string newDescription, string newNote, bool repeat, DateTime? newDueDate, int newRepeatDay = 7, DateTime newEndRepeatDate = new DateTime())
+        public void UpdateTask(string oldTitle, string newTitle, string newDescription, string newNote, bool repeat, DateTime newDueDate, int newRepeatDay = 7, DateTime newEndRepeatDate = new DateTime())
         {
             var task = FindTasksByTitle(oldTitle);
             if (task == null)

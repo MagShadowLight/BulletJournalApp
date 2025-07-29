@@ -452,13 +452,13 @@ namespace BulletJournalApp.Test.UI
             var task2 = new Tasks(DateTime.Now, "Test Task 2", "mrow", Schedule.Monthly, false);
             tasks.Add(task1);
             tasks.Add(task2);
-            taskMock.Setup(service => service.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, null, default, default));
+            taskMock.Setup(service => service.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, DateTime.MinValue, default, default));
             // Act
             using var userInput = new StringReader("10\nTest Task 2\nUpdated Task\nUpdated Description\nUpdated Note\n\n\n0\nN\n");
             Console.SetIn(userInput);
             taskManager.TaskManagerUI();
             // Assert
-            taskMock.Verify(user => user.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, null, 7, default), Times.Once);
+            taskMock.Verify(user => user.UpdateTask("Test Task 2", "Updated Task", "Updated Description", "Updated Note", false, DateTime.MinValue, 7, default), Times.Once);
             //userInput.Close();
             ResetReader();
         }
