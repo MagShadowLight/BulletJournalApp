@@ -75,6 +75,7 @@ namespace BulletJournalApp.Library
                 !measurements.Contains("cup") &&
                 !measurements.Contains("cups") &&
                 !measurements.Contains("liter") &&
+                !measurements.Contains("liters") &&
                 !measurements.Contains("n/a")
                 )
             {

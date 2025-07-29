@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Test.Fixture
+namespace BulletJournalApp.Test.Data.Library
 {
-    public class TasksDataFixture
+    public class TasksFixture
     {
         public static IEnumerable<object[]> GetValidTestDataForCreation()
         {
