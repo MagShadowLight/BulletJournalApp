@@ -41,6 +41,7 @@ namespace BulletJournalApp.Library
         {
             Validate(newname, nameof(newname));
             Validate(newdescription, nameof(newdescription));
+            ValidateQuantity(newquantity);
             Name = newname;
             Description = newdescription;
             Notes = newnote;
@@ -75,7 +76,7 @@ namespace BulletJournalApp.Library
         }
         public void ValidateQuantity(int quantity)
         {
-            if (quantity < 0)
+            if (quantity <= 0)
             {
                 throw new ArgumentOutOfRangeException("Invalid quantity number. Quantity must be greater than zero");
             }

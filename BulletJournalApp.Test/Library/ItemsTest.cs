@@ -1,5 +1,6 @@
 ﻿using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
+using BulletJournalApp.Test.Fixture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,162 +11,84 @@ namespace BulletJournalApp.Test.Library
 {
     public class ItemsTest
     {
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_Id()
+        [Theory]
+        [MemberData(nameof(ItemsDataFixture.GetValidItemsForCreation), MemberType =typeof(ItemsDataFixture))]
+        public void Given_There_Are_Valid_Items_When_Items_Were_Added_Then_Those_Values_Should_Assigned(string name, string desc, Schedule schedule, int quantity, int id, Category category, ItemStatus status, string notes, DateTime? dateadded, DateTime? datebought, DateTime expectedvalue1, DateTime expectedvalue2)
         {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal(1, item.Id);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_Name()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal("Test Item", item.Name);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_Description()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal("This is a test item", item.Description);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_Schedule()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal(Schedule.Daily, item.Schedule);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_Category()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal(Category.Works, item.Category);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_Status()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal(ItemStatus.Bought, item.Status);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_Notes()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal("Test note", item.Notes);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_DateAdded()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act // Assert
-            Assert.Equal(DateTime.Today, item.DateAdded);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_DateBought()
-        {
-            // Arrange
-
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note", DateTime.Parse("Jun 10, 2025"), DateTime.Parse("Jun 20, 2025"));
-            // Act // Assert
-            Assert.Equal(DateTime.Parse("Jun 20, 2025"), item.DateBought);
-        }
-        [Fact]
-        public void When_Creating_An_Items_Then_It_Should_Initalize_DateBought_As_Min_Value()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note", DateTime.Parse("Jun 10, 2025"));
-            // Act // Assert
-            Assert.Equal(DateTime.MinValue, item.DateBought);
-        }
-        [Fact]
-        public void When_Creating_An_Item_Then_It_Should_Initalize_Quantity()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note", DateTime.Parse("Jun 10, 2025"));
-
-            // Act // Assert
-            Assert.Equal(1, item.Quantity);
-            Assert.Throws<ArgumentOutOfRangeException>(() => { Items invalidItem = new Items("Test Item", "This is a test item", Schedule.Daily, -5, 1, Category.Works, ItemStatus.Bought, "Test note", DateTime.Parse("Jun 10, 2025")); });
-        }
-        [Fact]
-        public void When_There_Is_Items_Then_It_Should_Update_With_New_Name()
-        {
-            // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act
-            item.Update("Updated Item", "This is an updated test item", "Updated note", 5);
+            // Arrange // Act
+            var item = new Items(name, desc, schedule, quantity, id, category, status, notes, dateadded, datebought);
             // Assert
-            Assert.Equal("Updated Item", item.Name);
+            Assert.Equal(name, item.Name);
+            Assert.Equal(desc, item.Description);
+            Assert.Equal(schedule, item.Schedule);
+            Assert.Equal(quantity, item.Quantity);
+            Assert.Equal(id, item.Id);
+            Assert.Equal(category, item.Category);
+            Assert.Equal(status, item.Status);
+            Assert.Equal(notes, item.Notes);
+            Assert.Equal(expectedvalue1, item.DateAdded);
+            Assert.Equal(expectedvalue2, item.DateBought);
         }
-        [Fact]
-        public void When_There_Is_Items_Then_It_Should_Change_Schedule()
+        [Theory]
+        [MemberData(nameof(ItemsDataFixture.GetItemsWithEmptyString), MemberType = typeof(ItemsDataFixture))]
+        public void Given_There_Are_Items_With_Empty_Name_Or_Description_When_Items_Tried_To_Add_Then_It_Should_Throw_Argument_Null_Exception(string name, string desc, Schedule schedule, int quantity, int id, Category category, ItemStatus status, string notes, DateTime? dateadded, DateTime? datebought)
+        {
+            Assert.Throws<ArgumentNullException>(() => { new Items(name, desc, schedule, quantity, id, category, status, notes, dateadded, datebought); });
+        }
+        [Theory]
+        [MemberData(nameof(ItemsDataFixture.GetItemsWithInvalidQuantityForCreation), MemberType = typeof(ItemsDataFixture))]
+        public void Given_There_Are_Items_With_Invalid_Quantity_When_Items_Tried_To_Add_Then_It_Should_Throw_Argument_Out_Of_Range_Exception(string name, string desc, Schedule schedule, int quantity, int id, Category category, ItemStatus status, string notes, DateTime? dateadded, DateTime? datebought) {
+            Assert.Throws<ArgumentOutOfRangeException>(() => { new Items(name, desc, schedule, quantity, id, category, status, notes, dateadded, datebought); });
+        }
+        [Theory]
+        [MemberData(nameof(ItemsDataFixture.GetValidItemsForUpdate), MemberType = typeof(ItemsDataFixture))]
+        public void Given_There_Are_Items_When_Updating_Items_Then_The_Properties_Should_Reassigned_With_New_Value(string oldname, string olddesc, Schedule oldschedule, int oldquantity, string newname, string newdesc, string newnote, int newquantity, Category newcategory, Schedule newschedule, ItemStatus newstatus)
         {
             // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
+            var item = new Items(oldname, olddesc, oldschedule, oldquantity);
             // Act
-            item.ChangeSchedule(Schedule.Monthly);
+            item.Update(newname, newdesc, newnote, newquantity);
+            item.ChangeCategory(newcategory);
+            item.ChangeSchedule(newschedule);
+            item.ChangeStatus(newstatus);
             // Assert
-            Assert.Equal(Schedule.Monthly, item.Schedule);
+            Assert.Equal(newname, item.Name);
+            Assert.Equal(newdesc, item.Description);
+            Assert.Equal(newnote, item.Notes);
+            Assert.Equal(newquantity, item.Quantity);
+            Assert.Equal(newcategory, item.Category);
+            Assert.Equal(newschedule, item.Schedule);
+            Assert.Equal(newstatus, item.Status);
         }
-        [Fact]
-        public void When_There_Is_Items_Then_It_Should_Change_Category()
+        [Theory]
+        [MemberData(nameof(ItemsDataFixture.GetItemsWithEmptyStringForUpdating), MemberType = typeof(ItemsDataFixture))]
+        public void Given_There_Are_Invalid_Items_When_Updating_Items_Then_It_Should_Throw_Exception(string oldname, string olddesc, Schedule oldschedule, int oldquantity, string newname, string newdesc, string newnote, int newquantity)
         {
             // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act
-            item.ChangeCategory(Category.Personal);
-            // Assert
-            Assert.Equal(Category.Personal, item.Category);
+            var item = new Items(oldname, olddesc, oldschedule, oldquantity);
+            // Act // Assert
+            Assert.Throws<ArgumentNullException>(() => item.Update(newname, newdesc, newnote, newquantity));
         }
-        [Fact]
-        public void When_There_Is_Items_Then_It_Should_Change_Status()
+        [Theory]
+        [MemberData(nameof(ItemsDataFixture.GetItemsWithInvalidQuantityForUpdating), MemberType = typeof(ItemsDataFixture))]
+        public void Given_There_Are_Valid_Items_When_Updating_Items_With_Invalid_Quantity_Then_It_Should_Throw_Exception(string oldname, string olddesc, Schedule oldschedule, int oldquantity, string newname, string newdesc, string newnote, int newquantity)
         {
             // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.Bought, "Test note");
-            // Act
-            item.ChangeStatus(ItemStatus.NotBought);
-            // Assert
-            Assert.Equal(ItemStatus.NotBought, item.Status);
+            var item = new Items(oldname, olddesc, oldschedule, oldquantity);
+            // Act // Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => item.Update(newname, newdesc, newnote, newquantity));
         }
-        [Fact]
-        public void When_There_Is_Items_Then_It_Should_Mark_As_Bought()
+        [Theory]
+        [MemberData(nameof(ItemsDataFixture.GetItemsForMarkingBought), MemberType = typeof(ItemsDataFixture))]
+        public void Given_There_Are_Valid_Items_When_Marking_As_Bought_Then_It_Should_Reassign_Status_To_Bought_And_Set_Bought_Date_As_Today(string name, string desc, Schedule schedule, int quantity, ItemStatus status, DateTime datebought)
         {
             // Arrange
-            Items item = new Items("Test Item", "This is a test item", Schedule.Daily, 1, 1, Category.Works, ItemStatus.NotBought, "Test note");
+            var item = new Items(name, desc, schedule, quantity);
             // Act
             item.MarkAsBought();
             // Assert
-            Assert.Equal(ItemStatus.Bought, item.Status);
-            Assert.NotNull(item.DateBought);
-            Assert.Equal(DateTime.Today, item.DateBought.Value);
-        }
-        [Fact]
-        public void When_Updating_Items_With_Blank_Title_Or_Description_Then_It_Should_Throw()
-        {
-            // Arrange
-            List<Items> items = new List<Items>();
-            Items item1 = new Items("Meow", "Meow", Schedule.Daily, 1);
-            Items item2 = new Items("Mrow", "Mrow", Schedule.Daily, 1);
-            // Act
-            items.Add(item1);
-            items.Add(item2);
-            // Assert
-            Assert.Throws<ArgumentNullException>(() => item1.Update("", "Mrow", "", 1));
-            Assert.Throws<ArgumentNullException>(() => item2.Update("Mrrp", "", "", 1));
+            Assert.Equal(status, item.Status);
+            Assert.Equal(datebought, item.DateBought);
         }
     }
 }
