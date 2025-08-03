@@ -6,52 +6,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BulletJournalApp.Test.Core.Data;
 
 namespace BulletJournalApp.Test.Core.Service
 {
     public class ItemStatusServiceTest
     {
-        private ItemService _itemService = new ItemService(new ConsoleLogger(), new FileLogger());
-        public Items item1 = new Items("Test", "Test", Schedule.Monthly, 1);
-        public Items item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
-        public Items item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
-        [Fact]
-        public void When_User_Change_Status_Then_Items_Should_Update_With_New_Status()
+        private ConsoleLogger _consolelogger = new ConsoleLogger();
+        private FileLogger _filelogger = new FileLogger();
+        private ItemService _itemService;
+        private ItemStatusService _itemStatusService;
+
+        public ItemStatusServiceTest()
         {
-            // Arrange
-            List<Items> items;
-            var service = new ItemStatusService(_itemService);
-            _itemService.AddItems(item1);
-            _itemService.AddItems(item2);
-            _itemService.AddItems(item3);
-            // Act
-            service.ChangeStatus("Test2", Entries.ITEMS, ItemStatus.Cancelled);
-            items = _itemService.GetAllItems();
-            // Assert
-            Assert.Equal(3, items.Count);
-            Assert.Equal(ItemStatus.Cancelled, item2.Status);
-            Assert.Throws<Exception>(() => service.ChangeStatus("Fake Item", Entries.ITEMS, ItemStatus.Arrived));
+            _itemService = new ItemService(_consolelogger, _filelogger);
+            _itemStatusService = new ItemStatusService(_itemService);
+            var data = new ItemStatusServiceData();
+            data.SetUpItems(_itemService);
         }
-        [Fact]
-        public void When_Status_Were_Selected_Then_Items_Should_Return_With_Only_Just_This_Status()
+
+        [Theory]
+        [MemberData(nameof(ItemStatusServiceData.GetStatusAndStringValue), MemberType =typeof(ItemStatusServiceData))]
+        public void Given_There_Are_Items_In_The_Shopping_List_When_Changing_The_Status_Then_Item_Should_Be_Updated_With_New_Status(string name, ItemStatus status)
         {
             // Arrange
-            List<Items> AllItems;
-            List<Items> ArrivedItems;
-            var service = new ItemStatusService(_itemService);
-            _itemService.AddItems(item1);
-            _itemService.AddItems(item2);
-            _itemService.AddItems(item3);
-            service.ChangeStatus("Test3", Entries.ITEMS, ItemStatus.Arrived);
+            int num = 7;
             // Act
-            AllItems = _itemService.GetAllItems();
-            ArrivedItems = service.ListItemsByStatus(ItemStatus.Arrived);
+            _itemStatusService.ChangeStatus(name, Entries.ITEMS, status);
+            var items = _itemService.GetAllItems();
+            var item = _itemService.FindItemsByName(name);
             // Assert
-            Assert.Equal(3, AllItems.Count);
-            Assert.Single(ArrivedItems);
-            Assert.Contains(item3, ArrivedItems);
-            Assert.DoesNotContain(item1, ArrivedItems);
-            Assert.DoesNotContain(item2, ArrivedItems);
+            Assert.Equal(num, items.Count);
+            Assert.Equal(status, item.Status);
+            Assert.Throws<ArgumentNullException>(() => _itemStatusService.ChangeStatus(null, Entries.ITEMS, status));
+        }
+        [Theory]
+        [MemberData(nameof(ItemStatusServiceData.GetStatusValue), MemberType =typeof(ItemStatusServiceData))]
+        public void Given_There_Are_Items_In_The_Shopping_List_When_Listing_The_Items_With_Specific_Status_Then_It_Should_Return_A_List_Of_Items_With_Status_Value(int num, ItemStatus status)
+        {
+            // Assert // Act
+            var items = _itemStatusService.ListItemsByStatus(status);
+            // Assert
+            Assert.Equal(num, items.Count);
         }
     }
 }
