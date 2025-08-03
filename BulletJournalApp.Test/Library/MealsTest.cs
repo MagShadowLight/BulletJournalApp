@@ -12,7 +12,7 @@ namespace BulletJournalApp.Test.Library
     public class MealsTest
     {
         [Theory]
-        [MemberData(nameof(MealsFixture.GetValidMeals), MemberType =typeof(MealsFixture))]
+        [MemberData(nameof(MealsData.GetValidMeals), MemberType =typeof(MealsData))]
         public void Given_There_Are_Valid_Values_When_Meal_Were_Added_Then_It_Should_Assigned_With_Those_Value(string name, string desc, List<Ingredients> ingredients, DateTime mealdate, DateTime mealtime, int id, TimeOfDay timeofday, string newname, string newdesc, TimeOfDay newtimeofday, DateTime newmealdate, DateTime newmealtime, List<Ingredients> newingredients)
         {
             // Arrange // Act
@@ -27,19 +27,19 @@ namespace BulletJournalApp.Test.Library
             Assert.Equal(timeofday, meal.TimeOfDay);
         }
         [Theory]
-        [MemberData(nameof(MealsFixture.GetMealsWithEmptyString), MemberType = typeof(MealsFixture))]
+        [MemberData(nameof(MealsData.GetMealsWithEmptyString), MemberType = typeof(MealsData))]
         public void Given_There_Are_Values_With_Empty_String_When_Trying_To_Add_Meal_Then_It_Should_Throw_Exception(string name, string desc, List<Ingredients> ingredients, DateTime mealdate, DateTime mealtime, string fakename, string fakedesc, string newname, string newdesc)
         {
             Assert.Throws<ArgumentNullException>(() => { new Meals(name, desc, ingredients, mealdate, mealtime); });
         }
         [Theory]
-        [MemberData(nameof(MealsFixture.GetMealsWithEmptyList), MemberType = typeof(MealsFixture))]
+        [MemberData(nameof(MealsData.GetMealsWithEmptyList), MemberType = typeof(MealsData))]
         public void Given_There_Are_Values_With_Empty_List_When_Trying_To_Add_Meal_Then_It_Should_Throw_Exception(string name, string desc, List<Ingredients> ingredients, DateTime mealdate, DateTime mealtime, List<Ingredients> fakeingredients)
         {
             Assert.Throws<FormatException>(() => { new Meals(name, desc, ingredients, mealdate, mealtime); });
         }
         [Theory]
-        [MemberData(nameof(MealsFixture.GetValidMeals), MemberType = typeof(MealsFixture))]
+        [MemberData(nameof(MealsData.GetValidMeals), MemberType = typeof(MealsData))]
         public void Given_There_Are_Meals_When_Updating_The_Meal_Then_It_Should_Reassigned_With_Those__New_Value(string name, string desc, List<Ingredients> ingredients, DateTime mealdate, DateTime mealtime, int id, TimeOfDay timeofday, string newname, string newdesc, TimeOfDay newtimeofday, DateTime newmealdate, DateTime newmealtime, List<Ingredients> newingredients)
         {
             // Arrange
@@ -58,7 +58,7 @@ namespace BulletJournalApp.Test.Library
             Assert.Equal(newingredients, meal.Ingredients);
         }
         [Theory]
-        [MemberData(nameof(MealsFixture.GetMealsWithEmptyString), MemberType = typeof(MealsFixture))]
+        [MemberData(nameof(MealsData.GetMealsWithEmptyString), MemberType = typeof(MealsData))]
         public void Given_There_Are_Meal_When_Trying_To_Update_Meal_With_Empty_String_Then_It_Should_Throw_Exception(string name, string desc, List<Ingredients> ingredients, DateTime mealdate, DateTime mealtime, string fakename, string fakedesc, string newname, string newdesc)
         {
             // Arrange
@@ -67,7 +67,7 @@ namespace BulletJournalApp.Test.Library
             Assert.Throws<ArgumentNullException>(() => meal.Update(newname, newdesc));
         }
         [Theory]
-        [MemberData(nameof(MealsFixture.GetMealsWithEmptyList), MemberType = typeof(MealsFixture))]
+        [MemberData(nameof(MealsData.GetMealsWithEmptyList), MemberType = typeof(MealsData))]
         public void Given_There_Are_Meal_With_Empty_List_When_Trying_To_Update_Meal_With_Empty_List_Then_It_Should_Throw_Exception(string name, string desc, List<Ingredients> invalidingredients, DateTime mealdate, DateTime mealtime, List<Ingredients> ingredients)
         {
             // Arrange

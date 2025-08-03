@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Data.Library
 {
-    public class IngredientsFixture
+    public class IngredientsData
     {
         public static IEnumerable<object[]> GetValidIngredients()
         {

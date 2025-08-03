@@ -13,7 +13,7 @@ namespace BulletJournalApp.Test.Library
     {
 
         [Theory]
-        [MemberData(nameof(TasksFixture.GetValidTestDataForCreation), MemberType =typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetValidTestDataForCreation), MemberType =typeof(TasksData))]
         public void Given_There_Is_Valid_Values_In_Tasks_When_Tasks_Was_Added_Then_It_Should_Created_With_Values(DateTime duedate, string title, string description, Schedule schedule, bool isrepeating, int repeatdays, DateTime endrepeatdate, Priority priority, Category category, string notes, TasksStatus status, int id, bool iscomplete)
         {
             // Arrange // Act
@@ -34,14 +34,14 @@ namespace BulletJournalApp.Test.Library
             Assert.Equal(iscomplete, task.IsCompleted);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetInvalidTestDataForCreation), MemberType = typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetInvalidTestDataForCreation), MemberType = typeof(TasksData))]
         public void Given_There_Is_Invalid_Values_In_Tasks_When_Tasks_Tried_To_Create_Then_It_Should_Throw_Exception(DateTime duedate, string title, string description, Schedule schedule, bool isrepeating, int repeatdays, DateTime endrepeatdate, Priority priority, Category category, string notes, TasksStatus status, int id, bool iscomplete)
         {
             // Assert
             Assert.Throws<ArgumentException>(() => { new Tasks(duedate, title, description, schedule, isrepeating, repeatdays, endrepeatdate, priority, category, notes, status, id, iscomplete); } );
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetValidTestDataForUpdate), MemberType =typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetValidTestDataForUpdate), MemberType =typeof(TasksData))]
         public void Given_There_Is_An_Existing_Tasks_When_Updating_Tasks_Then_It_Should_Update_With_New_Valuew(DateTime oldduedate, string oldtitle, string olddesc, Schedule oldschedule, bool oldisrepeat, DateTime newduedate, string newtitle, string newdesc, bool newisrepeat, Priority newpriority, Category newcategory, TasksStatus newstatus, Schedule newschedule, string newnote, int newrepeatdays, DateTime newendrepeatdate)
         {
             // Arrange
@@ -66,7 +66,7 @@ namespace BulletJournalApp.Test.Library
             Assert.Equal(newschedule, task.schedule);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetTestDataForMarkingAndRepeating), MemberType =typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetTestDataForMarkingAndRepeating), MemberType =typeof(TasksData))]
         public void Given_There_Are_Tasks_When_Marking_As_Complete_Then_Is_Complete_Should_Set_To_True(DateTime duedate, string title, string desc, Schedule schedule, bool isrepeat, int repeatdays, DateTime endrepeatdate, DateTime expectedvalue1, DateTime expectedvalue2)
         {
             // Arrange
@@ -77,7 +77,7 @@ namespace BulletJournalApp.Test.Library
             Assert.True(task.IsCompleted);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetTestDataForMarkingAndRepeating), MemberType =typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetTestDataForMarkingAndRepeating), MemberType =typeof(TasksData))]
         public void Given_There_Are_Tasks_When_Repeating_The_Tasks_Then_DueDate_And_IsCompleted_Should_Be_Reassigned(DateTime duedate, string title, string desc, Schedule schedule, bool isrepeat, int repeatdays, DateTime endrepeatdate, DateTime expectedvalue1, DateTime expectedvalue2)
         {
             // Arrange
@@ -88,7 +88,7 @@ namespace BulletJournalApp.Test.Library
             Assert.Equal(expectedvalue1, task.DueDate);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetTestDataForMarkingAndRepeating), MemberType =typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetTestDataForMarkingAndRepeating), MemberType =typeof(TasksData))]
         public void Given_There_Are_Tasks_With_End_Repeat_Date_When_Repeating_The_Tasks_Over_The_End_Repeat_Date_Then_DueDate_And_IsCompleted_Should_Not_Be_Reassigned(DateTime duedate, string title, string desc, Schedule schedule, bool isrepeat, int repeatdays, DateTime endrepeatdate, DateTime expectedvalue1, DateTime expectedvalue2)
         {
             // Arrange
@@ -103,7 +103,7 @@ namespace BulletJournalApp.Test.Library
             Assert.Equal(expectedvalue2, task.DueDate);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetTestDataForOverdue), MemberType=typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetTestDataForOverdue), MemberType=typeof(TasksData))]
         public void Given_There_Are_Tasks_With_Past_Due_Date_When_Is_Overdue_Method_Run_Then_It_Should_Return_True(DateTime duedate1, DateTime duedate2, DateTime duedate3, string title, string desc, Schedule schedule, bool isrepeat)
         {
             // Arrange
@@ -114,7 +114,7 @@ namespace BulletJournalApp.Test.Library
             Assert.True(overdue);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetTestDataForOverdue), MemberType=typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetTestDataForOverdue), MemberType=typeof(TasksData))]
         public void Given_There_Are_Tasks_With_Future_Due_Date_When_Is_Overdue_Method_Run_Then_It_Should_Return_True(DateTime duedate1, DateTime duedate2, DateTime duedate3, string title, string desc, Schedule schedule, bool isrepeat)
         {
             // Arrange
@@ -125,7 +125,7 @@ namespace BulletJournalApp.Test.Library
             Assert.False(overdue);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetTestDataForOverdue), MemberType=typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetTestDataForOverdue), MemberType=typeof(TasksData))]
         public void Given_There_Are_Tasks_With_No_Due_Date_When_Is_Overdue_Method_Run_Then_It_Should_Return_True(DateTime duedate1, DateTime duedate2, DateTime duedate3, string title, string desc, Schedule schedule, bool isrepeat)
         {
             // Arrange
@@ -136,7 +136,7 @@ namespace BulletJournalApp.Test.Library
             Assert.False(overdue);
         }
         [Theory]
-        [MemberData(nameof(TasksFixture.GetTestDataForOverdue), MemberType=typeof(TasksFixture))]
+        [MemberData(nameof(TasksData.GetTestDataForOverdue), MemberType=typeof(TasksData))]
         public void Given_There_Are_Completed_Tasks_When_Is_Overdue_Method_Run_Then_It_Should_Return_True(DateTime duedate1, DateTime duedate2, DateTime duedate3, string title, string desc, Schedule schedule, bool isrepeat)
         {
             // Arrange

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Data.Library
 {
-    public class TasksFixture
+    public class TasksData
     {
         public static IEnumerable<object[]> GetValidTestDataForCreation()
         {

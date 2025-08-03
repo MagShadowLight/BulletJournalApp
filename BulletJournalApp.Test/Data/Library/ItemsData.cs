@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Data.Library
 {
-    public class ItemsFixture
+    public class ItemsData
     {
         public static IEnumerable<object[]> GetValidItemsForCreation()
         {

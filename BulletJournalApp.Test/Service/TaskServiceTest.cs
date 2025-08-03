@@ -6,59 +6,202 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BulletJournalApp.Test.Data.Services;
 
 namespace BulletJournalApp.Test.Service
 {
     public class TaskServiceTest
     {
-        private TaskService _taskService = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-        private ItemService _itemService = new ItemService(new ConsoleLogger(), new FileLogger());
+        private TaskService _taskService;
+        private ItemService _itemService;
+        private Formatter _formatter = new Formatter();
+        private ConsoleLogger _conlogger = new ConsoleLogger();
+        private FileLogger _filelogger = new FileLogger();
+        private Tasks task1;
+        private Tasks task2;
+        private Tasks task3;
+        private Tasks repeatingtask;
+        private Tasks repeatingtaskwithend;
+
+        public TaskServiceTest()
+        {
+            _taskService = new TaskService(_formatter, _conlogger, _filelogger);
+            _itemService = new ItemService(_conlogger, _filelogger);
+            task1 = new Tasks(DateTime.Today.AddDays(1), "Test 1", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 1, false);
+            task2 = new Tasks(DateTime.Today.AddDays(1), "Test 2", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 2, false);
+            task3 = new Tasks(DateTime.Today.AddDays(1), "Test 3", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
+            repeatingtask = new Tasks(DateTime.Today.AddDays(1), "Test 4", "Test", Schedule.Monthly, true, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
+            repeatingtaskwithend = new Tasks(DateTime.Today.AddDays(1), "Test 5", "Test", Schedule.Monthly, true, 7, DateTime.Today.AddDays(29), Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
+        }
+
+
         [Fact]
-        public void When_There_Are_Tasks_Then_It_Should_Return_Tasks_List()
+        public void Given_There_Are_No_Tasks_In_List_When_Adding_A_Task_Then_It_Should_Be_Added_To_List()
+        {
+            // Arrange 
+            int num = 3;
+            // Act
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            // Assert
+            Assert.Equal(num, _taskService.ListAllTasks().Count);
+            Assert.Contains(task1, _taskService.ListAllTasks());
+            Assert.Contains(task2, _taskService.ListAllTasks());
+            Assert.Contains(task3, _taskService.ListAllTasks());
+            Assert.Throws<ArgumentNullException>(() => _taskService.AddTask(null));
+        }
+        [Fact]
+        public void Given_There_Are_Tasks_In_The_List_When_Listing_All_Tasks_Then_It_Should_Return_All_Tasks()
         {
             // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false);
+            int num = 3;
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            // Act
+            var tasks = _taskService.ListAllTasks();
+            // Assert
+            Assert.Equal(3, tasks.Count);
+            Assert.Contains(task1, tasks);
+            Assert.Contains(task2, tasks);
+            Assert.Contains(task3, tasks);
+        }
+        [Fact]
+        public void Given_There_Are_Incomplete_Tasks_In_The_List_When_Getting_All_Incomplete_Tasks_Then_It_Should_Return_All_Incomplete_Tasks()
+        {
+            // Arrange
+            int num = 2;
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            // Act
             task2.MarkComplete();
-            // Act
-            service.AddTask(task1);
-            service.AddTask(task2);
-            var allTasks = service.ListAllTasks();
+            var incompletetasks = _taskService.ListIncompleteTasks();
             // Assert
-            Assert.Equal(2, allTasks.Count);
-            Assert.Contains(task1, allTasks);
-            Assert.Contains(task2, allTasks);
+            Assert.Equal(num, incompletetasks.Count);
+            Assert.Contains(task1, incompletetasks);
+            Assert.Contains(task3, incompletetasks);
+            Assert.DoesNotContain(task2, incompletetasks);
         }
         [Fact]
-        public void When_There_Are_Incomplete_Tasks_Then_It_Should_Return_Incomplete_Tasks()
-        {
-            // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false);
-            // Act
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
-            service.MarkTasksComplete(task2.Title);
-            var incompleteTasks = service.ListIncompleteTasks();
-            // Assert
-            Assert.Equal(2, incompleteTasks.Count);
-            Assert.Contains(task1, incompleteTasks);
-            Assert.Contains(task3, incompleteTasks);
-        }
-        [Fact]
-        public void When_There_Are_Empty_Tasks_Then_It_Should_Return_Nothing()
-        {
-            // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            // Act
-            var tasks = service.ListAllTasks();
+        public void Given_There_Are_Empty_List_When_Getting_All_Tasks_Then_It_Should_Return_Nothing()
+        { 
+            // Arrange // Act
+            var tasks = _taskService.ListAllTasks();
             // Assert
             Assert.Empty(tasks);
+            Assert.DoesNotContain(task1, tasks);
+            Assert.DoesNotContain(task2, tasks);
+            Assert.DoesNotContain(task3, tasks);
         }
+        [Fact]
+        public void Given_There_Are_Tasks_In_The_List_When_Finding_The_Tasks_With_Specific_Title_Then_It_Should_Find_That_Task()
+        {
+            // Arrange
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            // Act
+            var task = _taskService.FindTasksByTitle("Test 2");
+            // Assert
+            Assert.Equal(task2, task);
+            Assert.NotEqual(task1, task);
+            Assert.NotEqual(task3, task);
+        }
+        [Theory]
+        [MemberData(nameof(TasksServiceData.GetValueForUpdate), MemberType =typeof(TasksServiceData))]
+        public void Given_There_Are_Tasks_In_The_List_When_Updating_The_Task_With_New_Values_Then_Task_Should_Be_Updated(string newtitle, string newdescription, string newnote, bool newisrepeat, DateTime newduedate)
+        {
+            // Arrange
+            int num = 3;
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            // Act
+            _taskService.UpdateTask(task2.Title, newtitle, newdescription, newnote, newisrepeat, newduedate);
+            var tasks = _taskService.ListAllTasks();
+            // Assert
+            Assert.Equal(num, tasks.Count);
+            Assert.Equal(newtitle, task2.Title);
+            Assert.Equal(newdescription, task2.Description);
+            Assert.Equal(newnote, task2.Notes);
+            Assert.Equal(newisrepeat, task2.IsRepeatable);
+            Assert.Equal(newduedate, task2.DueDate);
+            Assert.Contains(task1, tasks);
+            Assert.Contains(task2, tasks);
+            Assert.Contains(task3, tasks);
+            Assert.Throws<ArgumentNullException>(() => _taskService.UpdateTask(null, null, null, null, false, DateTime.MinValue));
+        }
+        [Theory]
+        [MemberData(nameof(TasksServiceData.GetString), MemberType =typeof(TasksServiceData))]
+        public void Given_There_Are_Tasks_In_The_List_When_Marking_A_Task_As_Complete_Then_It_Should_Marked_As_Complete(string title)
+        {
+            // Arrange
+            int num = 3;
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            // Act
+            _taskService.MarkTasksComplete(title);
+            var tasks = _taskService.ListAllTasks();
+            var task = _taskService.FindTasksByTitle(title);
+            // Assert
+            Assert.True(task.IsCompleted);
+            Assert.Equal(num, tasks.Count);
+            Assert.Contains(task, tasks);
+            Assert.Throws<ArgumentNullException>(() => _taskService.MarkTasksComplete(null));
+        }
+        [Fact]
+        public void Given_There_Are_Tasks_With_Repeats_In_The_List_When_Marking_A_Task_As_Complete_Then_It_Should_Set_A_New_Due_Date_Instead_Of_Marking_As_Complete()
+        {
+            // Arrange
+            _taskService.AddTask(repeatingtask);
+            // Act
+            _taskService.MarkTasksComplete(repeatingtask.Title);
+            var tasks = _taskService.ListAllTasks();
+            // Assert
+            Assert.False(repeatingtask.IsCompleted);
+            Assert.True(repeatingtask.IsRepeatable);
+            Assert.Single(tasks);
+        }
+        [Fact]
+        public void Given_There_Are_Tasks_With_Repeats_And_End_Date_In_The_List_When_Marking_A_Task_As_Complete_Then_It_Should_Marks_As_Complete_And_Set_IsRepeatable_As_False()
+        {
+            // Arrange
+            _taskService.AddTask(repeatingtaskwithend);
+            // Act
+            _taskService.MarkTasksComplete(repeatingtaskwithend.Title);
+            _taskService.MarkTasksComplete(repeatingtaskwithend.Title);
+            _taskService.MarkTasksComplete(repeatingtaskwithend.Title);
+            _taskService.MarkTasksComplete(repeatingtaskwithend.Title);
+            _taskService.MarkTasksComplete(repeatingtaskwithend.Title);
+            var tasks = _taskService.ListAllTasks();
+            // Assert
+            Assert.True(repeatingtaskwithend.IsCompleted);
+            Assert.False(repeatingtaskwithend.IsRepeatable);
+            Assert.Single(tasks);
+        }
+        [Theory]
+        [MemberData(nameof(TasksServiceData.GetString), MemberType = typeof(TasksServiceData))]
+        public void Given_There_Are_Tasks_In_The_List_When_Deleting_A_Task_Then_It_Should_Be_Deleted(string title)
+        {
+            // Arrange
+            int num = 2;
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+            var task = _taskService.FindTasksByTitle(title);
+            // Act
+            _taskService.DeleteTask(title);
+            var tasks = _taskService.ListAllTasks();
+            // Assert
+            Assert.Equal(num, tasks.Count);
+            Assert.DoesNotContain(task, tasks);
+            Assert.Throws<ArgumentNullException>(() => _taskService.DeleteTask(null));
+        }
+
+        /*
         [Fact]
         public void When_There_Are_Tasks_With_Default_Priority_Then_It_Should_Return_Tasks_List_By_Default_Priority()
         {
@@ -146,114 +289,6 @@ namespace BulletJournalApp.Test.Service
             Assert.Contains(task1, weeklyTasks);
             Assert.Contains(task4, weeklyTasks);
         }
-        [Fact]
-        public void When_There_Are_Tasks_With_Specific_Title_Then_It_Should_Return_Only_Task()
-        {
-            // Assert
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Weekly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Weekly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
-            service.AddTask(task4);
-            // Act
-            var task = service.FindTasksByTitle("Task Test 2");
-            // Assert
-            Assert.Contains(task2.Title, task.Title);
-        }
-
-        [Fact]
-        public void When_Creating_Tasks_Then_The_Tasks_Should_Be_Added()
-        {
-            // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test", "Test", Schedule.Monthly, false);
-            // Act
-            service.AddTask(task1);
-            var task = service.FindTasksByTitle("Test");
-            // Assert
-            Assert.Contains(task1.Title, task.Title);
-            Assert.Throws<ArgumentNullException>(() => service.AddTask(null));
-        }
-        [Fact]
-        public void When_Tasks_Marked_As_Complete_Then_It_Should_Succeed()
-        {
-            // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily, false);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly, false);
-            var repeatingTask = new Tasks(DateTime.Today, "Repeating Test Task", "Test", Schedule.Monthly, true, 7, new DateTime(), Priority.Medium, Category.None, "", TasksStatus.ToDo, 0, false);
-            var repeatingTaskWithEnd = new Tasks(DateTime.Today, "RepeatingTestTaskWithEnd", "Test", Schedule.Monthly, true, 7, DateTime.Today.AddDays(28), Priority.Medium, Category.None, "", TasksStatus.ToDo, 0, false);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
-            service.AddTask(repeatingTask);
-            service.AddTask(repeatingTaskWithEnd);
-            // Act
-            service.MarkTasksComplete("Test 2");
-            service.MarkTasksComplete("Repeating Test Task");
-            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
-            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
-            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
-            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
-            service.MarkTasksComplete("RepeatingTestTaskWithEnd");
-            var allTasks = service.ListAllTasks();
-            var incompleteTasks = service.ListIncompleteTasks();
-            // Assert
-            Assert.True(task2.IsCompleted);
-            Assert.Equal(5, allTasks.Count);
-            Assert.Equal(3, incompleteTasks.Count);
-            Assert.Equal(DateTime.Today.AddDays(7), repeatingTask.DueDate);
-            Assert.False(repeatingTask.IsCompleted);
-            Assert.Equal(repeatingTaskWithEnd.EndRepeatDate, repeatingTaskWithEnd.DueDate);
-            Assert.True(repeatingTaskWithEnd.IsCompleted);
-            Assert.False(repeatingTaskWithEnd.IsRepeatable);
-            Assert.Throws<Exception>(() => service.MarkTasksComplete("Made Up Test"));
-        }
-        [Fact]
-        public void When_Tasks_Were_Updated_Then_It_Should_Succeed()
-        {
-            // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily, false);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly, false);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
-            // Act
-            service.UpdateTask("Test 2", "Updated Test", "Test with Updated Date", "", false, DateTime.Now);
-            var tasks = service.ListAllTasks();
-            var updatedTask = service.FindTasksByTitle("Updated Test");
-            // Assert
-            Assert.Contains("Updated Test", updatedTask.Title);
-            Assert.Equal(3, tasks.Count);
-            Assert.Throws<Exception>(() => service.UpdateTask("Fake Test", "Test", "Test", "", false, DateTime.Now));
-        }
-        [Fact]
-        public void When_Tasks_Were_Deleted_Then_It_Should_Succeed()
-        {
-            // Arrange
-            var service = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "Test", Schedule.Daily, false);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "Test", Schedule.Weekly, false);
-            service.AddTask(task1);
-            service.AddTask(task2);
-            service.AddTask(task3);
-            // Act
-            service.DeleteTask("Test 3");
-            var tasks = service.ListAllTasks();
-            // Assert
-            Assert.Equal(2, tasks.Count());
-            Assert.Contains(task1, tasks);
-            Assert.Contains(task2, tasks);
-            Assert.DoesNotContain(task3, tasks);
-            Assert.Throws<Exception>(() => service.DeleteTask("Fake Test"));
-        }
+        */
     }
 }

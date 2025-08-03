@@ -40,7 +40,7 @@ namespace BulletJournalApp.Core.Services
         {
             var task = FindTasksByTitle(title);
             if (task == null)
-                throw new Exception("Cannot find task");
+                throw new ArgumentNullException("Cannot find task");
             tasks.Remove(task);            
         }
 
@@ -62,7 +62,7 @@ namespace BulletJournalApp.Core.Services
         {
             var task = FindTasksByTitle(title);
             if (task == null)
-                throw new Exception("Cannot find task");
+                throw new ArgumentNullException("Cannot find task");
             task.IsCompleted = true;
             if (task.IsRepeatable)
                 task.RepeatTask();
@@ -71,7 +71,7 @@ namespace BulletJournalApp.Core.Services
         {
             var task = FindTasksByTitle(oldTitle);
             if (task == null)
-                throw new Exception("Cannot find task");
+                throw new ArgumentNullException("Cannot find task");
             task.Update(newDueDate, newTitle, newDescription, repeat, newNote);
         }
     }

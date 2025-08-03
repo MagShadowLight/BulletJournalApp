@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Data.Library
 {
-    public class MealsFixture
+    public class MealsData
     {
         private static List<Ingredients> ingredients1 = SetIngredientsList1(new List<Ingredients>());
         private static List<Ingredients> ingredients2 = SetIngredientsList2(new List<Ingredients>());
