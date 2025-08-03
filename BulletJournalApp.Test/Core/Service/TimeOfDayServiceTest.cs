@@ -1,6 +1,7 @@
 ﻿using BulletJournalApp.Core.Services;
 using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
+using BulletJournalApp.Test.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,66 +12,40 @@ namespace BulletJournalApp.Test.Core.Service
 {
     public class TimeOfDayServiceTest
     {
-        private readonly MealService _mealService = new MealService();
-        List<Ingredients> ingredientsList1 = new List<Ingredients>();
-        List<Ingredients> ingredientsList2 = new List<Ingredients>();
+        private MealService _mealService;
+        private TimeOfDayService _timeOfDayService;
+        private TimeOfDayServiceData _data;
 
-        void SetUpMeals()
+        public TimeOfDayServiceTest()
         {
-            Ingredients ingredient1 = new Ingredients("Test 1", 3, 2.16, "1 Cup");
-            Ingredients ingredient2 = new Ingredients("Test 2", 1, 6.12, "1 tsp");
-            Ingredients ingredient3 = new Ingredients("Test 3", 6, 0.52, "2 oz");
-            ingredientsList1.Add(ingredient1);
-            ingredientsList1.Add(ingredient2);
-            ingredientsList2.Add(ingredient1);
-            ingredientsList2.Add(ingredient3);
-            Meals meal1 = new Meals("Test 1", "nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            Meals meal2 = new Meals("Test 2", "nom nom", ingredientsList2, DateTime.Today, DateTime.Today, 0, TimeOfDay.Dinner);
-            Meals meal3 = new Meals("Test 3", "nom nom nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Breakfast);
-            _mealService.AddMeal(meal1);
-            _mealService.AddMeal(meal2);
-            _mealService.AddMeal(meal3);
+            _mealService = new MealService();
+            _timeOfDayService = new TimeOfDayService(_mealService);
+            _data = new TimeOfDayServiceData();
+            _data.SetUpMeals(_mealService);
         }
-
-        [Fact]
-        public void When_Meals_Were_Changed_With_Different_Time_Then_Time_Of_Day_Should_Changed()
+        [Theory]
+        [MemberData(nameof(TimeOfDayServiceData.GetTimeOfDayAndStringValue), MemberType =typeof(TimeOfDayServiceData))]
+        public void Given_There_Are_Meals_In_The_List_When_Changing_The_Time_Of_Day_Then_Meal_Should_Be_Updated_With_New_Time_Of_Day(string name, TimeOfDay timeOfDay)
         {
             // Arrange
-            SetUpMeals();
-            var service = new TimeOfDayService(_mealService);
-            var meal1 = _mealService.FindMealsByName("Test 1");
-            var meal2 = _mealService.FindMealsByName("Test 2");
-            var meal3 = _mealService.FindMealsByName("Test 3");
+            int num = 6;
             // Act
-            service.ChangeTimeOfDay("Test 2", TimeOfDay.Dessert);
+            _timeOfDayService.ChangeTimeOfDay(name, timeOfDay);
             var meals = _mealService.GetAllMeals();
+            var meal = _mealService.FindMealsByName(name);
             // Assert
-            Assert.Equal(3, meals.Count);
-            Assert.Contains(meal1, meals);
-            Assert.Contains(meal2, meals);
-            Assert.Contains(meal3, meals);
-            Assert.Equal(TimeOfDay.Dessert, meal2.TimeOfDay);
-            Assert.Throws<ArgumentNullException>(() => service.ChangeTimeOfDay("Fake Test", TimeOfDay.None));
+            Assert.Equal(num, meals.Count);
+            Assert.Equal(timeOfDay, meal.TimeOfDay);
+            Assert.Throws<ArgumentNullException>(() => _timeOfDayService.ChangeTimeOfDay(null, timeOfDay));
         }
-        [Fact]
-        public void When_Time_Of_Day_Were_Selected_Then_It_Should_Return_With_That_Meals()
+        [Theory]
+        [MemberData(nameof(TimeOfDayServiceData.GetTimeOfDayValue), MemberType =typeof(TimeOfDayServiceData))]
+        public void Given_There_Are_Meals_In_The_List_When_Listing_The_Meals_With_Specific_Time_Of_Day_Then_It_Should_Return_Meals_With_Only_Time_Of_Day_Value(int num, TimeOfDay timeofday)
         {
-            // Arrange
-            SetUpMeals();
-            var service = new TimeOfDayService(_mealService);
-            var meal1 = _mealService.FindMealsByName("Test 1");
-            var meal2 = _mealService.FindMealsByName("Test 2");
-            var meal3 = _mealService.FindMealsByName("Test 3");
-            Meals meal4 = new Meals("Test 4", "nom nom nom nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            _mealService.AddMeal(meal4);
-            // Act
-            var lunchMeals = service.GetMealsByTimeOfDay(TimeOfDay.Lunch);
-            var meals = _mealService.GetAllMeals();
+            // Arrange // Act
+            var meals = _timeOfDayService.GetMealsByTimeOfDay(timeofday);
             // Assert
-            Assert.Equal(4, meals.Count);
-            Assert.Equal(2, lunchMeals.Count);
-            Assert.Contains(meal1, lunchMeals);
-            Assert.Contains(meal4, lunchMeals);
+            Assert.Equal(num, meals.Count);
         }
     }
 }

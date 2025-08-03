@@ -21,7 +21,7 @@ namespace BulletJournalApp.Core.Services
             var meal = _mealservice.FindMealsByName(name);
             if (meal == null)
                 throw new ArgumentNullException($"Meal: {name} not found");
-            meal.TimeOfDay = timeOfDay;
+            meal.ChangeTimeOfDay(timeOfDay);
         }
 
         public List<Meals> GetMealsByTimeOfDay(TimeOfDay timeOfDay)
