@@ -6,25 +6,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BulletJournalApp.Test.Data.Services;
 
 namespace BulletJournalApp.Test.Service
 {
     public class TasksStatusServiceTest
     {
-        [Fact]
-        public void When_Tasks_Change_Status_Then_It_Should_Succeed()
+        private Formatter _formatter = new Formatter();
+        private ConsoleLogger _consolelogger = new ConsoleLogger();
+        private FileLogger _filelogger = new FileLogger();
+        private TaskService _taskService;
+        private TasksStatusService _tasksStatusService;
+
+        public TasksStatusServiceTest()
+        {
+            _taskService = new TaskService(_formatter, _consolelogger, _filelogger);
+            _tasksStatusService = new TasksStatusService(_taskService, _consolelogger, _filelogger, _formatter);
+            var data = new TasksStatusServiceData();
+            data.SetUpTasks(_taskService);
+        }
+
+        [Theory]
+        [MemberData(nameof(TasksStatusServiceData.GetStatusAndStringValue), MemberType =typeof(TasksStatusServiceData))]
+        public void Given_There_Are_Tasks_In_The_List_When_Changing_The_Status_Then_Task_Should_Be_Changed_With_New_Status(string title, TasksStatus status)
         {
             // Arrange
-            var service1 = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var service2 = new TasksStatusService(service1, new ConsoleLogger(), new FileLogger(), new Formatter());
-            var task1 = new Tasks(DateTime.Now, "Test 1", "Test", Schedule.Monthly, false);
-            service1.AddTask(task1);
+            int num = 5;
             // Act
-            service2.ChangeStatus("Test 1", TasksStatus.Overdue);
-            var task = service2.ListTasksByStatus(TasksStatus.Overdue);
+            _tasksStatusService.ChangeStatus(title, status);
+            var tasks = _taskService.ListAllTasks();
+            var task = _taskService.FindTasksByTitle(title);
             // Assert
-            Assert.Contains(task1, task);
-            Assert.Throws<Exception>(() => service2.ChangeStatus("", TasksStatus.InProgress));
+            Assert.Equal(num, tasks.Count);
+            Assert.Equal(status, task.Status);
+            Assert.Throws<ArgumentNullException>(() => _tasksStatusService.ChangeStatus(null, status));
+        }
+        [Theory]
+        [MemberData(nameof(TasksStatusServiceData.GetStatusValue), MemberType =typeof(TasksStatusServiceData))]
+        public void Given_There_Are_Tasks_In_The_List_When_Listing_The_Tasks_With_Specific_Status_Then_It_Should_Return_List_Of_Tasks_With_Status_Value(int num, TasksStatus status)
+        {
+            // Arrange // Act
+            var tasks = _tasksStatusService.ListTasksByStatus(status);
+            // Assert
+            Assert.Equal(num, tasks.Count);
         }
     }
 }
