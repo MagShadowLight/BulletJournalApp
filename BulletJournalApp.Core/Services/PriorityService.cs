@@ -29,7 +29,7 @@ namespace BulletJournalApp.Core.Services
         {
             var task = _taskservice.FindTasksByTitle(title);
             if (task == null)
-                throw new Exception("Cannot find task");
+                throw new ArgumentNullException("Cannot find task");
             task.ChangePriority(priority);
         }
 

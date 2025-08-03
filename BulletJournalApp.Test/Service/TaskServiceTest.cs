@@ -13,7 +13,6 @@ namespace BulletJournalApp.Test.Service
     public class TaskServiceTest
     {
         private TaskService _taskService;
-        private ItemService _itemService;
         private Formatter _formatter = new Formatter();
         private ConsoleLogger _conlogger = new ConsoleLogger();
         private FileLogger _filelogger = new FileLogger();
@@ -26,7 +25,6 @@ namespace BulletJournalApp.Test.Service
         public TaskServiceTest()
         {
             _taskService = new TaskService(_formatter, _conlogger, _filelogger);
-            _itemService = new ItemService(_conlogger, _filelogger);
             task1 = new Tasks(DateTime.Today.AddDays(1), "Test 1", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 1, false);
             task2 = new Tasks(DateTime.Today.AddDays(1), "Test 2", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 2, false);
             task3 = new Tasks(DateTime.Today.AddDays(1), "Test 3", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
@@ -202,29 +200,6 @@ namespace BulletJournalApp.Test.Service
         }
 
         /*
-        [Fact]
-        public void When_There_Are_Tasks_With_Default_Priority_Then_It_Should_Return_Tasks_List_By_Default_Priority()
-        {
-            // Arrange
-            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var priorityservice = new PriorityService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false);
-            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly, false);
-            taskservice.AddTask(task1);
-            taskservice.AddTask(task2);
-            taskservice.AddTask(task3);
-            taskservice.AddTask(task4);
-            // Act
-            priorityservice.ChangePriority(task2.Title, Priority.High);
-            priorityservice.ChangePriority(task4.Title, Priority.Low);
-            var mediumTasks = priorityservice.ListTasksByPriority(Priority.Medium);
-            // Assert
-            Assert.Equal(2, mediumTasks.Count);
-            Assert.Contains(task1, mediumTasks);
-            Assert.Contains(task3, mediumTasks);
-        }
         [Fact]
         public void When_There_Are_Tasks_With_Category_Then_It_Should_Return_Tasks_List_By_Category()
         {
