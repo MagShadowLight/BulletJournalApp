@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Test.Service
+namespace BulletJournalApp.Test.Core.Service
 {
     [Collection("Sequential")]
     public class LoggerTest

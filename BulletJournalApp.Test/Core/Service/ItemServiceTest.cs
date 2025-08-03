@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Test.Service
+namespace BulletJournalApp.Test.Core.Service
 {
     public class ItemServiceTest
     {

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Test.Data.Services
+namespace BulletJournalApp.Test.Core.Data
 {
     public class PriorityServiceData
     {

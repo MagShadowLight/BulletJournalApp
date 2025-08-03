@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BulletJournalApp.Test.Data.Services;
+using BulletJournalApp.Test.Core.Data;
 
-namespace BulletJournalApp.Test.Service
+namespace BulletJournalApp.Test.Core.Service
 {
     public class TaskServiceTest
     {
@@ -192,51 +192,5 @@ namespace BulletJournalApp.Test.Service
             Assert.DoesNotContain(task, tasks);
             Assert.Throws<ArgumentNullException>(() => _taskService.DeleteTask(null));
         }
-
-        /*
-        [Fact]
-        public void When_There_Are_Tasks_In_Progress_Then_It_Should_Returns_Only_In_Progress_Tasks()
-        {
-            // Arrange
-            var taskservice = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-            var statusservice = new TasksStatusService(taskservice, new ConsoleLogger(), new FileLogger(), new Formatter());
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            taskservice.AddTask(task1);
-            taskservice.AddTask(task2);
-            taskservice.AddTask(task3);
-            // Act
-            statusservice.ChangeStatus(task1.Title, TasksStatus.InProgress);
-            statusservice.ChangeStatus(task3.Title, TasksStatus.InProgress);
-            var WIPTasks = statusservice.ListTasksByStatus(TasksStatus.InProgress);
-            // Assert
-            Assert.Equal(2, WIPTasks.Count);
-            Assert.Contains(task1, WIPTasks);
-            Assert.Contains(task3, WIPTasks);
-        }
-        [Fact]
-        public void When_There_Are_Tasks_For_The_Week_Then_It_Should_Return_Only_Tasks_For_The_Week()
-        {
-            // Arrange
-            var scheduleservice = new ScheduleService(new Formatter(), new ConsoleLogger(), new FileLogger(), _taskService, _itemService);
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Home);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            var task4 = new Tasks(DateTime.Now, "Task Test 4", "mriaw", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.Personal);
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
-            _taskService.AddTask(task4);
-            // Act
-            scheduleservice.ChangeSchedule(task1.Title, Entries.TASKS, Schedule.Weekly);
-            scheduleservice.ChangeSchedule(task4.Title, Entries.TASKS, Schedule.Weekly);
-            var weeklyTasks = scheduleservice.ListTasksBySchedule(Schedule.Weekly);
-            // Assert
-            Assert.Equal(2, weeklyTasks.Count);
-            Assert.Contains(task1, weeklyTasks);
-            Assert.Contains(task4, weeklyTasks);
-        }
-        */
     }
 }

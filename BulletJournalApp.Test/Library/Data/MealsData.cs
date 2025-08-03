@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Test.Data.Library
+namespace BulletJournalApp.Test.Library.Data
 {
     public class MealsData
     {

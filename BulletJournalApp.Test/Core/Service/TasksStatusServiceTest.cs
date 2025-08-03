@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BulletJournalApp.Test.Data.Services;
+using BulletJournalApp.Test.Core.Data;
 
-namespace BulletJournalApp.Test.Service
+namespace BulletJournalApp.Test.Core.Service
 {
     public class TasksStatusServiceTest
     {

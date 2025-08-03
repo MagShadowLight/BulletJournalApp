@@ -1,14 +1,14 @@
 ﻿using BulletJournalApp.Core.Services;
 using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
-using BulletJournalApp.Test.Data.Services;
+using BulletJournalApp.Test.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletJournalApp.Test.Service
+namespace BulletJournalApp.Test.Core.Service
 {
     public class CategoryServiceTest
     {
