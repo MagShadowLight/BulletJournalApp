@@ -1,4 +1,7 @@
-﻿using BulletJournalApp.Library.Enum;
+﻿using BulletJournalApp.Core.Interface;
+using BulletJournalApp.Core.Services;
+using BulletJournalApp.Library;
+using BulletJournalApp.Library.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +36,20 @@ namespace BulletJournalApp.Test.Data.Services
             yield return new object[] { Priority.High, 1 };
             yield return new object[] { Priority.Medium, 3 };
             yield return new object[] { Priority.Low, 1 };
+        }
+
+        public void SetUpTasks(TaskService taskService)
+        {
+            var task1 = new Tasks(DateTime.Today, "Test 1", "Test", Schedule.Monthly, false);
+            var task2 = new Tasks(DateTime.Today, "Test 2", "Test", Schedule.Monthly, false);
+            var task3 = new Tasks(DateTime.Today, "Test 3", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.High);
+            var task4 = new Tasks(DateTime.Today, "Test 4", "Test", Schedule.Monthly, false);
+            var task5 = new Tasks(DateTime.Today, "Test 5", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Low);
+            taskService.AddTask(task1);
+            taskService.AddTask(task2);
+            taskService.AddTask(task3);
+            taskService.AddTask(task4);
+            taskService.AddTask(task5);
         }
     }
 }

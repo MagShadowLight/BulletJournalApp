@@ -1,6 +1,7 @@
 ﻿using BulletJournalApp.Core.Services;
 using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
+using BulletJournalApp.Test.Data.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,65 +12,95 @@ namespace BulletJournalApp.Test.Service
 {
     public class CategoryServiceTest
     {
-        private TaskService _taskService = new TaskService(new Formatter(), new ConsoleLogger(), new FileLogger());
-        private ItemService _itemService = new ItemService(new ConsoleLogger(), new FileLogger());
-        [Fact]
-        public void When_User_Try_To_Change_Category_With_Empty_Tasks_Then_It_Should_Throw_Exception()
+        private Formatter _formatter = new Formatter();
+        private ConsoleLogger _consolelogger = new ConsoleLogger();
+        private FileLogger _filelogger = new FileLogger();
+        private TaskService _taskservice;
+        private ItemService _itemservice;
+        private CategoryService _categoryservice;
+        private Entries entries;
+        private int num;
+
+        public CategoryServiceTest()
         {
-            // Arrange
-            var service2 = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var task = new Tasks(DateTime.Now, "Test", "Test", Schedule.Monthly, false);
-            _taskService.AddTask(task);
-            // Act // Assert
-            Assert.Throws<Exception>(() => service2.ChangeCategory("", Entries.TASKS, Category.Home));
+            _taskservice = new TaskService(_formatter, _consolelogger, _filelogger);
+            _itemservice = new ItemService(_consolelogger, _filelogger);
+            _categoryservice = new CategoryService(_consolelogger, _filelogger, _formatter, _taskservice, _itemservice);
+            
         }
-        [Fact]
-        public void When_User_Change_Category_Then_Items_Category_Should_Update()
+        public void SetUpList()
         {
-            // Arrange
-            List<Items> items;
-            var service2 = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
-            _itemService.AddItems(item1);
-            _itemService.AddItems(item2);
-            _itemService.AddItems(item3);
-            // Act
-            service2.ChangeCategory("Test2", Entries.ITEMS, Category.Home);
-            items = _itemService.GetAllItems();
-            // Assert
-            Assert.Equal(3, items.Count);
-            Assert.Equal(Category.Home, item2.Category);
-            Assert.Contains(item1, items);
-            Assert.Contains(item2, items);
-            Assert.Contains(item3, items);
-            Assert.Throws<Exception>(() => service2.ChangeCategory("Fake Test", Entries.ITEMS, Category.Home));
+            switch (entries)
+            {
+                case Entries.TASKS:
+                    var data1 = new CategoryServiceData();
+                    data1.SetUpTasks(_taskservice);
+                    num = _taskservice.ListAllTasks().Count;
+                    break;
+                case Entries.ITEMS:
+                    var data2 = new CategoryServiceData();
+                    data2.SetUpItems(_itemservice);
+                    num = _itemservice.GetAllItems().Count;
+                    break;
+
+            }
         }
-        [Fact]
-        public void When_Category_Were_Selected_Then_Items_Should_Return_With_Category()
+
+        [Theory]
+        [MemberData(nameof(CategoryServiceData.GetCategoryAndStringValue), MemberType = typeof(CategoryServiceData))]
+        public void Given_There_Are_Tasks_In_The_List_When_Changing_The_Category_Then_Task_Should_Be_Updated_With_New_Category(string title, Category category)
         {
             // Arrange
-            List<Items> AllItems;
-            List<Items> HomeItems;
-            Category category = Category.Home;
-            var service2 = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var item1 = new Items("Test", "Test", Schedule.Monthly, 1);
-            var item2 = new Items("Test2", "Test", Schedule.Monthly, 1);
-            var item3 = new Items("Test3", "Test", Schedule.Monthly, 1);
-            _itemService.AddItems(item1);
-            _itemService.AddItems(item2);
-            _itemService.AddItems(item3);
-            service2.ChangeCategory("Test2", Entries.ITEMS, Category.Home);
+            entries = Entries.TASKS;
+            SetUpList();
             // Act
-            AllItems = _itemService.GetAllItems();
-            HomeItems = service2.ListItemsByCategory(category);
+            _categoryservice.ChangeCategory(title, entries, category);
+            var tasks = _taskservice.ListAllTasks();
+            var task = _taskservice.FindTasksByTitle(title);
             // Assert
-            Assert.Equal(3, AllItems.Count);
-            Assert.Single(HomeItems);
-            Assert.Contains(item2, HomeItems);
-            Assert.DoesNotContain(item1, HomeItems);
-            Assert.DoesNotContain(item3, HomeItems);
+            Assert.Equal(num, tasks.Count);
+            Assert.Equal(category, task.Category);
+            Assert.Throws<ArgumentNullException>(() => _categoryservice.ChangeCategory(null, entries, category));
+        }
+        [Theory]
+        [MemberData(nameof(CategoryServiceData.GetCategoryAndStringValue), MemberType = typeof(CategoryServiceData))]
+        public void Given_There_Are_Items_In_The_Shopping_List_When_Changing_The_Category_Then_Item_Should_Be_Updated_With_New_Category(string name, Category category)
+        {
+            // Arrange
+            entries = Entries.ITEMS;
+            SetUpList();
+            // Act
+            _categoryservice.ChangeCategory(name, entries, category);
+            var items = _itemservice.GetAllItems();
+            var item = _itemservice.FindItemsByName(name);
+            // Assert
+            Assert.Equal(num, items.Count);
+            Assert.Equal(category, item.Category);
+            Assert.Throws<ArgumentNullException>(() => _categoryservice.ChangeCategory(null, entries, category));
+        }
+        [Theory]
+        [MemberData(nameof(CategoryServiceData.GetCategoryValue), MemberType =typeof(CategoryServiceData))]
+        public void Given_There_Are_Tasks_In_The_List_When_Listing_Tasks_With_Category_Value_Then_It_Should_Return_List_Of_Tasks_With_Only_Specific_Category_Value(int num, Category category)
+        {
+            // Arrange
+            entries = Entries.TASKS;
+            SetUpList();
+            // Act
+            var tasks = _categoryservice.ListTasksByCategory(category);
+            // Assert
+            Assert.Equal(num, tasks.Count);
+        }
+        [Theory]
+        [MemberData(nameof(CategoryServiceData.GetCategoryValue), MemberType = typeof(CategoryServiceData))]
+        public void Given_There_Are_Items_In_The_List_When_Listing_Items_With_Category_Value_Then_It_Should_Return_List_Of_Items_With_Only_Specific_Category_Value(int num, Category category)
+        {
+            // Arrange
+            entries = Entries.ITEMS;
+            SetUpList();
+            // Act
+            var items = _categoryservice.ListItemsByCategory(category);
+            // Assert
+            Assert.Equal(num, items.Count);
         }
     }
 }

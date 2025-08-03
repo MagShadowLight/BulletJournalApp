@@ -34,13 +34,13 @@ namespace BulletJournalApp.Core.Services
                 case Entries.TASKS:
                     var task = _taskservice.FindTasksByTitle(title);
                     if (task == null)
-                        throw new Exception("Cannot find task");
+                        throw new ArgumentNullException("Cannot find task");
                     task.ChangeCategory(category);
                     break;
                 case Entries.ITEMS:
                     var item = _itemservice.FindItemsByName(title);
                     if (item == null)
-                        throw new Exception("Cannot find task");
+                        throw new ArgumentNullException("Cannot find task");
                     item.ChangeCategory(category);
                     break;
             }

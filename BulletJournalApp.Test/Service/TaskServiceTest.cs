@@ -31,6 +31,12 @@ namespace BulletJournalApp.Test.Service
             repeatingtask = new Tasks(DateTime.Today.AddDays(1), "Test 4", "Test", Schedule.Monthly, true, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
             repeatingtaskwithend = new Tasks(DateTime.Today.AddDays(1), "Test 5", "Test", Schedule.Monthly, true, 7, DateTime.Today.AddDays(29), Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
         }
+        public void SetUpList()
+        {
+            _taskService.AddTask(task1);
+            _taskService.AddTask(task2);
+            _taskService.AddTask(task3);
+        }
 
 
         [Fact]
@@ -54,9 +60,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             int num = 3;
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
+            SetUpList();
             // Act
             var tasks = _taskService.ListAllTasks();
             // Assert
@@ -70,9 +74,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             int num = 2;
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
+            SetUpList();
             // Act
             task2.MarkComplete();
             var incompletetasks = _taskService.ListIncompleteTasks();
@@ -97,9 +99,7 @@ namespace BulletJournalApp.Test.Service
         public void Given_There_Are_Tasks_In_The_List_When_Finding_The_Tasks_With_Specific_Title_Then_It_Should_Find_That_Task()
         {
             // Arrange
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
+            SetUpList();
             // Act
             var task = _taskService.FindTasksByTitle("Test 2");
             // Assert
@@ -113,9 +113,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             int num = 3;
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
+            SetUpList();
             // Act
             _taskService.UpdateTask(task2.Title, newtitle, newdescription, newnote, newisrepeat, newduedate);
             var tasks = _taskService.ListAllTasks();
@@ -137,9 +135,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             int num = 3;
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
+            SetUpList();
             // Act
             _taskService.MarkTasksComplete(title);
             var tasks = _taskService.ListAllTasks();
@@ -186,9 +182,7 @@ namespace BulletJournalApp.Test.Service
         {
             // Arrange
             int num = 2;
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
+            SetUpList();
             var task = _taskService.FindTasksByTitle(title);
             // Act
             _taskService.DeleteTask(title);
@@ -200,27 +194,6 @@ namespace BulletJournalApp.Test.Service
         }
 
         /*
-        [Fact]
-        public void When_There_Are_Tasks_With_Category_Then_It_Should_Return_Tasks_List_By_Category()
-        {
-            // Arrange
-            var categoryservice = new CategoryService(new ConsoleLogger(), new FileLogger(), new Formatter(), _taskService, _itemService);
-            var task1 = new Tasks(DateTime.Now, "Task Test 1", "meow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.None);
-            var task2 = new Tasks(DateTime.Now, "Task Test 2", "mrow", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.None);
-            var task3 = new Tasks(DateTime.Now, "Task Test 3", "mrrp", Schedule.Monthly, false, 7, new DateTime(), Priority.Medium, Category.None);
-            _taskService.AddTask(task1);
-            _taskService.AddTask(task2);
-            _taskService.AddTask(task3);
-            // Act
-            categoryservice.ChangeCategory(task1.Title, Entries.TASKS, Category.Personal);
-            categoryservice.ChangeCategory(task2.Title, Entries.TASKS, Category.Home);
-            categoryservice.ChangeCategory(task3.Title, Entries.TASKS, Category.Personal);
-            var personalTasks = categoryservice.ListTasksByCategory(Category.Personal);
-            // Assert
-            Assert.Equal(2, personalTasks.Count);
-            Assert.Contains(task1, personalTasks);
-            Assert.Contains(task3, personalTasks);
-        }
         [Fact]
         public void When_There_Are_Tasks_In_Progress_Then_It_Should_Returns_Only_In_Progress_Tasks()
         {
