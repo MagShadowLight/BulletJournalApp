@@ -12,5 +12,9 @@ namespace BulletJournalApp.Test.Util
         {
             Console.SetIn(new StreamReader(Console.OpenStandardInput()));
         }
+        public void ResetOutput()
+        {
+            Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+        }
     }
 }

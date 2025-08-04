@@ -1,5 +1,7 @@
 ﻿using BulletJournalApp.Core.Interface;
 using BulletJournalApp.Core.Services;
+using BulletJournalApp.Test.Core.Data;
+using BulletJournalApp.Test.Util;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -9,47 +11,73 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Core.Service
 {
+    [Collection("Sequential")]
     public class FileLoggerTest
     {
-        // private FileMode mode = FileMode.Open;
-        //[Fact]
-        //public void When_Text_Were_Written_Into_File_Then_It_Should_Succeed()
-        //{
-        //    // Arrange
-        //    var mockLogger = new Mock<IFileLogger>();
-        //    var message = "Task added successfully";
-        //    mockLogger.Setup(logger => logger.Log(message));
-        //    var logger = new FileLogger();
-        //    var path = Path.Combine("Temp", "Log.txt");
-        //    CreateFile(path);
-        //    // Act
-        //    var testfs = new FileStream(path, mode);
-        //    logger.WriteText(testfs, "LOG", message);
-        //    testfs.Close();
-        //    var fs = new FileStream(path, mode);
-        //    using (StreamReader sr = new StreamReader(fs))
-        //    {
-        //        string outputMessage = sr.ReadToEnd();
-        //        // Assert
-        //        Assert.Contains(message, outputMessage);
-        //        ResetStream(sr, fs);
-        //    }
-        //}
-        //public void CreateFile(string path)
-        //{
-        //    if (!File.Exists(path))
-        //    {
-        //        if (!Directory.Exists("Temp"))
-        //        {
-        //            Directory.CreateDirectory("Temp");
-        //        }
-        //        File.Create(path).Close();
-        //    }
-        //}
-        //public void ResetStream(StreamReader sr, FileStream fs)
-        //{
-        //    sr.Close();
-        //    fs.Close();
-        //}
+        private FileMode mode = FileMode.Open;
+        private Mock<IFileLogger> _fileloggerMock = new Mock<IFileLogger>();
+        private FileLogger _fileLogger = new FileLogger();
+        private string path = Path.Combine("Temp", "Log.txt");
+        private FileInputOutput _file = new FileInputOutput();
+        [Theory]
+        [MemberData(nameof(LogMessageData.GetMessage), MemberType = typeof(LogMessageData))]
+        public void Given_There_Are_Messages_When_Writing_Log_Messages_Into_A_File_Then_It_Should_Display_In_A_File(string message)
+        {
+            // Arrange
+            _fileloggerMock.Setup(logger => logger.Log(message));
+            var logger = new FileLogger();
+            _file.DeleteFile(path);
+            _file.CreateFile(path);
+            // Act
+            _fileLogger.Log(message);
+            var fs = new FileStream(path, mode);
+            using (StreamReader sr = new StreamReader(fs))
+            {
+                string outputMessage = sr.ReadToEnd();
+                // Assert
+                Assert.Contains(message, outputMessage);
+                _file.ResetStream(sr, fs);
+            }
+        }
+        [Theory]
+        [MemberData(nameof(LogMessageData.GetMessage), MemberType = typeof(LogMessageData))]
+        public void Given_There_Are_Messages_When_Writing_Warning_Messages_Into_A_File_Then_It_Should_Display_In_A_File(string message)
+        {
+            // Arrange
+            _fileloggerMock.Setup(logger => logger.Warn(message));
+            var logger = new FileLogger();
+            _file.DeleteFile(path);
+            _file.CreateFile(path);
+            // Act
+            _fileLogger.Warn(message);
+            var fs = new FileStream(path, mode);
+            using (StreamReader sr = new StreamReader(fs))
+            {
+                string outputMessage = sr.ReadToEnd();
+                // Assert
+                Assert.Contains(message, outputMessage);
+                _file.ResetStream(sr, fs);
+            }
+        }
+        [Theory]
+        [MemberData(nameof(LogMessageData.GetMessage), MemberType = typeof(LogMessageData))]
+        public void Given_There_Are_Messages_When_Writing_Error_Messages_Into_A_File_Then_It_Should_Display_In_A_File(string message)
+        {
+            // Arrange
+            _fileloggerMock.Setup(logger => logger.Error(message));
+            var logger = new FileLogger();
+            _file.DeleteFile(path);
+            _file.CreateFile(path);
+            // Act
+            _fileLogger.Error(message);
+            var fs = new FileStream(path, mode);
+            using (StreamReader sr = new StreamReader(fs))
+            {
+                string outputMessage = sr.ReadToEnd();
+                // Assert
+                Assert.Contains(message, outputMessage);
+                _file.ResetStream(sr, fs);
+            }
+        }
     }
 }
