@@ -1,6 +1,7 @@
 ﻿using BulletJournalApp.Core.Services;
 using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
+using BulletJournalApp.Test.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,137 +13,138 @@ namespace BulletJournalApp.Test.Core.Service
 {
     public class MealServiceTest
     {
-        List<Meals> meals = new();
-        List<Ingredients> ingredientsList1 = new List<Ingredients>();
-        List<Ingredients> ingredientsList2 = new List<Ingredients>();
-        public void SetUpIngredients()
+        private MealService _mealService;
+        private MealServiceData _data = new MealServiceData();
+        private List<Ingredients> ingredients = new List<Ingredients>();
+        private Meals meal1;
+        private Meals meal2;
+        private Meals meal3;
+        int num = 0;
+
+        public MealServiceTest()
         {
-            Ingredients ingredient1 = new Ingredients("Test 1", 3, 2.16, "1 Cup");
-            Ingredients ingredient2 = new Ingredients("Test 2", 1, 6.12, "1 tsp");
-            Ingredients ingredient3 = new Ingredients("Test 3", 6, 0.52, "2 oz");
-            ingredientsList1.Add(ingredient1);
-            ingredientsList1.Add(ingredient2);
-            ingredientsList2.Add(ingredient1);
-            ingredientsList2.Add(ingredient3);
+            _mealService = new MealService();
+            _data.SetUpIngredientsList(ingredients);
+            meal1 = new Meals("Test 1", "Test", ingredients, DateTime.Today, DateTime.Today);
+            meal2 = new Meals("Test 2", "Test", ingredients, DateTime.Today, DateTime.Today);
+            meal3 = new Meals("Test 3", "Test", ingredients, DateTime.Today, DateTime.Today);
         }
-        
         [Fact]
-        public void When_Meals_Were_Added_Then_It_Should_Succeed()
+        public void Given_There_Are_No_Meals_In_The_List_When_Adding_A_Meal_Then_Meal_Should_Be_Added_To_The_List()
         {
             // Arrange
-            SetUpIngredients();
-            Meals meal1 = new Meals("Test 1", "nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            Meals meal2 = new Meals("Test 2", "nom nom", ingredientsList2, DateTime.Today, DateTime.Today, 0, TimeOfDay.Dinner);
-            Meals meal3 = new Meals("Test 3", "nom nom nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Breakfast);
-            var service = new MealService();
+            num = 3;
             // Act
-            service.AddMeal(meal1);
-            service.AddMeal(meal2);
-            service.AddMeal(meal3);
-            meals = service.GetAllMeals();
+            _mealService.AddMeal(meal1);
+            _mealService.AddMeal(meal2);
+            _mealService.AddMeal(meal3);
+            var meals = _mealService.GetAllMeals();
             // Assert
-            Assert.Equal(3, meals.Count);
+            Assert.Equal(num, meals.Count);
             Assert.Contains(meal1, meals);
             Assert.Contains(meal2, meals);
             Assert.Contains(meal3, meals);
-            Assert.Throws<ArgumentNullException>(() => service.AddMeal(new Meals("", "Nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.None)));
-            Assert.Throws<DuplicateNameException>(() => service.AddMeal(new Meals("Test 2", "nom nom nom nom", ingredientsList2, DateTime.Today, DateTime.Today, 0, TimeOfDay.None)));
+            Assert.Throws<DuplicateNameException>(() => _mealService.AddMeal(new Meals("Test 1", "Test", ingredients, DateTime.Today, DateTime.Today)));
+            Assert.Throws<ArgumentNullException>(() => _mealService.AddMeal(new Meals("", "Test", ingredients, DateTime.Today, DateTime.Today)));
+            Assert.Throws<ArgumentNullException>(() => _mealService.AddMeal(new Meals("Test", "", ingredients, DateTime.Today, DateTime.Today)));
+            Assert.Throws<FormatException>(() => _mealService.AddMeal(new Meals("Test", "Test", new List<Ingredients>(), DateTime.Today, DateTime.Today)));
         }
         [Fact]
-        public void When_Meals_Were_Updated_Then_It_Should_Succeed()
+        public void Given_There_Are_Meals_In_The_List_When_Getting_All_Meals_Then_It_Should_Return_List_Of_Meals()
         {
             // Arrange
-            SetUpIngredients();
-            Meals meal1 = new Meals("Test 1", "nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            Meals meal2 = new Meals("Test 2", "nom nom", ingredientsList2, DateTime.Today, DateTime.Today, 0, TimeOfDay.Dinner);
-            Meals meal3 = new Meals("Test 3", "nom nom nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Breakfast);
-            var service = new MealService();
-            service.AddMeal(meal1);
-            service.AddMeal(meal2);
-            service.AddMeal(meal3);
+            num = 3;
+            _data.SetUpMeals(_mealService, meal1, meal2, meal3);
             // Act
-            service.UpdateMeals("Test 2", "Updated Test", "nom nom mmmm");
-            meals = service.GetAllMeals();
+            var meals = _mealService.GetAllMeals();
             // Assert
-            Assert.Equal(3, meals.Count);
-            Assert.Contains("Updated Test", meal2.Name);
-            Assert.Contains("mmmm", meal2.Description);
+            Assert.Equal(num, meals.Count);
             Assert.Contains(meal1, meals);
             Assert.Contains(meal2, meals);
             Assert.Contains(meal3, meals);
-            Assert.Throws<DuplicateNameException>(() => service.UpdateMeals("Test 3", "Test 1", "nom"));
-            Assert.Throws<ArgumentNullException>(() => service.UpdateMeals("Fake Test", "Test", "nom, gross"));
         }
-        [Fact]
-        public void When_Meals_Were_Changed_Date_And_Time_Then_It_Should_Succeed()
+        [Theory]
+        [MemberData(nameof(MealServiceData.GetStringValue), MemberType =typeof(MealServiceData))]
+        public void Given_There_Are_Meals_In_The_List_When_Searching_For_Meal_With_Specific_Name_Then_It_Should_Return_Meal_With_That_Name(string name)
         {
             // Arrange
-            SetUpIngredients();
-            Meals meal1 = new Meals("Test 1", "nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            Meals meal2 = new Meals("Test 2", "nom nom", ingredientsList2, DateTime.Today, DateTime.Today, 0, TimeOfDay.Dinner);
-            Meals meal3 = new Meals("Test 3", "nom nom nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Breakfast);
-            var service = new MealService();
-            service.AddMeal(meal1);
-            service.AddMeal(meal2);
-            service.AddMeal(meal3);
+            _data.SetUpMeals(_mealService, meal1, meal2, meal3);
             // Act
-            service.ChangeMealDateTime("Test 3", DateTime.Today.AddDays(1), DateTime.Today.AddHours(4));
-            meals = service.GetAllMeals();
+            var meal = _mealService.FindMealsByName(name);
             // Assert
-            Assert.Equal(3, meals.Count);
-            Assert.Equal(DateTime.Today.AddDays(1), meal3.MealDate);
-            Assert.Equal(DateTime.Today.AddHours(4), meal3.MealTime);
-            Assert.Contains(meal1, meals);
-            Assert.Contains(meal2, meals);
-            Assert.Contains(meal3, meals);
-            Assert.Throws<ArgumentNullException>(() => service.ChangeMealDateTime("Fake Test", DateTime.Today.AddDays(1), DateTime.Today.AddHours(2)));
+            Assert.Equal(name, meal.Name);
         }
-        [Fact]
-        public void When_Ingredients_On_Meals_Were_Changed_Then_It_Should_Succeed()
+        [Theory]
+        [MemberData(nameof(MealServiceData.GetValuesForUpdate), MemberType = typeof(MealServiceData))]
+        public void Given_There_Are_Meals_In_The_List_When_Changing_The_Name_And_Description_Then_Meal_Should_Be_Updated_With_New_Value(string oldname, string newname, string newdescription, DateTime newmealdate, DateTime newmealtime)
         {
             // Arrange
-            SetUpIngredients();
-            Meals meal1 = new Meals("Test 1", "nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            Meals meal2 = new Meals("Test 2", "nom nom", ingredientsList2, DateTime.Today, DateTime.Today, 0, TimeOfDay.Dinner);
-            Meals meal3 = new Meals("Test 3", "nom nom nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Breakfast);
-            List<Ingredients> newIngredientsList = new();
-            newIngredientsList.AddRange(ingredientsList1);
-            newIngredientsList.AddRange(ingredientsList2);
-            var service = new MealService();
-            service.AddMeal(meal1);
-            service.AddMeal(meal2);
-            service.AddMeal(meal3);
+            num = 3;
+            _data.SetUpMeals(_mealService, meal1, meal2, meal3);
             // Act
-            service.ChangeMealIngredients("Test 2", newIngredientsList);
-            var meals = service.GetAllMeals();
+            _mealService.UpdateMeals(oldname, newname, newdescription);
+            var meals = _mealService.GetAllMeals();
+            var meal = _mealService.FindMealsByName(newname);
             // Assert
-            Assert.Equal(3, meals.Count);
-            Assert.Equal(4, meal2.Ingredients.Count);
-            Assert.Contains(meal1, meals);
-            Assert.Contains(meal2, meals);
-            Assert.Contains(meal3, meals);
-            Assert.Throws<ArgumentNullException>(() => service.ChangeMealIngredients("Fake Test", ingredientsList2));
+            Assert.Equal(num, meals.Count);
+            Assert.Equal(newname, meal.Name);
+            Assert.Equal(newdescription, meal.Description);
+            Assert.Throws<ArgumentNullException>(() => _mealService.UpdateMeals(null, newname, newdescription));
+            Assert.Throws<DuplicateNameException>(() => _mealService.UpdateMeals(newname, newname, newdescription));
+            Assert.Throws<ArgumentNullException>(() => _mealService.UpdateMeals(newname, "", "Test"));
+            Assert.Throws<ArgumentNullException>(() => _mealService.UpdateMeals(newname, "Test", ""));
         }
-        [Fact]
-        public void When_Meals_Were_Deleted_Then_It_Should_Succeed()
+        [Theory]
+        [MemberData(nameof(MealServiceData.GetValuesForUpdate), MemberType =typeof(MealServiceData))]
+        public void Given_There_Are_Meals_In_The_List_When_Changing_The_Meal_Date_And_Time_Then_Meal_Should_Be_Updated_With_New_Value(string oldname, string newname, string newdescription, DateTime newmealdate, DateTime newmealtime)
         {
             // Arrange
-            SetUpIngredients();
-            Meals meal1 = new Meals("Test 1", "nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            Meals meal2 = new Meals("Test 2", "nom nom", ingredientsList2, DateTime.Today, DateTime.Today, 0, TimeOfDay.Dinner);
-            Meals meal3 = new Meals("Test 3", "nom nom nom", ingredientsList1, DateTime.Today, DateTime.Today, 0, TimeOfDay.Breakfast);
-            var service = new MealService();
-            service.AddMeal(meal1);
-            service.AddMeal(meal2);
-            service.AddMeal(meal3);
+            num = 3;
+            _data.SetUpMeals(_mealService, meal1, meal2, meal3);
             // Act
-            service.DeleteMeals("Test 3");
-            meals = service.GetAllMeals();
+            _mealService.ChangeMealDateTime(oldname, newmealdate, newmealtime);
+            var meals = _mealService.GetAllMeals();
+            var meal = _mealService.FindMealsByName(oldname);
             // Assert
-            Assert.Equal(2, meals.Count);
-            Assert.Contains(meal1, meals);
-            Assert.Contains(meal2, meals);
-            Assert.Throws<ArgumentNullException>(() => service.DeleteMeals("Fake Test"));
+            Assert.Equal(num, meals.Count);
+            Assert.Equal(newmealdate, meal.MealDate);
+            Assert.Equal(newmealtime, meal.MealTime);
+            Assert.Throws<ArgumentNullException>(() => _mealService.ChangeMealDateTime(null, newmealdate, newmealtime));
+        }
+        [Theory]
+        [MemberData(nameof(MealServiceData.GetValuesForChangingIngredient), MemberType =typeof(MealServiceData))]
+        public void Given_There_Are_Meals_In_The_List_When_Changing_The_Ingredients_In_The_Ingredients_List_Then_Meal_Should_Be_Updated_With_New_Ingredient_List(string name, Ingredients ingredient)
+        {
+            // Arrange
+            num = 3;
+            var newnum = 4;
+            List<Ingredients> newingredient = ingredients.ToList();
+            _data.SetUpMeals(_mealService, meal1, meal2, meal3);
+            // Act
+            newingredient.Add(ingredient);
+            _mealService.ChangeMealIngredients(name, newingredient);
+            var meals = _mealService.GetAllMeals();
+            // Assert
+            Assert.Equal(num, meals.Count);
+            Assert.Equal(num, ingredients.Count);
+            Assert.Equal(newnum, newingredient.Count);
+            Assert.Throws<ArgumentNullException>(() => _mealService.ChangeMealIngredients(null, newingredient));
+        }
+        [Theory]
+        [MemberData(nameof(MealServiceData.GetStringValue), MemberType =typeof(MealServiceData))]
+        public void Given_There_Are_Meals_In_The_List_When_Deleting_A_Meal_Then_Meal_Should_Be_Removed_From_The_List(string name)
+        {
+            // Arrange
+            num = 2;
+            _data.SetUpMeals(_mealService, meal1, meal2, meal3);
+            var meal = _mealService.FindMealsByName(name);
+            // Act
+            _mealService.DeleteMeals(name);
+            var meals = _mealService.GetAllMeals();
+            // Assert
+            Assert.Equal(num, meals.Count);
+            Assert.DoesNotContain(meal, meals);
+            Assert.Throws<ArgumentNullException>(() => _mealService.DeleteMeals(null));
         }
     }
 }

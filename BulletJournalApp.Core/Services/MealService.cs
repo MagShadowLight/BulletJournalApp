@@ -36,12 +36,12 @@ namespace BulletJournalApp.Core.Services
             meal.ChangeMealDateAndTime(newDate, newTime);
         }
 
-        public void ChangeMealIngredients(string name, List<Ingredients> ingredients)
+        public void ChangeMealIngredients(string name, List<Ingredients> newingredients)
         {
             var meal = FindMealsByName(name);
             if (meal == null)
                 throw new ArgumentNullException($"Meal: {name} not found");
-            meal.ChangeIngredients(ingredients);
+            meal.ChangeIngredients(newingredients);
         }
 
         public void DeleteMeals(string name)
@@ -62,13 +62,13 @@ namespace BulletJournalApp.Core.Services
             return meals;
         }
 
-        public void UpdateMeals(string oldName, string newName, string description)
+        public void UpdateMeals(string oldName, string newName, string newdescription)
         {
             var meal = FindMealsByName(oldName);
             if (meal == null)
                 throw new ArgumentNullException($"Meal: {oldName} not found");
             ValidateDupe(newName);
-            meal.Update(newName, description);
+            meal.Update(newName, newdescription);
         }
     }
 }
