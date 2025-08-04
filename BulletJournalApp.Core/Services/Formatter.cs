@@ -20,7 +20,7 @@ namespace BulletJournalApp.Core.Services
                 $"- Status: {item.Status.ToString()}\n" +
                 $"- Note: {item.Notes}\n" +
                 $"- Date Added: {item.DateAdded}\n" +
-                $"{(item.DateBought != DateTime.MinValue ? $"- Date Bought: {item.DateBought}" : "")}";
+                $"{(item.DateBought != DateTime.MinValue ? $"- Date Bought: {item.DateBought}" : "- Date Bought: N/A")}";
         }
 
         public string FormatTasks(Tasks task)
