@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BulletJournalApp.UI.Util;
 using BulletJournalApp.Test.UI.Data;
+using BulletJournalApp.Test.Util;
 
 namespace BulletJournalApp.Test.UI
 {
@@ -32,6 +33,7 @@ namespace BulletJournalApp.Test.UI
         private ItemService itemService = new ItemService(new ConsoleLogger(), new FileLogger());
         private StringReader input;
         private TaskManagerTestData _data = new();
+        private ConsoleInputOutput _console = new();
 
 
 
@@ -47,7 +49,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.AddTask(It.Is<Tasks>(task => task.Title == "Test Task" && task.Description == "meow")), Times.Once());
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_Tasks_Were_Added_With_Repeating_Date_Then_It_Should_Succeed()
@@ -60,7 +62,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.AddTask(It.Is<Tasks>(task => task.Title == "Test Task" && task.Description == "meow")), Times.Once());
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_List_All_Tasks_Then_It_Should_Returns_List_Of_Tasks()
@@ -76,7 +78,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.ListAllTasks(), Times.Once());
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_List_Incomplete_Tasks_Then_It_Should_Returns_List_Of_Incomplete_Tasks()
@@ -92,7 +94,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.ListIncompleteTasks(), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetPriorityListInput), MemberType =typeof(TaskManagerTestData))]
@@ -109,7 +111,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             priorityMock.Verify(user => user.ListTasksByPriority(priority), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetCategoryListInput), MemberType = typeof(TaskManagerTestData))]
@@ -126,7 +128,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             categoryMock.Verify(user => user.ListTasksByCategory(category), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetStatusListInput), MemberType = typeof(TaskManagerTestData))]
@@ -143,7 +145,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             statusMock.Verify(user => user.ListTasksByStatus(status), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetScheduleListInput), MemberType = typeof(TaskManagerTestData))]
@@ -160,7 +162,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             scheduleMock.Verify(user => user.ListTasksBySchedule(schedule), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_Mark_Task_Complete_Then_It_Should_Mark_It_As_Completed()
@@ -175,7 +177,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.MarkTasksComplete("Test Task"), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_Find_Task_By_Specific_Title_Then_It_Should_Return_With_That_Title()
@@ -192,7 +194,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.FindTasksByTitle("Test 3"), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_Find_Task_By_Invalid_Title_Then_It_Should_Return_With_Tasks_Not_Found()
@@ -207,7 +209,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.FindTasksByTitle("Fake Test"), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_Update_Task_Then_Task_Should_Update_With_New_Input()
@@ -223,7 +225,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.UpdateTask("Test 2", "Updated Task", "Updated Description", "Updated Note", false, DateTime.Parse("Jun 6, 2025"), 7, default), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_Update_Task_With_Invalid_Date_Then_Task_Should_Update_With_New_Input()
@@ -239,7 +241,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.UpdateTask("Test 2", "Updated Task", "Updated Description", "Updated Note", false, DateTime.MinValue, 7, default), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetPriorityUpdateInput), MemberType = typeof(TaskManagerTestData))]
@@ -256,7 +258,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             priorityMock.Verify(user => user.ChangePriority("Test 2", priority), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetStatusUpdateInput), MemberType = typeof(TaskManagerTestData))]
@@ -273,7 +275,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             statusMock.Verify(user => user.ChangeStatus("Test 1", status), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetCategoryUpdateInput), MemberType = typeof(TaskManagerTestData))]
@@ -290,7 +292,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             categoryMock.Verify(user => user.ChangeCategory("Test 2", Entries.TASKS, category), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetScheduleUpdateInput), MemberType = typeof(TaskManagerTestData))]
@@ -307,7 +309,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             scheduleMock.Verify(user => user.ChangeSchedule("Test 1", Entries.TASKS, schedule), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_Delete_Task_Then_Task_Should_Be_Deleted()
@@ -323,7 +325,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.DeleteTask("Test 3"), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_Load_Task_Then_Tasks_Should_Be_Loaded()
@@ -344,7 +346,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             fileMock.Verify(user => user.LoadFunction(It.IsAny<string>(), Entries.TASKS), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Save_Tasks_Then_It_Should_Stored_In_A_Txt_File()
@@ -360,7 +362,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Cancelled_Saving_Tasks_Then_It_Should_Stored_In_A_Txt_File()
@@ -376,7 +378,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             fileMock.Verify(user => user.SaveFunction(It.IsAny<string>(), Entries.TASKS, It.IsAny<List<Tasks>>(), It.IsAny<List<Items>>(), It.IsAny<List<Meals>>()), Times.Never);
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_List_All_Tasks_With_Empty_Tasks_Then_It_Should_Returns_Nothing()
@@ -391,7 +393,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.ListAllTasks(), Times.Once());
-            ResetReader();
+            _console.ResetReader();
         }
         [Fact]
         public void When_User_Select_List_Incomplete_Tasks_With_No_Incompletes_Then_It_Should_Returns_List_Of_Incomplete_Tasks()
@@ -406,7 +408,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             taskMock.Verify(user => user.ListIncompleteTasks(), Times.Once);
-            ResetReader();
+            _console.ResetReader();
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetPriorityListInput), MemberType = typeof(TaskManagerTestData))]
@@ -422,11 +424,7 @@ namespace BulletJournalApp.Test.UI
             taskManager.TaskManagerUI();
             // Assert
             priorityMock.Verify(user => user.ListTasksByPriority(priority), Times.Once);
-            ResetReader();
-        }
-        public void ResetReader()
-        {
-            Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+            _console.ResetReader();
         }
 
 
