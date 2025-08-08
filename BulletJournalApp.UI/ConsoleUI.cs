@@ -50,13 +50,13 @@ namespace BulletJournalApp.UI
                         _filelogger.Log("Opening Shopping List Manager");
                         Console.WriteLine("Opening Shopping List");
                         _shoplistmanager.UI();
-                        _filelogger.Log("Shopping List Closed");
+                        _filelogger.Log("Shopping List Manager Closed");
                         break;
                     case "3":
                         _filelogger.Log("Opening Meal Plan Manager");
                         Console.WriteLine("Opening Meal Plan");
                         _mealplanmanager.MealPlanUI();
-                        _filelogger.Log("Shopping List Closed");
+                        _filelogger.Log("Meal Plan Manager Closed");
                         break;
                     case "0":
                         _filelogger.Log("Quitting");
