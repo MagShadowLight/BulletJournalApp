@@ -33,17 +33,6 @@ namespace BulletJournalApp.Test.UI
         private StringReader _input;
         private MealPlanManagerTestData _data = new();
 
-        private List<Ingredients> SetIngredientsList()
-        {
-            var ingredients = new List<Ingredients>();
-            var ingredient1 = new Ingredients("Test 1", 3, 0.32, "1 Cups");
-            var ingredient2 = new Ingredients("Test 2", 1, 4.21, "N/A");
-            var ingredient3 = new Ingredients("Test 3", 8, 2.14, "1 Gallon");
-            ingredients.Add(ingredient1);
-            ingredients.Add(ingredient2);
-            ingredients.Add(ingredient3);
-            return ingredients;
-        }
         [Fact]
         public void When_User_Selected_To_Add_Meals_Then_It_Should_Be_Added_To_Meal_Plan()
         {

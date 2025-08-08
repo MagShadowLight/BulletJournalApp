@@ -35,9 +35,6 @@ namespace BulletJournalApp.Test.UI
         private TaskManagerTestData _data = new();
         private ConsoleInputOutput _console = new();
 
-
-
-
         [Fact]
         public void When_Tasks_Were_Added_Then_It_Should_Succeed()
         {
@@ -426,77 +423,5 @@ namespace BulletJournalApp.Test.UI
             priorityMock.Verify(user => user.ListTasksByPriority(priority), Times.Once);
             _console.ResetReader();
         }
-
-
-        /*
-        [Fact]
-        public async void When_Priority_Were_Selected_Then_It_Should_Return_Priority()
-        {
-            // Arrange
-            Priority priority;
-            input = new StringReader("M\n");
-            Console.SetIn(input);
-            // Act
-            priority = userinput.GetPriorityInput("Priority");
-            // Assert
-            Assert.Equal(Priority.Medium, priority);
-            //Input.Close();
-            ResetReader();
-        }
-        [Fact]
-        public async void When_Category_Were_Selected_Then_It_Should_Return_Category()
-        {
-            // Arrange
-            Category category1;
-            Category category2;
-            // Act
-            using var userInput1 = new StringReader("H\n");
-            Console.SetIn(userInput1);
-            category1 = userinput.GetCategoryInput("Category");
-            using var userInput2 = new StringReader("F\n");
-            Console.SetIn(userInput2);
-            category2 = userinput.GetCategoryInput("Category");
-            // Assert
-            Assert.Equal(Category.Home, category1);
-            Assert.Equal(Category.Financial, category2);
-            //userInput1.Close();
-            //userInput2.Close();
-            ResetReader();
-        }
-        [Fact]
-        public async void When_Schedule_Were_Selected_Then_It_Should_Return_Schedule()
-        {
-            // Arrange
-            Schedule schedule;
-            // Act
-            using var userInput1 = new StringReader("Q\n");
-            Console.SetIn(userInput1);
-            schedule = userinput.GetScheduleInput("Schedule");
-            // Assert
-            Assert.Equal(Schedule.Quarterly, schedule);
-            //userInput1.Close();
-            ResetReader();
-        }
-        [Fact]
-        public async void When_Status_Were_Selected_Then_It_Should_Return_Status()
-        {
-            // Arrange
-            TasksStatus status1;
-            TasksStatus status2;
-            // Act
-            using var userInput1 = new StringReader("D\n");
-            Console.SetIn(userInput1);
-            status1 = userinput.GetTaskStatusInput("Status");
-            using var userInput2 = new StringReader("L\n");
-            Console.SetIn(userInput2);
-            status2 = userinput.GetTaskStatusInput("Status");
-            // Assert
-            Assert.Equal(TasksStatus.Done, status1);
-            Assert.Equal(TasksStatus.Late, status2);
-            //userInput1.Close();
-            //userInput2.Close();
-            ResetReader();
-        }*/
-
     }
 }

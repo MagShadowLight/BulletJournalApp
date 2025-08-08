@@ -47,20 +47,20 @@ namespace BulletJournalApp.UI.Util
         public Priority GetPriorityInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "L" => Priority.Low,
                 "M" => Priority.Medium,
                 "H" => Priority.High,
-                _ => throw new Exception("Invalid Priority Input. Use (L)ow, (M)edium, or (H)igh")
+                _ => throw new FormatException("Invalid Priority Input. Use (L)ow, (M)edium, or (H)igh")
             };
         }
 
         public Category GetCategoryInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "N" => Category.None,
@@ -70,14 +70,14 @@ namespace BulletJournalApp.UI.Util
                 "P" => Category.Personal,
                 "F" => Category.Financial,
                 "T" => Category.Transportation,
-                _ => throw new Exception("Invalid Category Input. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial, or (T)ransportation.")
+                _ => throw new FormatException("Invalid Category Input. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial, or (T)ransportation.")
             };
         }
 
         public Schedule GetScheduleInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "Y" => Schedule.Yearly,
@@ -85,14 +85,14 @@ namespace BulletJournalApp.UI.Util
                 "M" => Schedule.Monthly,
                 "W" => Schedule.Weekly,
                 "D" => Schedule.Daily,
-                _ => throw new Exception("Invalid Schedule Input. Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily")
+                _ => throw new FormatException("Invalid Schedule Input. Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily")
             };
         }
 
         public TasksStatus GetTaskStatusInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "T" => TasksStatus.ToDo,
@@ -100,14 +100,14 @@ namespace BulletJournalApp.UI.Util
                 "D" => TasksStatus.Done,
                 "O" => TasksStatus.Overdue,
                 "L" => TasksStatus.Late,
-                _ => throw new Exception("Invalid Status Input. Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate")
+                _ => throw new FormatException("Invalid Status Input. Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate")
             };
         }
 
         public ItemStatus GetItemStatusInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "N" => ItemStatus.NotBought,
