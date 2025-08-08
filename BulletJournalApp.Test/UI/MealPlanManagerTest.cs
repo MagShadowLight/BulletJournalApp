@@ -2,6 +2,7 @@
 using BulletJournalApp.Core.Services;
 using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
+using BulletJournalApp.Test.UI.Data;
 using BulletJournalApp.Test.Util;
 using BulletJournalApp.UI;
 using BulletJournalApp.UI.Util;
@@ -29,6 +30,8 @@ namespace BulletJournalApp.Test.UI
         private Mock<ITimeOfDayService> timeOfDayMock = new();
         private ConsoleInputOutput stream = new();
         private List<Meals> meals;
+        private StringReader _input;
+        private MealPlanManagerTestData _data = new();
 
         private List<Ingredients> SetIngredientsList()
         {
@@ -46,9 +49,9 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            _input = new StringReader("1\nTest meal\nTest\nL\nJuly 24, 2025\n12:00 PM\n1\nTest ingredients 1\n2\n2.13\nN/A\n1\nTest ingredients 2\n6\n0.59\n1 Cup\n0\n0");
+            Console.SetIn(_input);
             // Act
-            using var input = new StringReader("1\nTest meal\nTest\nL\nJuly 24, 2025\n12:00 PM\n1\nTest ingredients 1\n2\n2.13\nN/A\n1\nTest ingredients 2\n6\n0.59\n1 Cup\n0\n0");
-            Console.SetIn(input);
             ui.MealPlanUI();
             // Assert
             mealMock.Verify(user => user.AddMeal(It.Is<Meals>(meal => meal.Name == "Test meal" && meal.Description == "Test" && meal.TimeOfDay == TimeOfDay.Lunch && meal.MealDate == DateTime.Parse("July 24, 2025") && meal.MealTime == DateTime.Parse("12:00 PM") && meal.Ingredients.Count == 2)), Times.Once);
@@ -67,13 +70,12 @@ namespace BulletJournalApp.Test.UI
         public void When_User_Selected_To_Change_Ingredients_For_The_Selected_Meals_Then_Ingredients_Should_Be_Changed()
         {
             // Arrange
-            var ingredients = SetIngredientsList();
+            var ingredients = _data.SetUpIngredients(new List<Ingredients>());
             var ingredient2 = ingredients.Find(x => x.Name == "Test 2");
             var ingredient3 = ingredients.Find(x => x.Name == "Test 3");
-            var mealTest = new Meals("Testmeal", "Test", ingredients.ToList(), DateTime.Today, DateTime.Today);
+            var meal = _data.SetUpMeals(new List<Meals>())[0];
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
-            // Act
-            mealMock.Setup(service => service.FindMealsByName(mealTest.Name)).Returns(mealTest);
+            mealMock.Setup(service => service.FindMealsByName(meal.Name)).Returns(meal);
             ingredientMock.Setup(service => service.FindIngredientsByName("Test 2")).Returns(ingredient2);
             ingredientMock.Setup(service => service.FindIngredientsByName("Test 3")).Returns(ingredient3);
             ingredients.Add(new Ingredients("Test 4", 7, 2.34, "2 Pints"));
@@ -82,165 +84,158 @@ namespace BulletJournalApp.Test.UI
             ingredients.Add(ingredient2);
             ingredients.Remove(ingredient3);
             ingredientMock.Setup(service => service.GetAllIngredients()).Returns(ingredients);
-            using var input = new StringReader("5\n4\nTestmeal\n1\nTest 4\n7\n2.34\n2 Pints\n2\nTest 2\nUpdated Test\n2\n1.53\n1 Tbsp\n3\nTest 3\n4\n0\n0");
-            Console.SetIn(input);
+            _input = new StringReader("5\n4\nTest 1\n1\nTest 4\n7\n2.34\n2 Pints\n2\nTest 2\nUpdated Test\n2\n1.53\n1 Tbsp\n3\nTest 3\n4\n0\n0");
+            Console.SetIn(_input);
+            // Act
             ui.MealPlanUI();
             // Assert
-            mealMock.Verify(user => user.ChangeMealIngredients("Testmeal", It.IsAny<List<Ingredients>>()), Times.Once);
+            mealMock.Verify(user => user.ChangeMealIngredients("Test 1", It.IsAny<List<Ingredients>>()), Times.Once);
+            stream.ResetReader();
         }
         [Fact]
         public void When_User_Selected_To_Change_Name_And_Description_For_Selected_Meal_Then_Those_Values_Should_Be_Changed()
         {
             // Arrange
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients.ToList(), DateTime.Today, DateTime.Today);
+            var meal = _data.SetUpMeals(new List<Meals>());
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            mealMock.Setup(service => service.UpdateMeals("Test 1", "Updated meal", "Updated"));
+            _input = new StringReader("5\n1\nTest 1\nUpdated meal\nUpdated\n0");
+            Console.SetIn(_input);
             // Act
-            mealMock.Setup(service => service.UpdateMeals("Test meal", "Updated meal", "Updated"));
-            using var input = new StringReader("5\n1\nTest meal\nUpdated meal\nUpdated\n0");
-            Console.SetIn(input);
             ui.MealPlanUI();
             // Assert
-            mealMock.Verify(user => user.UpdateMeals("Test meal", "Updated meal", "Updated"), Times.Once);
+            mealMock.Verify(user => user.UpdateMeals("Test 1", "Updated meal", "Updated"), Times.Once);
+            stream.ResetReader();
         }
-        [Fact]
-        public void When_User_Selected_To_Change_Time_Of_Day_For_Selected_Meal_Then_That_Value_Should_Be_Changed()
+        [Theory]
+        [MemberData(nameof(MealPlanManagerTestData.GetTimeOfDayUpdateInput), MemberType =typeof(MealPlanManagerTestData))]
+        public void When_User_Selected_To_Change_Time_Of_Day_For_Selected_Meal_Then_That_Value_Should_Be_Changed(TimeOfDay timeofday, string input)
         {
             // Arrange
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients.ToList(), DateTime.Today, DateTime.Today);
+            var meals = _data.SetUpMeals(new List<Meals>());
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            timeOfDayMock.Setup(service => service.ChangeTimeOfDay("Test 2", timeofday));
+            _input = new StringReader(input);
+            Console.SetIn(_input);
             // Act
-            timeOfDayMock.Setup(service => service.ChangeTimeOfDay("Test meal", TimeOfDay.Dinner));
-            using var input = new StringReader("5\n2\nTest meal\nDI\n0");
-            Console.SetIn(input);
             ui.MealPlanUI();
             // Assert
-            timeOfDayMock.Verify(user => user.ChangeTimeOfDay("Test meal", TimeOfDay.Dinner), Times.Once);
+            timeOfDayMock.Verify(user => user.ChangeTimeOfDay("Test 2", timeofday), Times.Once);
+            stream.ResetReader();
         }
         [Fact]
         public void When_User_Selected_To_Change_The_Date_And_Time_For_Selected_Meal_Then_Those_Value_Should_Be_Changed()
         {
             // Arrange
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients.ToList(), DateTime.Today, DateTime.Today);
+            var meals = _data.SetUpMeals(new List<Meals>());
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            mealMock.Setup(service => service.ChangeMealDateTime("Test 1", DateTime.Parse("July 25, 2025"), DateTime.Parse("12:00 PM")));
+            _input = new StringReader("5\n3\nTest 1\nJuly 25, 2025\n12:00 PM\n0");
+            Console.SetIn(_input);
             // Act
-            mealMock.Setup(service => service.ChangeMealDateTime("Test meal", DateTime.Parse("July 25, 2025"), DateTime.Parse("12:00 PM")));
-            using var input = new StringReader("5\n3\nTest meal\nJuly 25, 2025\n12:00 PM\n0");
-            Console.SetIn(input);
             ui.MealPlanUI();
             // Assert
-            mealMock.Verify(user => user.ChangeMealDateTime("Test meal", DateTime.Parse("July 25, 2025"), DateTime.Parse("12:00 PM")), Times.Once);
+            mealMock.Verify(user => user.ChangeMealDateTime("Test 1", DateTime.Parse("July 25, 2025"), DateTime.Parse("12:00 PM")), Times.Once);
+            stream.ResetReader();
         }
         [Fact]
         public void When_User_Selected_To_Delete_A_Meal_Then_That_Meal_Should_Be_Deleted()
         {
             // Arrange
-            var ingredients = SetIngredientsList();
-            var ingredient1 = ingredients.Find(x => x.Name == "Test 1");
-            var ingredient2 = ingredients.Find(x => x.Name == "Test 2");
-            var ingredient3 = ingredients.Find(x => x.Name == "Test 3");
-            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today);
+            var meals = _data.SetUpMeals(new List<Meals>());
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            mealMock.Setup(service => service.DeleteMeals("Test 1"));
+            _input = new StringReader("6\nTest 1\n0");
+            Console.SetIn(_input);
             // Act
-            mealMock.Setup(service => service.DeleteMeals("Test meal"));
-            mealMock.Setup(service => service.FindMealsByName(mealTest.Name)).Returns(mealTest);
-            using var input = new StringReader("6\nTest meal\n0");
-            Console.SetIn(input);
             ui.MealPlanUI();
             // Assert
-            mealMock.Verify(user => user.DeleteMeals("Test meal"), Times.Once);
+            mealMock.Verify(user => user.DeleteMeals("Test 1"), Times.Once);
+            stream.ResetReader();
         }
         [Fact]
         public void When_User_Selected_To_Search_The_Specific_Meal_Then_That_Meal_Should_Be_Found()
         {
             // Arrange
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today);
+            var meal1 = _data.SetUpMeals(new List<Meals>())[0];
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            mealMock.Setup(service => service.FindMealsByName(meal1.Name)).Returns(meal1);
+            _input = new StringReader("4\nTest 1\n0");
+            Console.SetIn(_input);
             // Act
-            mealMock.Setup(service => service.FindMealsByName(mealTest.Name)).Returns(mealTest);
-            using var input = new StringReader("4\nTest meal\n0");
-            Console.SetIn(input);
             ui.MealPlanUI();
             // Assert
-            mealMock.Verify(user => user.FindMealsByName("Test meal"), Times.Once);
+            mealMock.Verify(user => user.FindMealsByName("Test 1"), Times.Once);
+            stream.ResetReader();
         }
         [Fact]
         public void When_User_Selected_To_List_All_Meals_Then_It_Should_Return_A_List_Of_Meals()
         {
             // Arrange
             List<Meals> meals = new List<Meals>();
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today);
-            meals.Add(mealTest);
+            meals = _data.SetUpMeals(meals);
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
-            // Act
             mealMock.Setup(service => service.GetAllMeals()).Returns(meals);
-            using var input = new StringReader("2\n0");
-            Console.SetIn(input);
+            _input = new StringReader("2\n0");
+            Console.SetIn(_input);
+            // Act
             ui.MealPlanUI();
             // Assert
             mealMock.Verify(user => user.GetAllMeals(), Times.Once);
+            stream.ResetReader();
         }
-        [Fact]
-        public void When_User_Selected_To_List_Meals_By_Time_Of_Day_Then_It_Should_Return_List_Of_Meals_Specific_To_That_Value()
+        [Theory]
+        [MemberData(nameof(MealPlanManagerTestData.GetTimeOfDayListInput), MemberType=typeof(MealPlanManagerTestData))]
+        public void When_User_Selected_To_List_Meals_By_Time_Of_Day_Then_It_Should_Return_List_Of_Meals_Specific_To_That_Value(TimeOfDay timeofday, string input)
         {
             // Arrange
             List<Meals> meals = new List<Meals>();
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            meals.Add(mealTest);
+            meals = _data.SetUpMeals(meals);
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            timeOfDayMock.Setup(service => service.GetMealsByTimeOfDay(timeofday)).Returns(meals);
+            _input = new StringReader(input);
+            Console.SetIn(_input);
             // Act
-            timeOfDayMock.Setup(service => service.GetMealsByTimeOfDay(TimeOfDay.Lunch)).Returns(meals);
-            using var input = new StringReader("3\nL\n0");
-            Console.SetIn(input);
             ui.MealPlanUI();
             // Assert
-            timeOfDayMock.Verify(user => user.GetMealsByTimeOfDay(TimeOfDay.Lunch), Times.Once);
+            timeOfDayMock.Verify(user => user.GetMealsByTimeOfDay(timeofday), Times.Once);
+            stream.ResetReader();
         }
         [Fact]
         public void When_User_Selected_To_Save_Meals_Lists_Then_It_Should_Be_Saved()
         {
             // Arrange
-            List<Meals> meals = new List<Meals>();
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            meals.Add(mealTest);
+            var meals = _data.SetUpMeals(new List<Meals>());
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
-            // Act
             mealMock.Setup(service => service.GetAllMeals()).Returns(meals);
             fileMock.Setup(user => user.SaveFunction("Faketest", Entries.MEALS, null, null, meals));
-            using var input = new StringReader("7\n1\nFaketest\n0");
-            Console.SetIn(input);
+            _input = new StringReader("7\n1\nFaketest\n0");
+            Console.SetIn(_input);
+            // Act
             ui.MealPlanUI();
             // Assert
             fileMock.Verify(user => user.SaveFunction("Faketest", Entries.MEALS, null, null, meals), Times.Once);
+            stream.ResetReader();
         }
         [Fact]
         public void When_User_Selected_To_Load_Meals_Lists_Then_It_Should_Be_Loaded()
         {
             // Arrange
-            List<Meals> meals = new List<Meals>();
-            var ingredients = SetIngredientsList();
-            var mealTest = new Meals("Test meal", "Test", ingredients, DateTime.Today, DateTime.Today, 0, TimeOfDay.Lunch);
-            meals.Add(mealTest);
+            var meals = _data.SetUpMeals(new List<Meals>());
             var ui = new MealPlanManager(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
             var taskservice = new Mock<ITaskService>();
             var itemservice = new Mock<IItemService>();
             var service = new FileService(formatterMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, taskservice.Object, itemservice.Object, mealMock.Object);
             service.SaveFunction("test", Entries.MEALS, null, null, meals);
-            // Act
             mealMock.Setup(service => service.GetAllMeals()).Returns(meals);
             fileMock.Setup(user => user.LoadFunction("test", Entries.MEALS));
-            
-            using var input = new StringReader("7\n2\ntest\n0");
-            Console.SetIn(input);
+            _input = new StringReader("7\n2\ntest\n0");
+            Console.SetIn(_input);
+            // Act
             ui.MealPlanUI();
             // Assert
             fileMock.Verify(user => user.LoadFunction("test", Entries.MEALS), Times.Once);
+            stream.ResetReader();
         }
     }
 }
