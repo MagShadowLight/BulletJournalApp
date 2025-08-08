@@ -52,30 +52,30 @@ namespace BulletJournalApp.Test.UI.Data
         }
         public static IEnumerable<object[]> GetScheduleListInput()
         {
-            yield return new object[] { Schedule.Yearly, "5\nSc\nY\n0\n" };
-            yield return new object[] { Schedule.Quarterly, "5\nSc\nQ\n0\n" };
-            yield return new object[] { Schedule.Monthly, "5\nSc\nM\n0\n" };
-            yield return new object[] { Schedule.Weekly, "5\nSc\nW\n0\n" };
-            yield return new object[] { Schedule.Daily, "5\nSc\nD\n0\n" };
+            yield return new object[] { Periodicity.Yearly, "5\nSc\nY\n0\n" };
+            yield return new object[] { Periodicity.Quarterly, "5\nSc\nQ\n0\n" };
+            yield return new object[] { Periodicity.Monthly, "5\nSc\nM\n0\n" };
+            yield return new object[] { Periodicity.Weekly, "5\nSc\nW\n0\n" };
+            yield return new object[] { Periodicity.Daily, "5\nSc\nD\n0\n" };
         }
         public static IEnumerable<object[]> GetScheduleUpdateInput()
         {
-            yield return new object[] { Schedule.Yearly, "9\nSc\nTest 2\nY\n0" };
-            yield return new object[] { Schedule.Quarterly, "9\nSc\nTest 2\nQ\n0" };
-            yield return new object[] { Schedule.Monthly, "9\nSc\nTest 2\nM\n0" };
-            yield return new object[] { Schedule.Weekly, "9\nSc\nTest 2\nW\n0" };
-            yield return new object[] { Schedule.Daily, "9\nSc\nTest 2\nD\n0" };
+            yield return new object[] { Periodicity.Yearly, "9\nSc\nTest 2\nY\n0" };
+            yield return new object[] { Periodicity.Quarterly, "9\nSc\nTest 2\nQ\n0" };
+            yield return new object[] { Periodicity.Monthly, "9\nSc\nTest 2\nM\n0" };
+            yield return new object[] { Periodicity.Weekly, "9\nSc\nTest 2\nW\n0" };
+            yield return new object[] { Periodicity.Daily, "9\nSc\nTest 2\nD\n0" };
         }
 
         public List<Items> SetUpItems(List<Items> items)
         {
-            var item1 = new Items("Test 1", "Test", Schedule.Yearly, 1, 1, Category.None, ItemStatus.NotBought, "", DateTime.Today, DateTime.MinValue);
-            var item2 = new Items("Test 2", "Test", Schedule.Quarterly, 1, 2, Category.Education, ItemStatus.Bought, "", DateTime.Today, DateTime.Today.AddDays(1));
-            var item3 = new Items("Test 3", "Test", Schedule.Monthly, 1, 3, Category.Works, ItemStatus.Ordered, "", DateTime.Today, DateTime.MinValue);
-            var item4 = new Items("Test 4", "Test", Schedule.Weekly, 1, 4, Category.Home, ItemStatus.Arrived, "", DateTime.Today, DateTime.MinValue);
-            var item5 = new Items("Test 5", "Test", Schedule.Daily, 1, 5, Category.Personal, ItemStatus.Delayed, "", DateTime.Today, DateTime.MinValue);
-            var item6 = new Items("Test 6", "Test", Schedule.Yearly, 1, 6, Category.Financial, ItemStatus.Cancelled, "", DateTime.Today, DateTime.MinValue);
-            var item7 = new Items("Test 7", "Test", Schedule.Quarterly, 1, 7, Category.Transportation, ItemStatus.Unknown, "", DateTime.Today, DateTime.MinValue);
+            var item1 = new Items("Test 1", "Test", Periodicity.Yearly, 1, 1, Category.None, ItemStatus.NotBought, "", DateTime.Today, DateTime.MinValue);
+            var item2 = new Items("Test 2", "Test", Periodicity.Quarterly, 1, 2, Category.Education, ItemStatus.Bought, "", DateTime.Today, DateTime.Today.AddDays(1));
+            var item3 = new Items("Test 3", "Test", Periodicity.Monthly, 1, 3, Category.Works, ItemStatus.Ordered, "", DateTime.Today, DateTime.MinValue);
+            var item4 = new Items("Test 4", "Test", Periodicity.Weekly, 1, 4, Category.Home, ItemStatus.Arrived, "", DateTime.Today, DateTime.MinValue);
+            var item5 = new Items("Test 5", "Test", Periodicity.Daily, 1, 5, Category.Personal, ItemStatus.Delayed, "", DateTime.Today, DateTime.MinValue);
+            var item6 = new Items("Test 6", "Test", Periodicity.Yearly, 1, 6, Category.Financial, ItemStatus.Cancelled, "", DateTime.Today, DateTime.MinValue);
+            var item7 = new Items("Test 7", "Test", Periodicity.Quarterly, 1, 7, Category.Transportation, ItemStatus.Unknown, "", DateTime.Today, DateTime.MinValue);
             items.Add(item1);
             items.Add(item2);
             items.Add(item3);

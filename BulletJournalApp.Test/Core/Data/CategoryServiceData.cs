@@ -50,13 +50,13 @@ namespace BulletJournalApp.Test.Core.Data
 
         public void SetUpTasks(TaskService taskService)
         {
-            var task1 = new Tasks(DateTime.Today, "Test 1", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None);
-            var task2 = new Tasks(DateTime.Today, "Test 2", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Education);
-            var task3 = new Tasks(DateTime.Today, "Test 3", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Works);
-            var task4 = new Tasks(DateTime.Today, "Test 4", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Home);
-            var task5 = new Tasks(DateTime.Today, "Test 5", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Personal);
-            var task6 = new Tasks(DateTime.Today, "Test 6", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Financial);
-            var task7 = new Tasks(DateTime.Today, "Test 7", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Transportation);
+            var task1 = new Tasks(DateTime.Today, "Test 1", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None);
+            var task2 = new Tasks(DateTime.Today, "Test 2", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Education);
+            var task3 = new Tasks(DateTime.Today, "Test 3", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Works);
+            var task4 = new Tasks(DateTime.Today, "Test 4", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Home);
+            var task5 = new Tasks(DateTime.Today, "Test 5", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Personal);
+            var task6 = new Tasks(DateTime.Today, "Test 6", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Financial);
+            var task7 = new Tasks(DateTime.Today, "Test 7", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Transportation);
             taskService.AddTask(task1);
             taskService.AddTask(task2);
             taskService.AddTask(task3);
@@ -68,13 +68,13 @@ namespace BulletJournalApp.Test.Core.Data
 
         public void SetUpItems(ItemService itemservice)
         {
-            var item1 = new Items("Test 1", "Test", Schedule.Monthly, 1, 1, Category.None);
-            var item2 = new Items("Test 2", "Test", Schedule.Monthly, 1, 2, Category.Education);
-            var item3 = new Items("Test 3", "Test", Schedule.Monthly, 1, 3, Category.Works);
-            var item4 = new Items("Test 4", "Test", Schedule.Monthly, 1, 4, Category.Home);
-            var item5 = new Items("Test 5", "Test", Schedule.Monthly, 1, 5, Category.Personal);
-            var item6 = new Items("Test 6", "Test", Schedule.Monthly, 1, 6, Category.Financial);
-            var item7 = new Items("Test 7", "Test", Schedule.Monthly, 1, 7, Category.Transportation);
+            var item1 = new Items("Test 1", "Test", Periodicity.Monthly, 1, 1, Category.None);
+            var item2 = new Items("Test 2", "Test", Periodicity.Monthly, 1, 2, Category.Education);
+            var item3 = new Items("Test 3", "Test", Periodicity.Monthly, 1, 3, Category.Works);
+            var item4 = new Items("Test 4", "Test", Periodicity.Monthly, 1, 4, Category.Home);
+            var item5 = new Items("Test 5", "Test", Periodicity.Monthly, 1, 5, Category.Personal);
+            var item6 = new Items("Test 6", "Test", Periodicity.Monthly, 1, 6, Category.Financial);
+            var item7 = new Items("Test 7", "Test", Periodicity.Monthly, 1, 7, Category.Transportation);
             itemservice.AddItems(item1);
             itemservice.AddItems(item2);
             itemservice.AddItems(item3);

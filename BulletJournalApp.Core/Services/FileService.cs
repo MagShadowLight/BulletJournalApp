@@ -164,7 +164,7 @@ namespace BulletJournalApp.Core.Services
             var notes = sr.ReadLine();
             var category = (Category)Enum.Parse(typeof(Category), sr.ReadLine());
             var status = (TasksStatus)Enum.Parse(typeof(TasksStatus), sr.ReadLine());
-            var schedule = (Schedule)Enum.Parse(typeof(Schedule), sr.ReadLine());
+            var schedule = (Periodicity)Enum.Parse(typeof(Periodicity), sr.ReadLine());
             var isRepeatable = bool.Parse(sr.ReadLine());
             var repeatDays = int.Parse(sr.ReadLine());
             var endRepeatDate = DateTime.TryParse(sr.ReadLine(), out DateTime parsedRepeatDate) ? parsedRepeatDate : DateTime.MinValue;
@@ -177,7 +177,7 @@ namespace BulletJournalApp.Core.Services
             var name = sr.ReadLine();
             var description = sr.ReadLine();
             var quantity = int.Parse(sr.ReadLine());
-            var schedule = (Schedule)Enum.Parse(typeof(Schedule), sr.ReadLine());
+            var schedule = (Periodicity)Enum.Parse(typeof(Periodicity), sr.ReadLine());
             var category = (Category)Enum.Parse(typeof(Category), sr.ReadLine());
             var status = (ItemStatus)Enum.Parse(typeof (ItemStatus), sr.ReadLine());
             var note = sr.ReadLine();

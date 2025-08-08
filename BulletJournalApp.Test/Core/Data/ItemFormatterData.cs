@@ -15,7 +15,7 @@ namespace BulletJournalApp.Test.Core.Data
             yield return new object[] { new Items(
                  "Test 1",
                  "Test",
-                 Schedule.Monthly,
+                 Periodicity.Monthly,
                  1,
                  1,
                  Category.None,
@@ -28,7 +28,7 @@ namespace BulletJournalApp.Test.Core.Data
             yield return new object[] { new Items(
                  "Test 2",
                  "Test",
-                 Schedule.Monthly,
+                 Periodicity.Monthly,
                  1,
                  2,
                  Category.None,
@@ -41,7 +41,7 @@ namespace BulletJournalApp.Test.Core.Data
             yield return new object[] { new Items(
                  "Test 3",
                  "Test",
-                 Schedule.Monthly,
+                 Periodicity.Monthly,
                  1,
                  3,
                  Category.None,

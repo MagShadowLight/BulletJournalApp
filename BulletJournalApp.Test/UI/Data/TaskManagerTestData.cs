@@ -12,11 +12,11 @@ namespace BulletJournalApp.Test.UI.Data
     {
         public static IEnumerable<object[]> GetScheduleUpdateInput()
         {
-            yield return new object[] { Schedule.Yearly, "14\nTest 1\nY\n0\nN\n" };
-            yield return new object[] { Schedule.Quarterly, "14\nTest 1\nQ\n0\nN\n" };
-            yield return new object[] { Schedule.Monthly, "14\nTest 1\nM\n0\nN\n" };
-            yield return new object[] { Schedule.Weekly, "14\nTest 1\nW\n0\nN\n" };
-            yield return new object[] { Schedule.Daily, "14\nTest 1\nD\n0\nN\n" };
+            yield return new object[] { Periodicity.Yearly, "14\nTest 1\nY\n0\nN\n" };
+            yield return new object[] { Periodicity.Quarterly, "14\nTest 1\nQ\n0\nN\n" };
+            yield return new object[] { Periodicity.Monthly, "14\nTest 1\nM\n0\nN\n" };
+            yield return new object[] { Periodicity.Weekly, "14\nTest 1\nW\n0\nN\n" };
+            yield return new object[] { Periodicity.Daily, "14\nTest 1\nD\n0\nN\n" };
         }
         public static IEnumerable<object[]> GetCategoryUpdateInput()
         {
@@ -44,11 +44,11 @@ namespace BulletJournalApp.Test.UI.Data
         }
         public static IEnumerable<object[]> GetScheduleListInput()
         {
-            yield return new object[] { Schedule.Yearly, "7\nY\n0\nN\n" };
-            yield return new object[] { Schedule.Quarterly, "7\nQ\n0\nN\n" };
-            yield return new object[] { Schedule.Monthly, "7\nM\n0\nN\n" };
-            yield return new object[] { Schedule.Weekly, "7\nW\n0\nN\n" };
-            yield return new object[] { Schedule.Daily, "7\nD\n0\nN\n" };
+            yield return new object[] { Periodicity.Yearly, "7\nY\n0\nN\n" };
+            yield return new object[] { Periodicity.Quarterly, "7\nQ\n0\nN\n" };
+            yield return new object[] { Periodicity.Monthly, "7\nM\n0\nN\n" };
+            yield return new object[] { Periodicity.Weekly, "7\nW\n0\nN\n" };
+            yield return new object[] { Periodicity.Daily, "7\nD\n0\nN\n" };
         }
         public static IEnumerable<object[]> GetStatusListInput()
         {
@@ -78,13 +78,13 @@ namespace BulletJournalApp.Test.UI.Data
 
         public List<Tasks> SetUpTasks(List<Tasks> tasks)
         {
-            var task1 = new Tasks(DateTime.Now, "Test 1", "meow", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 0, false);
-            var task2 = new Tasks(DateTime.Now, "Test 2", "mrow", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Low, Category.Education, "", TasksStatus.InProgress, 0, true);
-            var task3 = new Tasks(DateTime.Now, "Test 3", "mrrp", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.High, Category.Works, "", TasksStatus.Done, 0, false);
-            var task4 = new Tasks(DateTime.Now, "Test 4", "mrrp", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Home, "", TasksStatus.Overdue, 0, false);
-            var task5 = new Tasks(DateTime.Now, "Test 5", "mrrp", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Low, Category.Personal, "", TasksStatus.Late, 0, true);
-            var task6 = new Tasks(DateTime.Now, "Test 6", "mrrp", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.High, Category.Financial, "", TasksStatus.ToDo, 0, true);
-            var task7 = new Tasks(DateTime.Now, "Test 7", "mrrp", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Transportation, "", TasksStatus.InProgress, 0, false);
+            var task1 = new Tasks(DateTime.Now, "Test 1", "meow", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 0, false);
+            var task2 = new Tasks(DateTime.Now, "Test 2", "mrow", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Low, Category.Education, "", TasksStatus.InProgress, 0, true);
+            var task3 = new Tasks(DateTime.Now, "Test 3", "mrrp", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.High, Category.Works, "", TasksStatus.Done, 0, false);
+            var task4 = new Tasks(DateTime.Now, "Test 4", "mrrp", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Home, "", TasksStatus.Overdue, 0, false);
+            var task5 = new Tasks(DateTime.Now, "Test 5", "mrrp", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Low, Category.Personal, "", TasksStatus.Late, 0, true);
+            var task6 = new Tasks(DateTime.Now, "Test 6", "mrrp", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.High, Category.Financial, "", TasksStatus.ToDo, 0, true);
+            var task7 = new Tasks(DateTime.Now, "Test 7", "mrrp", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.Transportation, "", TasksStatus.InProgress, 0, false);
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);

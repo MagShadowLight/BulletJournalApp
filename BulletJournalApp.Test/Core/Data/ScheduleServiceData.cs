@@ -13,44 +13,44 @@ namespace BulletJournalApp.Test.Core.Data
     {
         public static IEnumerable<object[]> GetScheduleAndStringValue()
         {
-            yield return new object[] { "Test 1", Schedule.Daily };
-            yield return new object[] { "Test 1", Schedule.Weekly };
-            yield return new object[] { "Test 1", Schedule.Monthly };
-            yield return new object[] { "Test 1", Schedule.Quarterly };
-            yield return new object[] { "Test 1", Schedule.Yearly };
-            yield return new object[] { "Test 2", Schedule.Daily };
-            yield return new object[] { "Test 2", Schedule.Weekly };
-            yield return new object[] { "Test 2", Schedule.Monthly };
-            yield return new object[] { "Test 2", Schedule.Quarterly };
-            yield return new object[] { "Test 2", Schedule.Yearly };
-            yield return new object[] { "Test 3", Schedule.Daily };
-            yield return new object[] { "Test 3", Schedule.Weekly };
-            yield return new object[] { "Test 3", Schedule.Monthly };
-            yield return new object[] { "Test 3", Schedule.Quarterly };
-            yield return new object[] { "Test 3", Schedule.Yearly };
-            yield return new object[] { "Test 4", Schedule.Daily };
-            yield return new object[] { "Test 4", Schedule.Weekly };
-            yield return new object[] { "Test 4", Schedule.Monthly };
-            yield return new object[] { "Test 4", Schedule.Quarterly };
-            yield return new object[] { "Test 4", Schedule.Yearly };
+            yield return new object[] { "Test 1", Periodicity.Daily };
+            yield return new object[] { "Test 1", Periodicity.Weekly };
+            yield return new object[] { "Test 1", Periodicity.Monthly };
+            yield return new object[] { "Test 1", Periodicity.Quarterly };
+            yield return new object[] { "Test 1", Periodicity.Yearly };
+            yield return new object[] { "Test 2", Periodicity.Daily };
+            yield return new object[] { "Test 2", Periodicity.Weekly };
+            yield return new object[] { "Test 2", Periodicity.Monthly };
+            yield return new object[] { "Test 2", Periodicity.Quarterly };
+            yield return new object[] { "Test 2", Periodicity.Yearly };
+            yield return new object[] { "Test 3", Periodicity.Daily };
+            yield return new object[] { "Test 3", Periodicity.Weekly };
+            yield return new object[] { "Test 3", Periodicity.Monthly };
+            yield return new object[] { "Test 3", Periodicity.Quarterly };
+            yield return new object[] { "Test 3", Periodicity.Yearly };
+            yield return new object[] { "Test 4", Periodicity.Daily };
+            yield return new object[] { "Test 4", Periodicity.Weekly };
+            yield return new object[] { "Test 4", Periodicity.Monthly };
+            yield return new object[] { "Test 4", Periodicity.Quarterly };
+            yield return new object[] { "Test 4", Periodicity.Yearly };
         }
 
         public static IEnumerable<object[]> GetScheduleValue()
         {
-            yield return new object[] { 1, Schedule.Daily };
-            yield return new object[] { 1, Schedule.Weekly };
-            yield return new object[] { 1, Schedule.Monthly };
-            yield return new object[] { 1, Schedule.Quarterly };
-            yield return new object[] { 1, Schedule.Yearly };
+            yield return new object[] { 1, Periodicity.Daily };
+            yield return new object[] { 1, Periodicity.Weekly };
+            yield return new object[] { 1, Periodicity.Monthly };
+            yield return new object[] { 1, Periodicity.Quarterly };
+            yield return new object[] { 1, Periodicity.Yearly };
         }
 
         public void SetUpTasks(TaskService taskService)
         {
-            var task1 = new Tasks(DateTime.Today, "Test 1", "Test", Schedule.Daily, false);
-            var task2 = new Tasks(DateTime.Today, "Test 2", "Test", Schedule.Weekly, false);
-            var task3 = new Tasks(DateTime.Today, "Test 3", "Test", Schedule.Monthly, false);
-            var task4 = new Tasks(DateTime.Today, "Test 4", "Test", Schedule.Quarterly, false);
-            var task5 = new Tasks(DateTime.Today, "Test 5", "Test", Schedule.Yearly, false);
+            var task1 = new Tasks(DateTime.Today, "Test 1", "Test", Periodicity.Daily, false);
+            var task2 = new Tasks(DateTime.Today, "Test 2", "Test", Periodicity.Weekly, false);
+            var task3 = new Tasks(DateTime.Today, "Test 3", "Test", Periodicity.Monthly, false);
+            var task4 = new Tasks(DateTime.Today, "Test 4", "Test", Periodicity.Quarterly, false);
+            var task5 = new Tasks(DateTime.Today, "Test 5", "Test", Periodicity.Yearly, false);
             taskService.AddTask(task1);
             taskService.AddTask(task2);
             taskService.AddTask(task3);
@@ -60,11 +60,11 @@ namespace BulletJournalApp.Test.Core.Data
 
         public void SetUpItems(ItemService itemservice)
         {
-            var item1 = new Items("Test 1", "Test", Schedule.Daily, 1);
-            var item2 = new Items("Test 2", "Test", Schedule.Weekly, 1);
-            var item3 = new Items("Test 3", "Test", Schedule.Monthly, 1);
-            var item4 = new Items("Test 4", "Test", Schedule.Quarterly, 1);
-            var item5 = new Items("Test 5", "Test", Schedule.Yearly, 1);
+            var item1 = new Items("Test 1", "Test", Periodicity.Daily, 1);
+            var item2 = new Items("Test 2", "Test", Periodicity.Weekly, 1);
+            var item3 = new Items("Test 3", "Test", Periodicity.Monthly, 1);
+            var item4 = new Items("Test 4", "Test", Periodicity.Quarterly, 1);
+            var item5 = new Items("Test 5", "Test", Periodicity.Yearly, 1);
             itemservice.AddItems(item1);
             itemservice.AddItems(item2);
             itemservice.AddItems(item3);

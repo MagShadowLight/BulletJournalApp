@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Core.Services
 {
-    public class ScheduleService : IScheduleService
+    public class PeriodicityService : IPeriodicityService
     {
 
         private readonly IFormatter _formatter;
@@ -19,7 +19,7 @@ namespace BulletJournalApp.Core.Services
         private readonly IItemService _itemservice;
         private readonly Entries _entries;
 
-        public ScheduleService(IFormatter formatter, IConsoleLogger consolelogger, IFileLogger filelogger, ITaskService taskService, IItemService itemService)
+        public PeriodicityService(IFormatter formatter, IConsoleLogger consolelogger, IFileLogger filelogger, ITaskService taskService, IItemService itemService)
         {
             _formatter = formatter;
             _consolelogger = consolelogger;
@@ -28,7 +28,7 @@ namespace BulletJournalApp.Core.Services
             _itemservice = itemService;
         }
 
-        public void ChangeSchedule(string title, Entries entries, Schedule schedule)
+        public void ChangeSchedule(string title, Entries entries, Periodicity schedule)
         {
             switch(entries)
             {
@@ -47,13 +47,13 @@ namespace BulletJournalApp.Core.Services
             }
         }
 
-        public List<Items> ListItemsBySchedule(Schedule schedule)
+        public List<Items> ListItemsBySchedule(Periodicity schedule)
         {
             List<Items> items = _itemservice.GetAllItems();
             return items.Where(time => time.Schedule == schedule).ToList();
         }
 
-        public List<Tasks> ListTasksBySchedule(Schedule schedule)
+        public List<Tasks> ListTasksBySchedule(Periodicity schedule)
         {
             List<Tasks> tasks = _taskservice.ListAllTasks();
             return tasks.Where(time => time.schedule == schedule).ToList();

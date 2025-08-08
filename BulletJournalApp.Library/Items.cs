@@ -12,7 +12,7 @@ namespace BulletJournalApp.Library
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Schedule Schedule { get; set; }
+        public Periodicity Schedule { get; set; }
         public Category Category { get; set; }
         public ItemStatus Status { get; set; }
         public string? Notes { get; set; }
@@ -20,7 +20,7 @@ namespace BulletJournalApp.Library
         public DateTime? DateBought { get; set; }
         public int Quantity { get; set; }
 
-        public Items(string name, string description, Schedule schedule, int quantity, int id = 0, Category category = Category.None, ItemStatus status = ItemStatus.NotBought, string note = "", DateTime? dateadded = null, DateTime? datebought = null)
+        public Items(string name, string description, Periodicity schedule, int quantity, int id = 0, Category category = Category.None, ItemStatus status = ItemStatus.NotBought, string note = "", DateTime? dateadded = null, DateTime? datebought = null)
         {
             Validate(name, nameof(name));
             Validate(description, nameof(description));
@@ -53,7 +53,7 @@ namespace BulletJournalApp.Library
             Category = newcategory;
         }
 
-        public void ChangeSchedule(Schedule newschedule)
+        public void ChangeSchedule(Periodicity newschedule)
         {
             Schedule = newschedule;
         }

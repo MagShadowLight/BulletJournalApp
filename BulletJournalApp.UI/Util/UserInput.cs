@@ -74,17 +74,17 @@ namespace BulletJournalApp.UI.Util
             };
         }
 
-        public Schedule GetScheduleInput(string prompt)
+        public Periodicity GetScheduleInput(string prompt)
         {
             Console.Write(prompt);
             var input = Console.ReadLine().ToUpper();
             return input switch
             {
-                "Y" => Schedule.Yearly,
-                "Q" => Schedule.Quarterly,
-                "M" => Schedule.Monthly,
-                "W" => Schedule.Weekly,
-                "D" => Schedule.Daily,
+                "Y" => Periodicity.Yearly,
+                "Q" => Periodicity.Quarterly,
+                "M" => Periodicity.Monthly,
+                "W" => Periodicity.Weekly,
+                "D" => Periodicity.Daily,
                 _ => throw new FormatException("Invalid Schedule Input. Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily")
             };
         }

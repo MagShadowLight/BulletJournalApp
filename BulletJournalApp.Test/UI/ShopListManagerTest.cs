@@ -23,7 +23,7 @@ namespace BulletJournalApp.Test.UI
         private Mock<IFileLogger> fileLoggerMock = new();
         private Mock<IFormatter> formatterMock = new();
         private Mock<ICategoryService> categoryMock = new();
-        private Mock<IScheduleService> scheduleMock = new();
+        private Mock<IPeriodicityService> scheduleMock = new();
         private Mock<IItemStatusService> statusMock = new();
         private Mock<IFileService> fileMock = new();
         private Mock<IItemService> itemMock = new();
@@ -43,7 +43,7 @@ namespace BulletJournalApp.Test.UI
             // Act
             ui.UI();
             // Assert
-            itemMock.Verify(user => user.AddItems(It.Is<Items>(item => item.Name == "Test" && item.Description == "Test" && item.Schedule == Schedule.Monthly)), Times.Once);
+            itemMock.Verify(user => user.AddItems(It.Is<Items>(item => item.Name == "Test" && item.Description == "Test" && item.Schedule == Periodicity.Monthly)), Times.Once);
             _console.ResetReader();
         }
         [Fact]
@@ -96,7 +96,7 @@ namespace BulletJournalApp.Test.UI
         }
         [Theory]
         [MemberData(nameof(ShopListManagerTestData.GetScheduleListInput), MemberType =typeof(ShopListManagerTestData))]
-        public void When_User_Selected_To_List_All_Items_By_Schedule_Then_It_Should_Returns(Schedule schedule, string userinput)
+        public void When_User_Selected_To_List_All_Items_By_Schedule_Then_It_Should_Returns(Periodicity schedule, string userinput)
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);
@@ -197,7 +197,7 @@ namespace BulletJournalApp.Test.UI
         }
         [Theory]
         [MemberData(nameof(ShopListManagerTestData.GetScheduleUpdateInput), MemberType = typeof(ShopListManagerTestData))]
-        public void When_User_Selected_Change_Item_Schedule_Then_Items_Should_Update_With_New_Schedule(Schedule schedule, string userinput)
+        public void When_User_Selected_Change_Item_Schedule_Then_Items_Should_Update_With_New_Schedule(Periodicity schedule, string userinput)
         {
             // Arrange
             var ui = new ShopListManager(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, inputMock.Object);

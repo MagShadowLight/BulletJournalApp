@@ -23,7 +23,7 @@ namespace BulletJournalApp.Test.UI
         private Mock<IFormatter> formatterMock = new();
         private Mock<IPriorityService> priorityMock = new();
         private Mock<ICategoryService> categoryMock = new();
-        private Mock<IScheduleService> scheduleMock = new();
+        private Mock<IPeriodicityService> scheduleMock = new();
         private Mock<ITasksStatusService> statusMock = new();
         private Mock<IFileService> fileMock = new();
         private Mock<ITaskService> taskMock = new();
@@ -146,7 +146,7 @@ namespace BulletJournalApp.Test.UI
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetScheduleListInput), MemberType = typeof(TaskManagerTestData))]
-        public void When_User_Select_Task_List_By_Weekly_Schedule_Then_It_Should_Return_Task_List_With_Only_Weekly_Schedule(Schedule schedule, string userInput)
+        public void When_User_Select_Task_List_By_Weekly_Schedule_Then_It_Should_Return_Task_List_With_Only_Weekly_Schedule(Periodicity schedule, string userInput)
         {
             // Arrange
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
@@ -166,7 +166,7 @@ namespace BulletJournalApp.Test.UI
         {
             // Arrange
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);
-            var task = new Tasks(DateTime.Now, "Test Task", "meow", Schedule.Monthly, false);
+            var task = new Tasks(DateTime.Now, "Test Task", "meow", Periodicity.Monthly, false);
             taskMock.Setup(service => service.MarkTasksComplete("Test Task"));
             input = new StringReader("8\nTest Task\n0\nN\n");
             Console.SetIn(input);
@@ -293,7 +293,7 @@ namespace BulletJournalApp.Test.UI
         }
         [Theory]
         [MemberData(nameof(TaskManagerTestData.GetScheduleUpdateInput), MemberType = typeof(TaskManagerTestData))]
-        public void When_User_Select_Change_Schedule_Then_Task_Should_Change_To_New_Schedule(Schedule schedule, string userInput)
+        public void When_User_Select_Change_Schedule_Then_Task_Should_Change_To_New_Schedule(Periodicity schedule, string userInput)
         {
             // Arrange
             var taskManager = new TaskManager(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, statusMock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, userinput);

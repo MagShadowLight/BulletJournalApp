@@ -21,11 +21,11 @@ namespace BulletJournalApp.UI
         private readonly IFormatter _formatter;
         private readonly ITasksStatusService _statusservice;
         private readonly IFileService _fileservice;
-        private readonly IScheduleService _scheduleservice;
+        private readonly IPeriodicityService _scheduleservice;
         private readonly IPriorityService _priorityservice;
         private readonly ICategoryService _categoryservice;
         private readonly IUserInput _userinput;
-        public TaskManager(ITaskService taskservice, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITasksStatusService statusservice, IFileService fileservice, IScheduleService scheduleservice, IPriorityService priorityservice, ICategoryService categoryservice, IUserInput userinput)
+        public TaskManager(ITaskService taskservice, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITasksStatusService statusservice, IFileService fileservice, IPeriodicityService scheduleservice, IPriorityService priorityservice, ICategoryService categoryservice, IUserInput userinput)
         {
             _taskservice = taskservice;
             _consolelogger = consolelogger;
@@ -343,7 +343,7 @@ namespace BulletJournalApp.UI
         }
         public void ListTaskBySchedule()
         {
-            Schedule schedule;
+            Periodicity schedule;
             try
             {
                 schedule = _userinput.GetScheduleInput("Enter the Schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
@@ -501,7 +501,7 @@ namespace BulletJournalApp.UI
         public void ChangeTaskSchedule()
         {
             var title = _userinput.GetStringInput("Enter the task title to change Schedule: ");
-            Schedule schedule;
+            Periodicity schedule;
             try
             {
                 schedule = _userinput.GetScheduleInput("Enter the new schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");

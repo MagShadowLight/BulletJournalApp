@@ -25,11 +25,11 @@ namespace BulletJournalApp.Test.Core.Service
         public TaskServiceTest()
         {
             _taskService = new TaskService(_formatter, _conlogger, _filelogger);
-            task1 = new Tasks(DateTime.Today.AddDays(1), "Test 1", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 1, false);
-            task2 = new Tasks(DateTime.Today.AddDays(1), "Test 2", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 2, false);
-            task3 = new Tasks(DateTime.Today.AddDays(1), "Test 3", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
-            repeatingtask = new Tasks(DateTime.Today.AddDays(1), "Test 4", "Test", Schedule.Monthly, true, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
-            repeatingtaskwithend = new Tasks(DateTime.Today.AddDays(1), "Test 5", "Test", Schedule.Monthly, true, 7, DateTime.Today.AddDays(29), Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
+            task1 = new Tasks(DateTime.Today.AddDays(1), "Test 1", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 1, false);
+            task2 = new Tasks(DateTime.Today.AddDays(1), "Test 2", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 2, false);
+            task3 = new Tasks(DateTime.Today.AddDays(1), "Test 3", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
+            repeatingtask = new Tasks(DateTime.Today.AddDays(1), "Test 4", "Test", Periodicity.Monthly, true, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
+            repeatingtaskwithend = new Tasks(DateTime.Today.AddDays(1), "Test 5", "Test", Periodicity.Monthly, true, 7, DateTime.Today.AddDays(29), Priority.Medium, Category.None, "", TasksStatus.ToDo, 3, false);
         }
         public void SetUpList()
         {

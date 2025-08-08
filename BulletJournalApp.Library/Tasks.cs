@@ -19,12 +19,12 @@ namespace BulletJournalApp.Library
         public string? Notes { get; set; }
         public Category Category { get; set; }
         public TasksStatus Status { get; set; }
-        public Schedule schedule { get; set; }
+        public Periodicity schedule { get; set; }
         public bool IsRepeatable { get; set; }
         public int RepeatDays { get; set; }
         public DateTime EndRepeatDate { get; set; }
 
-        public Tasks(DateTime dueDate, string title, string description, Schedule timely, bool isrepeatable, int repeatdays = 7, DateTime endRepeatDate = new DateTime(), Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
+        public Tasks(DateTime dueDate, string title, string description, Periodicity timely, bool isrepeatable, int repeatdays = 7, DateTime endRepeatDate = new DateTime(), Priority priority = Priority.Medium, Category category = Category.None, string notes = "", TasksStatus status = TasksStatus.ToDo, int id = 0, bool iscompleted = false)
         {
             Validate(title, nameof(title));
             Validate(description, nameof(description));
@@ -91,7 +91,7 @@ namespace BulletJournalApp.Library
                 throw new ArgumentException($"{fieldName} cannot be blank or whitespace.");
         }
 
-        public void ChangeSchedule(Schedule timely)
+        public void ChangeSchedule(Periodicity timely)
         {
             schedule = timely;
         }

@@ -90,7 +90,7 @@ namespace BulletJournalApp.Test.Core.Service
         public void Given_There_Are_Item_With_Date_Bought_Of_Min_Date_When_Formatting_Item_Into_A_String_Then_It_Should_Converted_To_String()
         {
             // Arrange
-            var item = new Items("Test 1", "Test", Schedule.Monthly, 1, 1, Category.None, ItemStatus.NotBought, "Test", DateTime.Today, DateTime.MinValue);
+            var item = new Items("Test 1", "Test", Periodicity.Monthly, 1, 1, Category.None, ItemStatus.NotBought, "Test", DateTime.Today, DateTime.MinValue);
             var message = "- Date Bought: N/A";
             // Act
             var result = _formatter.FormatItems(item);
@@ -101,7 +101,7 @@ namespace BulletJournalApp.Test.Core.Service
         public void Given_There_Are_Item_With_Bought_Date_When_Formatting_Item_Into_A_String_Then_It_Should_Converted_To_String()
         {
             // Arrange
-            var item = new Items("Test 1", "Test", Schedule.Monthly, 1, 1, Category.None, ItemStatus.NotBought, "Test", DateTime.Today, DateTime.Today.AddDays(1));
+            var item = new Items("Test 1", "Test", Periodicity.Monthly, 1, 1, Category.None, ItemStatus.NotBought, "Test", DateTime.Today, DateTime.Today.AddDays(1));
             var message = $"- Date Bought: {item.DateBought}";
             Console.WriteLine(item.DateBought);
             // Act

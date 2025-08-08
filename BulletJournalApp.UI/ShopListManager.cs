@@ -21,12 +21,12 @@ namespace BulletJournalApp.UI
         private readonly IFileLogger _filelogger;
         private readonly IFormatter _formatter;
         private readonly IItemStatusService _statusservice;
-        private readonly IScheduleService _scheduleservice;
+        private readonly IPeriodicityService _scheduleservice;
         private readonly ICategoryService _categoryservice;
         private readonly IFileService _fileservice;
         private readonly IUserInput _userinput;
 
-        public ShopListManager(IItemService itemService, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, IItemStatusService statusservice, IScheduleService scheduleservice, ICategoryService categoryservice, IFileService fileservice, IUserInput userInput)
+        public ShopListManager(IItemService itemService, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, IItemStatusService statusservice, IPeriodicityService scheduleservice, ICategoryService categoryservice, IFileService fileservice, IUserInput userInput)
         {
             _itemService = itemService;
             _consolelogger = consolelogger;

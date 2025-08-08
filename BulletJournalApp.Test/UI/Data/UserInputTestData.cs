@@ -32,11 +32,11 @@ namespace BulletJournalApp.Test.UI.Data
         }
         public static IEnumerable<object[]> GetScheduleOutput()
         {
-            yield return new object[] { "Y", Schedule.Yearly };
-            yield return new object[] { "Q", Schedule.Quarterly };
-            yield return new object[] { "M", Schedule.Monthly };
-            yield return new object[] { "W", Schedule.Weekly };
-            yield return new object[] { "D", Schedule.Daily };
+            yield return new object[] { "Y", Periodicity.Yearly };
+            yield return new object[] { "Q", Periodicity.Quarterly };
+            yield return new object[] { "M", Periodicity.Monthly };
+            yield return new object[] { "W", Periodicity.Weekly };
+            yield return new object[] { "D", Periodicity.Daily };
         }
         public static IEnumerable<object[]> GetTaskStatusOutput()
         {

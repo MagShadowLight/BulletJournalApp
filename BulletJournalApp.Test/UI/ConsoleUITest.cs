@@ -20,7 +20,7 @@ namespace BulletJournalApp.Test.UI
         private Mock<IFormatter> formatterMock = new();
         private Mock<IPriorityService> priorityMock = new();
         private Mock<ICategoryService> categoryMock = new();
-        private Mock<IScheduleService> scheduleMock = new();
+        private Mock<IPeriodicityService> scheduleMock = new();
         private Mock<ITasksStatusService> taskstatusmock = new();
         private Mock<IItemStatusService> itemStatusMock = new();
         private Mock<IFileService> fileMock = new();

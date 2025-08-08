@@ -16,9 +16,9 @@ namespace BulletJournalApp.Test.Core.Service
         private FileLogger _filelogger = new FileLogger();
         private ItemService _itemService;
         private ItemServiceData _data;
-        Items item1 = new Items("Test 1", "Test", Schedule.Monthly, 1);
-        Items item2 = new Items("Test 2", "Test", Schedule.Monthly, 1);
-        Items item3 = new Items("Test 3", "Test", Schedule.Monthly, 1);
+        Items item1 = new Items("Test 1", "Test", Periodicity.Monthly, 1);
+        Items item2 = new Items("Test 2", "Test", Periodicity.Monthly, 1);
+        Items item3 = new Items("Test 3", "Test", Periodicity.Monthly, 1);
 
         public ItemServiceTest()
         {
@@ -40,9 +40,9 @@ namespace BulletJournalApp.Test.Core.Service
             Assert.Contains(item1, items);
             Assert.Contains(item2, items);
             Assert.Contains(item3, items);
-            Assert.Throws<FormatException>(() => _itemService.AddItems(new Items("Test 1", "Test", Schedule.Monthly, 1)));
-            Assert.Throws<ArgumentNullException>(() => _itemService.AddItems(new Items("", "Test", Schedule.Monthly, 1)));
-            Assert.Throws<ArgumentOutOfRangeException>(() => _itemService.AddItems(new Items("Test 4", "Test", Schedule.Monthly, -5)));
+            Assert.Throws<FormatException>(() => _itemService.AddItems(new Items("Test 1", "Test", Periodicity.Monthly, 1)));
+            Assert.Throws<ArgumentNullException>(() => _itemService.AddItems(new Items("", "Test", Periodicity.Monthly, 1)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _itemService.AddItems(new Items("Test 4", "Test", Periodicity.Monthly, -5)));
         }
         [Fact]
         public void Given_There_Are_Items_In_The_Shopping_List_When_Listing_All_Items_Then_It_Should_Return_All_Items()

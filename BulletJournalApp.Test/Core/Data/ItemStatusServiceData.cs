@@ -56,13 +56,13 @@ namespace BulletJournalApp.Test.Core.Data
 
         public void SetUpItems(ItemService itemService)
         {
-            Items item1 = new Items("Test 1", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.NotBought);
-            Items item2 = new Items("Test 2", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.Bought);
-            Items item3 = new Items("Test 3", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.Ordered);
-            Items item4 = new Items("Test 4", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.Arrived);
-            Items item5 = new Items("Test 5", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.Delayed);
-            Items item6 = new Items("Test 6", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.Cancelled);
-            Items item7 = new Items("Test 7", "Test", Schedule.Monthly, 1, 0, Category.None, ItemStatus.Unknown);
+            Items item1 = new Items("Test 1", "Test", Periodicity.Monthly, 1, 0, Category.None, ItemStatus.NotBought);
+            Items item2 = new Items("Test 2", "Test", Periodicity.Monthly, 1, 0, Category.None, ItemStatus.Bought);
+            Items item3 = new Items("Test 3", "Test", Periodicity.Monthly, 1, 0, Category.None, ItemStatus.Ordered);
+            Items item4 = new Items("Test 4", "Test", Periodicity.Monthly, 1, 0, Category.None, ItemStatus.Arrived);
+            Items item5 = new Items("Test 5", "Test", Periodicity.Monthly, 1, 0, Category.None, ItemStatus.Delayed);
+            Items item6 = new Items("Test 6", "Test", Periodicity.Monthly, 1, 0, Category.None, ItemStatus.Cancelled);
+            Items item7 = new Items("Test 7", "Test", Periodicity.Monthly, 1, 0, Category.None, ItemStatus.Unknown);
             itemService.AddItems(item1);
             itemService.AddItems(item2);
             itemService.AddItems(item3);

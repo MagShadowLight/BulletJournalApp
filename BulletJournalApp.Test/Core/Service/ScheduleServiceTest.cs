@@ -18,7 +18,7 @@ namespace BulletJournalApp.Test.Core.Service
         private FileLogger _filelogger = new FileLogger();
         private TaskService _taskService;
         private ItemService _itemService;
-        private ScheduleService _scheduleService;
+        private PeriodicityService _scheduleService;
         private Entries entries;
         private int num;
 
@@ -26,7 +26,7 @@ namespace BulletJournalApp.Test.Core.Service
         {
             _taskService = new TaskService(_formatter, _consolelogger, _filelogger);
             _itemService = new ItemService(_consolelogger, _filelogger);
-            _scheduleService = new ScheduleService(_formatter, _consolelogger, _filelogger, _taskService, _itemService);
+            _scheduleService = new PeriodicityService(_formatter, _consolelogger, _filelogger, _taskService, _itemService);
         }
         public void SetUpList()
         {
@@ -48,7 +48,7 @@ namespace BulletJournalApp.Test.Core.Service
 
         [Theory]
         [MemberData(nameof(ScheduleServiceData.GetScheduleAndStringValue), MemberType = typeof(ScheduleServiceData))]
-        public void Given_There_Are_Tasks_In_The_List_When_Changing_The_Schedule_Then_Task_Should_Be_Updated_With_New_Schedule(string title, Schedule schedule)
+        public void Given_There_Are_Tasks_In_The_List_When_Changing_The_Schedule_Then_Task_Should_Be_Updated_With_New_Schedule(string title, Periodicity schedule)
         {
             // Arrange
             entries = Entries.TASKS;
@@ -64,7 +64,7 @@ namespace BulletJournalApp.Test.Core.Service
         }
         [Theory]
         [MemberData(nameof(ScheduleServiceData.GetScheduleAndStringValue), MemberType =typeof(ScheduleServiceData))]
-        public void Given_There_Are_Items_In_The_List_When_Changing_The_Schedule_Then_Item_Should_Be_Updated_With_New_Schedule(string name, Schedule schedule)
+        public void Given_There_Are_Items_In_The_List_When_Changing_The_Schedule_Then_Item_Should_Be_Updated_With_New_Schedule(string name, Periodicity schedule)
         {
             // Arrange
             entries = Entries.ITEMS;
@@ -80,7 +80,7 @@ namespace BulletJournalApp.Test.Core.Service
         }
         [Theory]
         [MemberData(nameof(ScheduleServiceData.GetScheduleValue), MemberType = typeof(ScheduleServiceData))]
-        public void Given_There_Are_Tasks_In_The_List_When_Listing_Tasks_With_Schedule_Value_Then_It_Should_Return_List_Of_Tasks_With_Specific_Schedule(int num, Schedule schedule)
+        public void Given_There_Are_Tasks_In_The_List_When_Listing_Tasks_With_Schedule_Value_Then_It_Should_Return_List_Of_Tasks_With_Specific_Schedule(int num, Periodicity schedule)
         {
             // Arrange
             entries = Entries.TASKS;
@@ -92,7 +92,7 @@ namespace BulletJournalApp.Test.Core.Service
         }
         [Theory]
         [MemberData(nameof(ScheduleServiceData.GetScheduleValue), MemberType = typeof(ScheduleServiceData))]
-        public void Given_There_Are_Items_In_The_Shopping_List_When_Listing_Items_With_Schedule_Value_Then_It_Should_Return_List_Of_Items_With_Specific_Schedule(int num, Schedule schedule)
+        public void Given_There_Are_Items_In_The_Shopping_List_When_Listing_Items_With_Schedule_Value_Then_It_Should_Return_List_Of_Items_With_Specific_Schedule(int num, Periodicity schedule)
         {
             // Arrange
             entries = Entries.ITEMS;

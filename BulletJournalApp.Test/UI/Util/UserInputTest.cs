@@ -110,7 +110,7 @@ namespace BulletJournalApp.Test.UI.Util
         }
         [Theory]
         [MemberData(nameof(UserInputTestData.GetScheduleOutput), MemberType = typeof(UserInputTestData))]
-        public void When_User_Input_A_Schedule_Then_Schedule_Should_Be_Return(string input, Schedule expectedSchedule)
+        public void When_User_Input_A_Schedule_Then_Schedule_Should_Be_Return(string input, Periodicity expectedSchedule)
         {
             // Arrange
             _consoleinput = new StringReader(input);

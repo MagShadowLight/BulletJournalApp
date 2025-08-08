@@ -48,11 +48,11 @@ namespace BulletJournalApp.Test.Core.Data
 
         public void SetUpTasks(TaskService taskService)
         {
-            var task1 = new Tasks(DateTime.Today, "Test 1", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo);
-            var task2 = new Tasks(DateTime.Today, "Test 2", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.InProgress);
-            var task3 = new Tasks(DateTime.Today, "Test 3", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.Done);
-            var task4 = new Tasks(DateTime.Today, "Test 4", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.Overdue);
-            var task5 = new Tasks(DateTime.Today, "Test 5", "Test", Schedule.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.Late);
+            var task1 = new Tasks(DateTime.Today, "Test 1", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.ToDo);
+            var task2 = new Tasks(DateTime.Today, "Test 2", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.InProgress);
+            var task3 = new Tasks(DateTime.Today, "Test 3", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.Done);
+            var task4 = new Tasks(DateTime.Today, "Test 4", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.Overdue);
+            var task5 = new Tasks(DateTime.Today, "Test 5", "Test", Periodicity.Monthly, false, 7, DateTime.MinValue, Priority.Medium, Category.None, "", TasksStatus.Late);
             taskService.AddTask(task1);
             taskService.AddTask(task2);
             taskService.AddTask(task3);

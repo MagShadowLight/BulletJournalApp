@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Library.Enum
 {
-    public enum Schedule
+    public enum Periodicity
     {
         Yearly,
         Quarterly,

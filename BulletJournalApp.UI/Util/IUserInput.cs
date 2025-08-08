@@ -13,7 +13,7 @@ namespace BulletJournalApp.UI.Util
         public DateTime GetDateInput(string prompt);
         public Priority GetPriorityInput(string prompt);
         public Category GetCategoryInput(string prompt);
-        public Schedule GetScheduleInput(string prompt);
+        public Periodicity GetScheduleInput(string prompt);
         public TasksStatus GetTaskStatusInput(string prompt);
         public ItemStatus GetItemStatusInput(string prompt);
         public bool GetBooleanInput(string prompt);
