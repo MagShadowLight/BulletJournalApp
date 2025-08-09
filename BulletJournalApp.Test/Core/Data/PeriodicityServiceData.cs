@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.Core.Data
 {
-    public class ScheduleServiceData
+    public class PeriodicityServiceData
     {
         public static IEnumerable<object[]> GetScheduleAndStringValue()
         {
@@ -70,6 +70,28 @@ namespace BulletJournalApp.Test.Core.Data
             itemservice.AddItems(item3);
             itemservice.AddItems(item4);
             itemservice.AddItems(item5);
+        }
+        public List<string> SetUpStringList(List<string> list)
+        {
+            list.Add("Test 1");
+            list.Add("Test 2");
+            list.Add("Test 3");
+            list.Add("Test 4");
+            list.Add("Test 5");
+            return list;
+        }
+        public void SetUpRoutines(RoutineService routineservice)
+        {
+            var routine1 = new Routines("Test 1", "Test", Category.None, SetUpStringList(new List<string>()), Periodicity.Yearly, "Test");
+            var routine2 = new Routines("Test 2", "Test", Category.None, SetUpStringList(new List<string>()), Periodicity.Quarterly, "Test");
+            var routine3 = new Routines("Test 3", "Test", Category.None, SetUpStringList(new List<string>()), Periodicity.Monthly, "Test");
+            var routine4 = new Routines("Test 4", "Test", Category.None, SetUpStringList(new List<string>()), Periodicity.Weekly, "Test");
+            var routine5 = new Routines("Test 5", "Test", Category.None, SetUpStringList(new List<string>()), Periodicity.Daily, "Test");
+            routineservice.AddRoutine(routine1);
+            routineservice.AddRoutine(routine2);
+            routineservice.AddRoutine(routine3);
+            routineservice.AddRoutine(routine4);
+            routineservice.AddRoutine(routine5);
         }
     }
 }

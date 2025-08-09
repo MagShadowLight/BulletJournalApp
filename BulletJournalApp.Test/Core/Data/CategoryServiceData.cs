@@ -83,5 +83,31 @@ namespace BulletJournalApp.Test.Core.Data
             itemservice.AddItems(item6);
             itemservice.AddItems(item7);
         }
+        private static List<string> SetUpTaskList(List<string> strings)
+        {
+            strings.Add("Test 1");
+            strings.Add("Test 2");
+            strings.Add("Test 3");
+            strings.Add("Test 4");
+            strings.Add("Test 5");
+            return strings;
+        }
+        public void SetUpRoutine(RoutineService routineService)
+        {
+            var routine1 = new Routines("Test 1", "Test", Category.None, SetUpTaskList(new List<string>()), Periodicity.Monthly, "Test");
+            var routine2 = new Routines("Test 2", "Test", Category.Education, SetUpTaskList(new List<string>()), Periodicity.Monthly, "Test");
+            var routine3 = new Routines("Test 3", "Test", Category.Works, SetUpTaskList(new List<string>()), Periodicity.Monthly, "Test");
+            var routine4 = new Routines("Test 4", "Test", Category.Home, SetUpTaskList(new List<string>()), Periodicity.Monthly, "Test");
+            var routine5 = new Routines("Test 5", "Test", Category.Personal, SetUpTaskList(new List<string>()), Periodicity.Monthly, "Test");
+            var routine6 = new Routines("Test 6", "Test", Category.Financial, SetUpTaskList(new List<string>()), Periodicity.Monthly, "Test");
+            var routine7 = new Routines("Test 7", "Test", Category.Transportation, SetUpTaskList(new List<string>()), Periodicity.Monthly, "Test");
+            routineService.AddRoutine(routine1);
+            routineService.AddRoutine(routine2);
+            routineService.AddRoutine(routine3);
+            routineService.AddRoutine(routine4);
+            routineService.AddRoutine(routine5);
+            routineService.AddRoutine(routine6);
+            routineService.AddRoutine(routine7);
+        }
     }
 }
