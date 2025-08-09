@@ -10,6 +10,7 @@ namespace BulletJournalApp.Library.Enum
     {
         TASKS,
         ITEMS,
-        MEALS
+        MEALS,
+        ROUTINES
     }
 }
