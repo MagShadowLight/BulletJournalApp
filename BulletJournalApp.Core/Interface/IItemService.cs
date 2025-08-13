@@ -15,7 +15,7 @@ namespace BulletJournalApp.Core.Interface
         public List<Items> GetItemsOwned();
         public Items FindItemsByName(string name);
         public void MarkItemsAsBought(string name);
-        public void UpdateItems(string oldName, string newName, string newDescription, string newNotes);
+        public void UpdateItems(string oldName, string newName, string newDescription, string newNotes, int newQuantity);
         public void DeleteItems(string name);
     }
 }

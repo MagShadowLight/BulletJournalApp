@@ -24,7 +24,7 @@ namespace BulletJournalApp.Core.Services
                 case Entries.ITEMS:
                     var item = _itemservice.FindItemsByName(title);
                     if (item == null)
-                        throw new Exception("Cannot find task");
+                        throw new ArgumentNullException("Cannot find item");
                     item.ChangeStatus(status);
                     break;
             }

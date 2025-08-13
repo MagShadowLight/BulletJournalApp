@@ -21,11 +21,11 @@ namespace BulletJournalApp.UI
         private readonly IFormatter _formatter;
         private readonly ITasksStatusService _statusservice;
         private readonly IFileService _fileservice;
-        private readonly IScheduleService _scheduleservice;
+        private readonly IPeriodicityService _scheduleservice;
         private readonly IPriorityService _priorityservice;
         private readonly ICategoryService _categoryservice;
         private readonly IUserInput _userinput;
-        public TaskManager(ITaskService taskservice, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITasksStatusService statusservice, IFileService fileservice, IScheduleService scheduleservice, IPriorityService priorityservice, ICategoryService categoryservice, IUserInput userinput)
+        public TaskManager(ITaskService taskservice, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITasksStatusService statusservice, IFileService fileservice, IPeriodicityService scheduleservice, IPriorityService priorityservice, ICategoryService categoryservice, IUserInput userinput)
         {
             _taskservice = taskservice;
             _consolelogger = consolelogger;
@@ -173,6 +173,8 @@ namespace BulletJournalApp.UI
 
         public void AddTask()
         {
+            int repeatDay = 7;
+            DateTime endRepeatDate = new DateTime();
             var title = _userinput.GetStringInput("Enter the task title: ");
             var description = _userinput.GetStringInput("Enter the task description: ");
             try
@@ -181,8 +183,14 @@ namespace BulletJournalApp.UI
                 var priority = _userinput.GetPriorityInput("Enter the Priority (Use (L)ow, (M)edium, or (H)igh): ");
                 var category = _userinput.GetCategoryInput(("Enter the Category (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial): "));
                 var schedule = _userinput.GetScheduleInput("Enter the Schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
-                var notes = _userinput.GetStringInput("Enter the Note for the task: ");                
-                var task = new Tasks(dueDate, title, description, schedule, priority, category, notes);
+                var notes = _userinput.GetStringInput("Enter the Note for the task: ");
+                var repeat = _userinput.GetBooleanInput("Do you want this task to repeat? (Y)es or (N)o: ");
+                if (repeat)
+                {
+                    repeatDay = _userinput.GetIntInput("How many days do you want to repeat per: ");
+                    endRepeatDate = _userinput.GetOptionalDateInput("Do you want to end the repeating task by date? If so, enter the date by MMM DD, YYYY: ");
+                }
+                var task = new Tasks(dueDate, title, description, schedule, repeat, repeatDay, endRepeatDate, priority, category, notes);
                 if (_taskservice.AddTask(task))
                 {
                     _consolelogger.Log("Task added successfully");
@@ -335,7 +343,7 @@ namespace BulletJournalApp.UI
         }
         public void ListTaskBySchedule()
         {
-            Schedule schedule;
+            Periodicity schedule;
             try
             {
                 schedule = _userinput.GetScheduleInput("Enter the Schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
@@ -399,16 +407,41 @@ namespace BulletJournalApp.UI
             var newdescription = _userinput.GetStringInput("Enter the new description: ");
             var newnote = _userinput.GetStringInput("Enter the new note: ");
             DateTime? newduedate;
+            bool newRepeat;
+            Tasks? temptask = null;
+            int newRepeatDay = 7;
+            DateTime newEndRepeatDate = new DateTime();
             try
             {
                 newduedate = _userinput.GetDateInput("Enter the new due date (Use MMM DD, YYYY): ");
             } catch (Exception ex)
             {
-                newduedate = null;
+                newduedate = DateTime.MinValue;
             }
             try
             {
-                _taskservice.UpdateTask(oldtitle, newtitle, newdescription, newnote, newduedate);
+                temptask = _taskservice.FindTasksByTitle(oldtitle);
+                newRepeat = _userinput.GetBooleanInput("Do you want to make this task a repeat? (Y)es, (N)o, or leave it blank to keep it the same. ");
+                if (newRepeat)
+                {
+                    newRepeatDay = _userinput.GetIntInput("How many Days per task completed do you want to make it a repeat? ");
+                    newEndRepeatDate = _userinput.GetOptionalDateInput("Enter the date to end the repeat: ");
+                }
+            } catch (Exception ex)
+            {
+                if (temptask != null)
+                {
+                    newRepeat = temptask.IsRepeatable;
+                    newRepeatDay = temptask.RepeatDays;
+                    newEndRepeatDate = temptask.EndRepeatDate;
+                } else
+                {
+                    newRepeat = false;
+                }
+            }
+            try
+            {
+                _taskservice.UpdateTask(oldtitle, newtitle, newdescription, newnote, newRepeat, newduedate.Value, newRepeatDay, newEndRepeatDate);
                 _consolelogger.Log($"Task: {oldtitle} updated successfully");
                 _filelogger.Log($"Task: {oldtitle} updated successfully");
             } catch (Exception ex)
@@ -468,7 +501,7 @@ namespace BulletJournalApp.UI
         public void ChangeTaskSchedule()
         {
             var title = _userinput.GetStringInput("Enter the task title to change Schedule: ");
-            Schedule schedule;
+            Periodicity schedule;
             try
             {
                 schedule = _userinput.GetScheduleInput("Enter the new schedule (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
@@ -500,7 +533,7 @@ namespace BulletJournalApp.UI
         {
             var filename = _userinput.GetStringInput("Enter the file name of the Tasks (without extension): ");
             Console.WriteLine("Creating File");
-            string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            string path = Path.Combine("Data", Entries.TASKS.ToString(), $"{filename}.txt");
             if (File.Exists(path))
             {
                 Console.Write($"Are you sure you want to overwrite {filename}.txt?");
@@ -512,7 +545,7 @@ namespace BulletJournalApp.UI
             try
             {
                 List<Tasks> tasks = _taskservice.ListAllTasks();
-                _fileservice.SaveTasks(filename, tasks);
+                _fileservice.SaveFunction(filename, Entries.TASKS, tasks, null, null);
                 _filelogger.Log("File have successfully saved");
                 _consolelogger.Log($"File: {filename} have successfully saved");
             } catch (Exception ex)
@@ -524,13 +557,13 @@ namespace BulletJournalApp.UI
         public void LoadTask()
         {
             var filename = _userinput.GetStringInput("Enter the name of the file (without extension): ");
-            string path = Path.Combine("Data", "Tasks", $"{filename}.txt");
+            string path = Path.Combine("Data", Entries.TASKS.ToString(), $"{filename}.txt");
             if (!File.Exists(path))
             {
                 throw new Exception("File not found. Invalid file name. Try again.");
             }
             _filelogger.Log($"Loading tasks from {filename}");
-            _fileservice.LoadTasks(filename);
+            _fileservice.LoadFunction(filename, Entries.TASKS);
             _consolelogger.Log("Tasks loaded successfully");
             _filelogger.Log("Tasks loaded successfully");
         }

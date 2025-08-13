@@ -32,23 +32,35 @@ namespace BulletJournalApp.UI.Util
             }
         }
 
+        public bool GetBooleanInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine().ToUpper();
+            return input switch
+            {
+                "Y" => true,
+                "N" => false,
+                _ => throw new FormatException("Invalid Boolean Property.")
+            };
+        }
+
         public Priority GetPriorityInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "L" => Priority.Low,
                 "M" => Priority.Medium,
                 "H" => Priority.High,
-                _ => throw new Exception("Invalid Priority Input. Use (L)ow, (M)edium, or (H)igh")
+                _ => throw new FormatException("Invalid Priority Input. Use (L)ow, (M)edium, or (H)igh")
             };
         }
 
         public Category GetCategoryInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "N" => Category.None,
@@ -58,29 +70,29 @@ namespace BulletJournalApp.UI.Util
                 "P" => Category.Personal,
                 "F" => Category.Financial,
                 "T" => Category.Transportation,
-                _ => throw new Exception("Invalid Category Input. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial, or (T)ransportation.")
+                _ => throw new FormatException("Invalid Category Input. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial, or (T)ransportation.")
             };
         }
 
-        public Schedule GetScheduleInput(string prompt)
+        public Periodicity GetScheduleInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
-                "Y" => Schedule.Yearly,
-                "Q" => Schedule.Quarterly,
-                "M" => Schedule.Monthly,
-                "W" => Schedule.Weekly,
-                "D" => Schedule.Daily,
-                _ => throw new Exception("Invalid Schedule Input. Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily")
+                "Y" => Periodicity.Yearly,
+                "Q" => Periodicity.Quarterly,
+                "M" => Periodicity.Monthly,
+                "W" => Periodicity.Weekly,
+                "D" => Periodicity.Daily,
+                _ => throw new FormatException("Invalid Schedule Input. Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily")
             };
         }
 
         public TasksStatus GetTaskStatusInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "T" => TasksStatus.ToDo,
@@ -88,14 +100,14 @@ namespace BulletJournalApp.UI.Util
                 "D" => TasksStatus.Done,
                 "O" => TasksStatus.Overdue,
                 "L" => TasksStatus.Late,
-                _ => throw new Exception("Invalid Status Input. Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate")
+                _ => throw new FormatException("Invalid Status Input. Use (T)oDo, (I)nProgress, (D)one, (O)verdue, or (L)ate")
             };
         }
 
         public ItemStatus GetItemStatusInput(string prompt)
         {
             Console.Write(prompt);
-            var input = Console.ReadLine()?.ToUpper();
+            var input = Console.ReadLine().ToUpper();
             return input switch
             {
                 "N" => ItemStatus.NotBought,
@@ -106,6 +118,60 @@ namespace BulletJournalApp.UI.Util
                 "C" => ItemStatus.Cancelled,
                 _ => ItemStatus.Unknown
             };
+        }
+
+        public int GetIntInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            
+            if (int.TryParse(input, out int num))
+            {
+                return num;
+            } else
+            {
+                throw new FormatException("Invalid Number");
+            }
+        }
+
+        public DateTime GetOptionalDateInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            if (DateTime.TryParse(input, out DateTime date))
+            {
+                return date;
+            } else
+            {
+                return DateTime.MinValue;
+            }
+        }
+
+        public TimeOfDay GetTimeOfDayInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine().ToUpper();
+            return input switch
+            {
+                "B" => TimeOfDay.Breakfast,
+                "L" => TimeOfDay.Lunch,
+                "DI" => TimeOfDay.Dinner,
+                "S" => TimeOfDay.Snacks,
+                "DE" => TimeOfDay.Dessert,
+                _ => TimeOfDay.None
+            };
+        }
+
+        public double GetDoubleInput(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            if (double.TryParse(input, out double num)) {
+                return num;
+            } else
+            {
+                throw new FormatException("Invalid Number");
+            }
         }
     }
 }

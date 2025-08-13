@@ -12,6 +12,7 @@ namespace BulletJournalApp.Core.Interface
     {
         public List<Items> ListItemsByCategory(Category category);
         public List<Tasks> ListTasksByCategory(Category category);
+        public List<Routines> ListRoutinesByCategory(Category category);
         public void ChangeCategory(string title, Entries entries, Category category);
     }
 }

@@ -14,13 +14,17 @@ namespace BulletJournalApp.UI
         private readonly IFileLogger _filelogger;
         private readonly IConsoleLogger _consolelogger;
         private readonly ShopListManager _shoplistmanager;
+        private readonly MealPlanManager _mealplanmanager;
+        private readonly RoutineManager _routinemanager;
 
-        public ConsoleUI(TaskManager taskManager, IFileLogger filelogger, IConsoleLogger consolelogger, ShopListManager shoplistmanager)
+        public ConsoleUI(TaskManager taskManager, IFileLogger filelogger, IConsoleLogger consolelogger, ShopListManager shoplistmanager, MealPlanManager mealplanmanager, RoutineManager routinemanager)
         {
             _filelogger = filelogger;
             _taskManager = taskManager;
             _consolelogger = consolelogger;
             _shoplistmanager = shoplistmanager;
+            _mealplanmanager = mealplanmanager;
+            _routinemanager = routinemanager;
         }
         public void Run()
         {
@@ -32,6 +36,8 @@ namespace BulletJournalApp.UI
                 Console.WriteLine("Select which one to open");
                 Console.WriteLine("1. To Do List");
                 Console.WriteLine("2. Shopping List");
+                Console.WriteLine("3. Meal Plan");
+                Console.WriteLine("4. Routine");
                 Console.WriteLine("0: Quit");
                 Console.Write("Choose an option: ");
                 var input = Console.ReadLine();
@@ -47,10 +53,22 @@ namespace BulletJournalApp.UI
                         _filelogger.Log("Opening Shopping List Manager");
                         Console.WriteLine("Opening Shopping List");
                         _shoplistmanager.UI();
-                        _filelogger.Log("Shopping List Closed");
+                        _filelogger.Log("Shopping List Manager Closed");
+                        break;
+                    case "3":
+                        _filelogger.Log("Opening Meal Plan Manager");
+                        Console.WriteLine("Opening Meal Plan");
+                        _mealplanmanager.MealPlanUI();
+                        _filelogger.Log("Meal Plan Manager Closed");
+                        break;
+                    case "4":
+                        _filelogger.Log("Opening Routine Manager");
+                        Console.WriteLine("Opening Routine Manager");
+                        _routinemanager.RoutineUI();
+                        _filelogger.Log("Routine Manager Closed");
                         break;
                     case "0":
-                        _filelogger.Log("Quiting");
+                        _filelogger.Log("Quitting");
                         Console.WriteLine("Goodbye");
                         _filelogger.Log($"Exited Bullet Journal App at {DateTime.Now.ToString()}");
                         return;

@@ -17,18 +17,26 @@ namespace BulletJournalApp.Consoles
 
             var services = new ServiceCollection();
             CreateFile();
+            
+
             services.AddSingleton<ITaskService, TaskService>();
             services.AddSingleton<IFormatter, Formatter>();
             services.AddSingleton<IConsoleLogger, ConsoleLogger>();
             services.AddSingleton<IFileLogger, FileLogger>();
             services.AddSingleton<IFileService, FileService>();
-            services.AddSingleton<IScheduleService, ScheduleService>();
+            services.AddSingleton<IRoutineService, RoutineService>();
+            services.AddSingleton<IPeriodicityService, PeriodicityService>();
             services.AddSingleton<IPriorityService, PriorityService>();
             services.AddSingleton<ICategoryService, CategoryService>();
             services.AddSingleton<ITasksStatusService, TasksStatusService>();
             services.AddSingleton<IItemStatusService, ItemStatusService>();
             services.AddSingleton<IUserInput, UserInput>();
             services.AddSingleton<IItemService, ItemService>();
+            services.AddSingleton<ITimeOfDayService, TimeOfDayService>();
+            services.AddSingleton<IMealService, MealService>();
+            services.AddSingleton<IIngredientService, IngredientService>();
+            services.AddSingleton<RoutineManager>();
+            services.AddSingleton<MealPlanManager>();
             services.AddSingleton<ShopListManager>();
             services.AddSingleton<TaskManager>();
             services.AddSingleton<ConsoleUI>();

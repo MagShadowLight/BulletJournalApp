@@ -9,6 +9,8 @@ namespace BulletJournalApp.Library.Enum
     public enum Entries
     {
         TASKS,
-        ITEMS
+        ITEMS,
+        MEALS,
+        ROUTINES
     }
 }

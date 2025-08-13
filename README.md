@@ -39,7 +39,7 @@ It provides a simple and intuitive interface for creating and managing bullet jo
 - VS Code
 - C# Dev Kit Extension for VS Code
 - Terminal with .NET CLI like kitty, gnome-terminal, xterm, or any other terminal emulator (for Linux users)
-- you can use the terminal app that comes with macOS (for Mac users)
+- you can use the terminal app that comes with macOS or install a terminal emulator like kitty, alacritty, ghostty, or other terminal emulator that work with MacOS (for Mac users)
 
 ## How to build and run project
 

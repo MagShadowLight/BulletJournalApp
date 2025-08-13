@@ -30,7 +30,7 @@ namespace BulletJournalApp.Core.Services
         {
             var item = FindItemsByName(name);
             if (item == null)
-                throw new Exception($"{name} not found");
+                throw new ArgumentNullException($"{name} not found");
             items.Remove(item);
         }
 
@@ -58,24 +58,24 @@ namespace BulletJournalApp.Core.Services
         {
             var item = FindItemsByName(name);
             if (item == null)
-                throw new Exception($"{name} not found");
+                throw new ArgumentNullException($"{name} not found");
             item.MarkAsBought();
         }
 
-        public void UpdateItems(string oldName, string newName, string newDescription, string newNotes)
+        public void UpdateItems(string oldName, string newName, string newDescription, string newNotes, int newQuantity)
         {
             var item = FindItemsByName(oldName);
             if (item == null)
-                throw new Exception($"{oldName} not found");
+                throw new ArgumentNullException($"{oldName} not found");
             ValidateDuplication(newName);
-            item.Update(newName, newDescription, newNotes);
+            item.Update(newName, newDescription, newNotes, newQuantity);
         }
         private void ValidateDuplication(string name)
         {
             foreach(var i in items)
             {
                 if (i.Name.Equals(name))
-                    throw new Exception("This item cannot be duplicated");
+                    throw new FormatException("This item cannot be duplicated");
             }
         }
     }

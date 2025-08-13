@@ -1,4 +1,5 @@
 ﻿using BulletJournalApp.Core.Interface;
+using BulletJournalApp.Core.Services;
 using BulletJournalApp.Library;
 using BulletJournalApp.Library.Enum;
 using BulletJournalApp.UI.Util;
@@ -20,12 +21,12 @@ namespace BulletJournalApp.UI
         private readonly IFileLogger _filelogger;
         private readonly IFormatter _formatter;
         private readonly IItemStatusService _statusservice;
-        private readonly IScheduleService _scheduleservice;
+        private readonly IPeriodicityService _scheduleservice;
         private readonly ICategoryService _categoryservice;
         private readonly IFileService _fileservice;
         private readonly IUserInput _userinput;
 
-        public ShopListManager(IItemService itemService, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, IItemStatusService statusservice, IScheduleService scheduleservice, ICategoryService categoryservice, IFileService fileservice, IUserInput userInput)
+        public ShopListManager(IItemService itemService, IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, IItemStatusService statusservice, IPeriodicityService scheduleservice, ICategoryService categoryservice, IFileService fileservice, IUserInput userInput)
         {
             _itemService = itemService;
             _consolelogger = consolelogger;
@@ -56,7 +57,7 @@ namespace BulletJournalApp.UI
                 Console.WriteLine("8. Update Items");
                 Console.WriteLine("9. Change Items Status, Category, or Schedule");
                 Console.WriteLine("10. Delete Items");
-                Console.WriteLine("11. Load Items");
+                Console.WriteLine("11. File Management Options");
                 Console.WriteLine("0. Exit");
                 Console.Write("Choose your option: ");
                 var input = Console.ReadLine();
@@ -103,10 +104,8 @@ namespace BulletJournalApp.UI
                         DeleteItem();
                         break;
                     case "11":
-                        _filelogger.Log("Loading item");
-                        _consolelogger.Warn("It's not ready yet");
-                        _filelogger.Log("This functionality is not ready");
-                        //LoadItem();
+                        _filelogger.Log("Opening the file management");
+                        FileManageOption();
                         break;
                     case "0":
                         _filelogger.Log("Closing Shopping List Manager");
@@ -118,6 +117,68 @@ namespace BulletJournalApp.UI
                         _filelogger.Error("Invalid choice. Please try again with different option.");
                         break;
                 }
+            }
+        }
+
+        private void FileManageOption()
+        {
+            Console.WriteLine("Which option do you want?");
+            Console.WriteLine("1. Save");
+            Console.WriteLine("2. Load");
+            try
+            {
+                var input = _userinput.GetIntInput("Choose an Option: ");
+                switch (input)
+                {
+                    case 1:
+                        _filelogger.Log("Saving items");
+                        SaveItems();
+                        break;
+                    case 2:
+                        _filelogger.Log("Loading items");
+                        LoadItem();
+                        break;
+                    default:
+                        _consolelogger.Error("Invalid choice. Try again");
+                        _filelogger.Error("Invalid choice. Try again");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
+            }
+
+        }
+
+        private void SaveItems()
+        {
+            var filename = _userinput.GetStringInput("What the name of the file you want (without extension): ");
+            Console.WriteLine("Creating File");
+            string path = Path.Combine("Data", Entries.ITEMS.ToString(), $"{filename}.txt");
+            if (File.Exists(path))
+            {
+                Console.Write($"Are you sure you want to overwrite {filename}.txt?");
+                var overwrite = _userinput.GetStringInput(" (Y)es or (N)o: ").ToUpper();
+                if (overwrite != "Y")
+                {
+                    throw new Exception("Cancelled to override tasks");
+                }
+                File.Delete(path);
+            }
+            _filelogger.Log($"Saving to {filename}");
+            try
+            {
+                List<Items> items = _itemService.GetAllItems();
+                _fileservice.SaveFunction(filename, Entries.ITEMS, null, items, null);
+                _filelogger.Log("File have successfully saved");
+                _consolelogger.Log($"File: {filename} have successfully saved");
+            }
+            catch (Exception ex)
+            {
+                _consolelogger.Error(ex.Message);
+                _filelogger.Error(ex.Message);
             }
         }
 
@@ -137,7 +198,16 @@ namespace BulletJournalApp.UI
 
         private void LoadItem()
         {
-            throw new NotImplementedException();
+            var filename = _userinput.GetStringInput("Enter the name of the file (without extension): ");
+            string path = Path.Combine("Data", Entries.ITEMS.ToString(), $"{filename}.txt");
+            if (!File.Exists(path))
+            {
+                throw new Exception("File not found. Invalid file name. Try again.");
+            }
+            _filelogger.Log($"Loading items from {filename}");
+            _fileservice.LoadFunction(filename, Entries.ITEMS);
+            _consolelogger.Log("Items loaded successfully");
+            _filelogger.Log("Items loaded successfully");
         }
 
         private void DeleteItem()
@@ -230,7 +300,8 @@ namespace BulletJournalApp.UI
                 var newname = _userinput.GetStringInput("Enter the new name of the item: ");
                 var newdesc = _userinput.GetStringInput("Enter the new description of the item: ");
                 var newnote = _userinput.GetStringInput("Enter the new note of the item: ");
-                _itemService.UpdateItems(oldname, newname, newdesc, newnote);
+                var newquantity = _userinput.GetIntInput("Enter the new quantity of the item: ");
+                _itemService.UpdateItems(oldname, newname, newdesc, newnote, newquantity);
                 _consolelogger.Log("Item updated successfully");
                 _filelogger.Log("Item updated successfully");
             } catch (Exception ex)
@@ -412,10 +483,11 @@ namespace BulletJournalApp.UI
             {
                 var name = _userinput.GetStringInput("Enter the item name: ");
                 var description = _userinput.GetStringInput("Enter the item description: ");
+                var quantity = _userinput.GetIntInput("Enter the quantity of the item: ");
                 var schedule = _userinput.GetScheduleInput("Enter the Schedule. Use (D)aily, (W)eekly, (M)onthly, (Q)uarterly, or (Y)early. ");
                 var category = _userinput.GetCategoryInput("Enter the Category. Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inanical, or (T)ransportion. ");
                 var note = _userinput.GetStringInput("Enter the note: ");
-                _itemService.AddItems(new Items(name, description, schedule, 0, category, ItemStatus.NotBought, note, DateTime.Now));
+                _itemService.AddItems(new Items(name, description, schedule, quantity, 0, category, ItemStatus.NotBought, note, DateTime.Now));
                 Console.WriteLine("Item have been added successfully");
                 _filelogger.Log("Item added successfully");
             } catch (Exception ex)
