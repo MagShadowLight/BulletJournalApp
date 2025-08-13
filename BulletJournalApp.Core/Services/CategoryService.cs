@@ -17,14 +17,16 @@ namespace BulletJournalApp.Core.Services
         private readonly IConsoleLogger _consolelogger;
         private readonly IFileLogger _filelogger;
         private readonly IItemService _itemservice;
+        private readonly IRoutineService _routineservice;
 
-        public CategoryService(IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITaskService taskService,  IItemService itemservice)
+        public CategoryService(IConsoleLogger consolelogger, IFileLogger filelogger, IFormatter formatter, ITaskService taskService,  IItemService itemservice, IRoutineService routineservice)
         {
             _taskservice = taskService;
             _consolelogger = consolelogger;
             _filelogger = filelogger;
             _formatter = formatter;
             _itemservice = itemservice;
+            _routineservice = routineservice;
         }
 
         public void ChangeCategory(string title, Entries entries, Category category)
@@ -40,8 +42,14 @@ namespace BulletJournalApp.Core.Services
                 case Entries.ITEMS:
                     var item = _itemservice.FindItemsByName(title);
                     if (item == null)
-                        throw new ArgumentNullException("Cannot find task");
+                        throw new ArgumentNullException("Cannot find item");
                     item.ChangeCategory(category);
+                    break;
+                case Entries.ROUTINES:
+                    var routine = _routineservice.FindRoutineByName(title);
+                    if (routine == null)
+                        throw new ArgumentNullException("Cannot find routine");
+                    routine.ChangeCategory(category);
                     break;
             }
             
@@ -51,6 +59,12 @@ namespace BulletJournalApp.Core.Services
         {
             var items = _itemservice.GetAllItems();
             return items.Where(cat => cat.Category == category).ToList();
+        }
+
+        public List<Routines> ListRoutinesByCategory(Category category)
+        {
+            var routines = _routineservice.GetAllRoutines();
+            return routines.Where(cat => cat.Category == category).ToList();
         }
 
         public List<Tasks> ListTasksByCategory(Category category)

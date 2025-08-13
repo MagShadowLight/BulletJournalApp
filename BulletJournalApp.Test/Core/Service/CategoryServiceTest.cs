@@ -20,29 +20,35 @@ namespace BulletJournalApp.Test.Core.Service
         private CategoryService _categoryservice;
         private Entries entries;
         private int num;
+        private CategoryServiceData _data;
+        private RoutineService _routineservice;
 
         public CategoryServiceTest()
         {
             _taskservice = new TaskService(_formatter, _consolelogger, _filelogger);
             _itemservice = new ItemService(_consolelogger, _filelogger);
-            _categoryservice = new CategoryService(_consolelogger, _filelogger, _formatter, _taskservice, _itemservice);
-            
+            _routineservice = new RoutineService();
+            _categoryservice = new CategoryService(_consolelogger, _filelogger, _formatter, _taskservice, _itemservice, _routineservice);
         }
         public void SetUpList()
         {
             switch (entries)
             {
                 case Entries.TASKS:
-                    var data1 = new CategoryServiceData();
-                    data1.SetUpTasks(_taskservice);
+                    _data = new CategoryServiceData();
+                    _data.SetUpTasks(_taskservice);
                     num = _taskservice.ListAllTasks().Count;
                     break;
                 case Entries.ITEMS:
-                    var data2 = new CategoryServiceData();
-                    data2.SetUpItems(_itemservice);
+                    _data = new CategoryServiceData();
+                    _data.SetUpItems(_itemservice);
                     num = _itemservice.GetAllItems().Count;
                     break;
-
+                case Entries.ROUTINES:
+                    _data = new CategoryServiceData();
+                    _data.SetUpRoutine(_routineservice);
+                    num = _routineservice.GetAllRoutines().Count;
+                    break;
             }
         }
 
@@ -79,6 +85,22 @@ namespace BulletJournalApp.Test.Core.Service
             Assert.Throws<ArgumentNullException>(() => _categoryservice.ChangeCategory(null, entries, category));
         }
         [Theory]
+        [MemberData(nameof(CategoryServiceData.GetCategoryAndStringValue), MemberType = typeof(CategoryServiceData))]
+        public void Given_There_Are_Routine_In_The_List_When_Changing_The_Category_Then_Routine_Should_Be_Updated_With_New_Category(string name, Category category)
+        {
+            // Arrange
+            entries = Entries.ROUTINES;
+            SetUpList();
+            // Act
+            _categoryservice.ChangeCategory(name, entries, category);
+            var routines = _routineservice.GetAllRoutines();
+            var routine = _routineservice.FindRoutineByName(name);
+            // Assert
+            Assert.Equal(num, routines.Count);
+            Assert.Equal(category, routine.Category);
+            Assert.Throws<ArgumentNullException>(() => _categoryservice.ChangeCategory(null, entries, category));
+        }
+        [Theory]
         [MemberData(nameof(CategoryServiceData.GetCategoryValue), MemberType =typeof(CategoryServiceData))]
         public void Given_There_Are_Tasks_In_The_List_When_Listing_Tasks_With_Category_Value_Then_It_Should_Return_List_Of_Tasks_With_Only_Specific_Category_Value(int num, Category category)
         {
@@ -99,6 +121,18 @@ namespace BulletJournalApp.Test.Core.Service
             SetUpList();
             // Act
             var items = _categoryservice.ListItemsByCategory(category);
+            // Assert
+            Assert.Equal(num, items.Count);
+        }
+        [Theory]
+        [MemberData(nameof(CategoryServiceData.GetCategoryValue), MemberType = typeof(CategoryServiceData))]
+        public void Given_There_Are_Routine_In_The_List_When_Listing_Routine_With_Category_Value_Then_It_Should_Return_List_Of_Routines_With_Only_Specific_Category_Value(int num, Category category)
+        {
+            // Arrange
+            entries = Entries.ROUTINES;
+            SetUpList();
+            // Act
+            var items = _categoryservice.ListRoutinesByCategory(category);
             // Assert
             Assert.Equal(num, items.Count);
         }

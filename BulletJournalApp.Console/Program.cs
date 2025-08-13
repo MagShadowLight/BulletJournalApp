@@ -24,6 +24,7 @@ namespace BulletJournalApp.Consoles
             services.AddSingleton<IConsoleLogger, ConsoleLogger>();
             services.AddSingleton<IFileLogger, FileLogger>();
             services.AddSingleton<IFileService, FileService>();
+            services.AddSingleton<IRoutineService, RoutineService>();
             services.AddSingleton<IPeriodicityService, PeriodicityService>();
             services.AddSingleton<IPriorityService, PriorityService>();
             services.AddSingleton<ICategoryService, CategoryService>();
@@ -34,6 +35,7 @@ namespace BulletJournalApp.Consoles
             services.AddSingleton<ITimeOfDayService, TimeOfDayService>();
             services.AddSingleton<IMealService, MealService>();
             services.AddSingleton<IIngredientService, IngredientService>();
+            services.AddSingleton<RoutineManager>();
             services.AddSingleton<MealPlanManager>();
             services.AddSingleton<ShopListManager>();
             services.AddSingleton<TaskManager>();

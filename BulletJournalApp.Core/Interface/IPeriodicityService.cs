@@ -12,6 +12,7 @@ namespace BulletJournalApp.Core.Interface
     {
         public List<Items> ListItemsBySchedule(Periodicity schedule);
         public List<Tasks> ListTasksBySchedule(Periodicity schedule);
+        public List<Routines> ListRoutinesByPeriodicity(Periodicity periodicity);
         public void ChangeSchedule(string title, Entries entries, Periodicity schedule);
     }
 }
