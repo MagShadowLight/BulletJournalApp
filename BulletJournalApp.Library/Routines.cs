@@ -10,6 +10,7 @@ namespace BulletJournalApp.Library
 {
     public class Routines
     {
+        public int Id;
         public string Name;
         public string Description;
         public Periodicity Periodicity;
@@ -17,7 +18,7 @@ namespace BulletJournalApp.Library
         public string? Notes;
         public List<string> TaskList;
 
-        public Routines(string name, string description, Category category, List<string> taskList, Periodicity periodicity = Periodicity.Monthly, string note = "")
+        public Routines(string name, string description, Category category, List<string> taskList, Periodicity periodicity = Periodicity.Monthly, string note = "", int id = 0)
         {
             Validate(name, nameof(name));
             Validate(description, nameof(description));
@@ -28,6 +29,7 @@ namespace BulletJournalApp.Library
             TaskList = taskList;
             Periodicity = periodicity;
             Notes = note;
+            Id = id;
         }
         public void UpdateRoutine(string newname, string newdescription, string newnote = "")
         {

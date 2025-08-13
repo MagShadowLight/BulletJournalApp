@@ -57,5 +57,21 @@ namespace BulletJournalApp.Core.Services
                 $"  - Price: ${ingredient.Price}\n" +
                 $"  - Measurement: {ingredient.Measurements}\n";
         }
+
+        public string FormatRoutines(Routines routines)
+        {
+            var str = "";
+            foreach(var stritem in routines.TaskList)
+            {
+                str += stritem + "\n";
+            }
+            return $"[{routines.Id}]: {routines.Name}\n" +
+                $"Description: {routines.Description}\n" +
+                $"Periodicity: {routines.Periodicity}\n" +
+                $"Category: {routines.Category}\n" +
+                $"Note: {routines.Notes}\n" +
+                $"Tasks:\n" +
+                $"{str}";
+        }
     }
 }
