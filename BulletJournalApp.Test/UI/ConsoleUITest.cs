@@ -27,12 +27,14 @@ namespace BulletJournalApp.Test.UI
         private Mock<ITaskService> taskMock = new();
         private Mock<IItemService> itemMock = new();
         private Mock<IMealService> mealMock = new();
+        private Mock<IRoutineService> routineMock = new();
         private Mock<IIngredientService> ingredientMock = new();
         private Mock<IUserInput> _inputMock = new();
         private Mock<ITimeOfDayService> timeOfDayMock = new();
         private TaskManager _taskManagerMock;
         private ShopListManager _shopListManagerMock;
         private MealPlanManager _mealPlanManagerMock;
+        private RoutineManager _routineManagerMock;
         private StringReader _input;
         private ConsoleInputOutput _console = new();
 
@@ -41,13 +43,14 @@ namespace BulletJournalApp.Test.UI
             _taskManagerMock = new(taskMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, taskstatusmock.Object, fileMock.Object, scheduleMock.Object, priorityMock.Object, categoryMock.Object, _inputMock.Object);
             _shopListManagerMock = new(itemMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, itemStatusMock.Object, scheduleMock.Object, categoryMock.Object, fileMock.Object, _inputMock.Object);
             _mealPlanManagerMock = new(mealMock.Object, ingredientMock.Object, timeOfDayMock.Object, _inputMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            _routineManagerMock = new(routineMock.Object, categoryMock.Object, scheduleMock.Object, _inputMock.Object, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
         }
 
         [Fact]
         public void When_User_Select_Tasks_Manager_Then_Task_Manager_UI_Should_Open()
         {
             // Arrange
-            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock);
+            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock, _routineManagerMock);
             _input = new StringReader("1\n0\nN\n0");
             Console.SetIn(_input);
             // Act
@@ -61,7 +64,7 @@ namespace BulletJournalApp.Test.UI
         public void When_User_Select_Shopping_List_Manager_Then_Shopping_List_Manager_UI_Should_Open()
         {
             // Arrange
-            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock);
+            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock, _routineManagerMock);
             _input = new StringReader("2\n0\n0");
             Console.SetIn(_input);
             // Act
@@ -75,7 +78,7 @@ namespace BulletJournalApp.Test.UI
         public void When_User_Select_Meal_Plan_Manager_Then_Meal_Plan_Manager_UI_Should_Open()
         {
             // Arrange
-            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock);
+            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock, _routineManagerMock);
             _input = new StringReader("3\n0\n0");
             Console.SetIn(_input);
             // Act
@@ -89,7 +92,7 @@ namespace BulletJournalApp.Test.UI
         public void When_User_Select_Invalid_Choices_Then_It_Should_Throw_An_Error()
         {
             // Arrange
-            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock);
+            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock, _routineManagerMock);
             _input = new StringReader("Test\n0");
             Console.SetIn(_input);
             // Act

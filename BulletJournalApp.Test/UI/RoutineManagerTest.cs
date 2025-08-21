@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace BulletJournalApp.Test.UI
 {
+    [Collection("Sequential")]
     public class RoutineManagerTest
     {
         private Entries entries = Entries.ROUTINES;
@@ -24,7 +25,7 @@ namespace BulletJournalApp.Test.UI
         private Mock<IFileService> fileMock = new();
         private Mock<UserInput> inputMock = new();
         private UserInput userInput = new UserInput();
-        private Mock<IRoutineService> routineServiceMock = new();
+        private Mock<IRoutineService> routineServiceMock;
         private Mock<ICategoryService> categoryServiceMock = new();
         private Mock<IPeriodicityService> periodicityServiceMock = new();
         private ConsoleInputOutput stream = new();
@@ -49,6 +50,7 @@ namespace BulletJournalApp.Test.UI
         public void Given_There_Are_No_Routines_In_The_List_When_User_Selected_To_Add_Routine_Then_It_Should_Be_Added()
         {
             // Arrange
+            routineServiceMock = new();
             var ui = new RoutineManager(routineServiceMock.Object, categoryServiceMock.Object, periodicityServiceMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
             _input = new StringReader("1\nTest 1\nTest\nP\nTest note\nM\n1\nTest Task 1\n1\nTest Task 2\n1\nTest Task 3\n0\n0");
             Console.SetIn(_input);
@@ -65,12 +67,13 @@ namespace BulletJournalApp.Test.UI
                 Times.Once);
         }
         [Theory]
-        [MemberData(nameof(RoutineManagerTestData.GetLogsVerificationForAddingRoutineWithSuccess), MemberType =typeof(RoutineManagerTestData))]
-        public void Given_There_Are_No_Routines_In_The_List_When_User_Selected_To_Add_Routine_Then_Logger_Should_Be_Logged_That_User_Is_Adding(string logVerify)
+        [MemberData(nameof(RoutineManagerTestData.GetLogsVerification), MemberType =typeof(RoutineManagerTestData))]
+        public void Given_Routine_Manager_Were_Opened_When_User_Are_Selecting_Variant_Of_Options_Then_Logger_Should_Be_Logged_That_User_Is_Doing_Something(string input, string logVerify)
         {
             // Arrange
+            routineServiceMock = new();
             var ui = new RoutineManager(routineServiceMock.Object, categoryServiceMock.Object, periodicityServiceMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
-            _input = new StringReader("1\nTest 1\nTest\nP\nTest note\nM\n1\nTest Task 1\n1\nTest Task 2\n1\nTest Task 3\n0\n0");
+            _input = new StringReader(input);
             Console.SetIn(_input);
             // Act
             ui.RoutineUI();
@@ -82,6 +85,7 @@ namespace BulletJournalApp.Test.UI
         public void Given_There_Are_No_Routines_In_The_List_When_User_Selected_To_Add_Routine_Then_It_Should_Display_That_It_Was_Failed_To_Add(string input, string errorverify)
         {
             // Arrange
+            routineServiceMock = new();
             var ui = new RoutineManager(routineServiceMock.Object, categoryServiceMock.Object, periodicityServiceMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
             _input = new StringReader(input);
             Console.SetIn(_input);
@@ -95,6 +99,7 @@ namespace BulletJournalApp.Test.UI
         public void Given_There_Are_Routines_In_The_List_When_User_Selected_To_List_All_Routines_Then_It_Should_Get_All_Routines_And_Display_It_To_User()
         {
             // Arrange
+            routineServiceMock = new();
             _data.GetAllRoutines(routines, _routines1, _routines2, _routines3);
             var ui = new RoutineManager(routineServiceMock.Object, categoryServiceMock.Object, periodicityServiceMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
             routineServiceMock.Setup(s => s.GetAllRoutines()).Returns(routines);
@@ -105,6 +110,20 @@ namespace BulletJournalApp.Test.UI
             // Assert
             routineServiceMock.Verify(user => user.GetAllRoutines(), Times.Once);
         }
-
+        [Theory]
+        [MemberData(nameof(RoutineManagerTestData.GetValueForError), MemberType =typeof(RoutineManagerTestData))]
+        public void Given_Routine_Manager_Were_Opened_When_User_Selected_Invalid_Values_Or_Choices_Then_It_Should_Display_Error(string input, string message)
+        {
+            // Arrange
+            routineServiceMock = new();
+            var ui = new RoutineManager(routineServiceMock.Object, categoryServiceMock.Object, periodicityServiceMock.Object, userInput, consoleLoggerMock.Object, fileLoggerMock.Object, formatterMock.Object, fileMock.Object);
+            _input = new StringReader(input);
+            Console.SetIn(_input);
+            // Act
+            ui.RoutineUI();
+            // Assert
+            consoleLoggerMock.Verify(user => user.Error(message), Times.Once);
+            fileLoggerMock.Verify(user => user.Error(message), Times.Once);
+        }
     }
 }
