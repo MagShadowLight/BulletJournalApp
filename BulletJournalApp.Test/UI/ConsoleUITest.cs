@@ -89,6 +89,20 @@ namespace BulletJournalApp.Test.UI
             _console.ResetReader();
         }
         [Fact]
+        public void When_User_Select_Routines_Manager_Then_Routines_Manager_UI_Should_Open()
+        {
+            // Arrange
+            var ui = new ConsoleUI(_taskManagerMock, fileLoggerMock.Object, consoleLoggerMock.Object, _shopListManagerMock, _mealPlanManagerMock, _routineManagerMock);
+            _input = new StringReader("4\n0\n0");
+            Console.SetIn(_input);
+            // Act
+            ui.Run();
+            // Assert
+            fileLoggerMock.Verify(logger => logger.Log("Opening Routine Manager"));
+            fileLoggerMock.Verify(logger => logger.Log("Routine Manager Closed"));
+            _console.ResetReader();
+        }
+        [Fact]
         public void When_User_Select_Invalid_Choices_Then_It_Should_Throw_An_Error()
         {
             // Arrange

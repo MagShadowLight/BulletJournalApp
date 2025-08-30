@@ -51,7 +51,8 @@ namespace BulletJournalApp.UI
                     "6. Delete Routine\n" +
                     "7. File Management\n" +
                     "0. Exit");
-                var input = _userInput.GetStringInput("Choose an option: ");
+                Console.Write("Choose an option: ");
+                var input = Console.ReadLine();
                 try
                 {
                     switch (input)
@@ -85,6 +86,7 @@ namespace BulletJournalApp.UI
                             break;
                         case "0":
                             Console.WriteLine("Goodbye");
+                            isRunning = false;
                             return;
                         default:
                             _filelogger.Error("Invalid choice. Try again.");

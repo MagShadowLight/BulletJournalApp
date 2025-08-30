@@ -69,5 +69,43 @@ namespace BulletJournalApp.Test.UI.Util
             fileLoggerMock.Verify(user => user.Error("Value cannot be null. (Parameter 'str must not be null or empty string')"), Times.Once);
             consoleLoggerMock.Verify(user => user.Error("Value cannot be null. (Parameter 'str must not be null or empty string')"), Times.Once);
         }
+        [Fact]
+        public void Given_There_Is_No_String_In_The_List_When_User_Selected_To_Add_String_Then_It_Should_Be_Added()
+        {
+            // Arrange
+            var listmanager = new ListManager(fileLoggerMock.Object, consoleLoggerMock.Object);
+            var expected = new List<string> { "Meow" };
+            _input = new StringReader("1\nMeow\n0");
+            Console.SetIn(_input);
+            // Act
+            var actual = listmanager.StringListManager();
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public void Given_There_Is_String_In_The_List_When_User_Selected_To_Edit_String_Then_It_Should_Be_Updated()
+        {
+            // Arrange
+            var listmanager = new ListManager(fileLoggerMock.Object, consoleLoggerMock.Object);
+            var expected = new List<string> { "Meow" };
+            _input = new StringReader("1\nTest\n2\nTest\nMeow\n0");
+            Console.SetIn(_input);
+            // Act
+            var actual = listmanager.StringListManager();
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public void Given_There_Is_String_In_The_List_When_User_Selected_To_Delete_String_Then_It_Should_Be_Removed_From_The_List()
+        {
+            // Arrange
+            var listmanager = new ListManager(fileLoggerMock.Object, consoleLoggerMock.Object);
+            _input = new StringReader("1\nTest\n3\nTest\n0");
+            Console.SetIn(_input);
+            // Act
+            var actual = listmanager.StringListManager();
+            // Assert
+            Assert.Empty(actual);
+        }
     }
 }
