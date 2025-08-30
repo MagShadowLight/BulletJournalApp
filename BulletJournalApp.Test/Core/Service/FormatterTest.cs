@@ -103,7 +103,6 @@ namespace BulletJournalApp.Test.Core.Service
             // Arrange
             var item = new Items("Test 1", "Test", Periodicity.Monthly, 1, 1, Category.None, ItemStatus.NotBought, "Test", DateTime.Today, DateTime.Today.AddDays(1));
             var message = $"- Date Bought: {item.DateBought}";
-            Console.WriteLine(item.DateBought);
             // Act
             var result = _formatter.FormatItems(item);
             // Assert
@@ -125,7 +124,7 @@ namespace BulletJournalApp.Test.Core.Service
             Assert.Contains(ingredient.Measurements, result);
         }
         [Theory]
-        [MemberData(nameof(MealsFormatterData.GetMeals), MemberType =typeof(MealsFormatterData))    ]
+        [MemberData(nameof(MealsFormatterData.GetMeals), MemberType =typeof(MealsFormatterData))]
         public void Given_There_Are_Meal_When_Formatting_Meal_Into_A_String_Then_It_Should_Converted_To_String(Meals meal)
         {
             // Arrange // Act
@@ -138,15 +137,22 @@ namespace BulletJournalApp.Test.Core.Service
             Assert.Contains(meal.MealDate.ToShortDateString(), result);
             Assert.Contains(meal.MealTime.ToShortTimeString(), result);
         }
-
-
-
-
-
-
-
-
-
-        
+        [Theory]
+        [MemberData(nameof(RoutinesFormatterTestData.GetRoutines), MemberType =typeof(RoutinesFormatterTestData))]
+        public void Given_There_Are_Routines_When_Formatting_Routine_Into_A_String_Then_It_Should_Converted_To_String(Routines routines)
+        {
+            // Arrange // Act
+            var result = _formatter.FormatRoutines(routines);
+            // Assert
+            Assert.Contains(routines.Id.ToString(), result);
+            Assert.Contains(routines.Name, result);
+            Assert.Contains(routines.Description, result);
+            Assert.Contains(routines.Category.ToString(), result);
+            Assert.Contains(routines.TaskList[0], result);
+            Assert.Contains(routines.TaskList[1], result);
+            Assert.Contains(routines.TaskList[2], result);
+            Assert.Contains(routines.Periodicity.ToString(), result);
+            Assert.Contains(routines.Notes, result);
+        }
     }
 }

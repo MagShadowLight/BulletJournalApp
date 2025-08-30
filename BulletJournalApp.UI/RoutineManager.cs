@@ -33,7 +33,7 @@ namespace BulletJournalApp.UI
             _filelogger = filelogger;
             _formatter = formatter;
             _fileservice = fileservice;
-            _listmanager = new(_filelogger);
+            _listmanager = new(_filelogger, _consolelogger);
         }
         public void RoutineUI()
         {
@@ -51,54 +51,61 @@ namespace BulletJournalApp.UI
                     "6. Delete Routine\n" +
                     "7. File Management\n" +
                     "0. Exit");
-                var input = _userInput.GetStringInput("Choose an option: ");
-                switch (input)
+                Console.Write("Choose an option: ");
+                var input = Console.ReadLine();
+                try
                 {
-                    case "1":
-                        _filelogger.Log("Adding a routine");
-                        AddRoutine();
-                        break;
-                    case "2":
-                        ListAllRoutines();
-                        break;
-                    case "3":
-                        ListRoutinesByOptions();
-                        break;
-                    case "4":
-                        SearchRoutines();
-                        break;
-                    case "5":
-                        UpdateRoutineValues();
-                        break;
-                    case "6":
-                        DeleteRoutine();
-                        break;
-                    case "7":
-                        _consolelogger.Warn("This feature is not implemented yet");
-                        break;
-                    case "0":
-                        Console.WriteLine("Goodbye");
-                        return;
-                    default:
-                        _filelogger.Log("Invalid choice. try again.");
-                        _consolelogger.Log("Invalid choic. Try again.");
-                        break;
+                    switch (input)
+                    {
+                        case "1":
+                            _filelogger.Log("Adding a routine");
+                            AddRoutine();
+                            break;
+                        case "2":
+                            _filelogger.Log("Listing all the routines");
+                            ListAllRoutines();
+                            break;
+                        case "3":
+                            _filelogger.Log("Listing all routines by options selected");
+                            ListRoutinesByOptions();
+                            break;
+                        case "4":
+                            _filelogger.Log("Searching for routine");
+                            SearchRoutines();
+                            break;
+                        case "5":
+                            _filelogger.Log("Updating Routine");
+                            UpdateRoutineValues();
+                            break;
+                        case "6":
+                            _filelogger.Log("Deleting routine");
+                            DeleteRoutine();
+                            break;
+                        case "7":
+                            _consolelogger.Warn("This feature is not implemented yet");
+                            break;
+                        case "0":
+                            Console.WriteLine("Goodbye");
+                            isRunning = false;
+                            return;
+                        default:
+                            _filelogger.Error("Invalid choice. Try again.");
+                            _consolelogger.Error("Invalid choice. Try again.");
+                            break;
+                    }
+                } catch(Exception ex)
+                {
+                    _consolelogger.Error(ex.Message);
+                    _filelogger.Error(ex.Message);
                 }
             }
         }
         internal void AddRoutine()
         {
-            _filelogger.Log("Entering name");
             var name = _userInput.GetStringInput("Enter the name of the routine: ");
-            _filelogger.Log("Entering description");
             var description = _userInput.GetStringInput("Enter the description of the routine: ");
-            try
-            {
-                _filelogger.Log("Entering category");
                 var category = _userInput.GetCategoryInput("Enter the category of the routine (Use (N)one, (E)ducation, (W)orks, (H)ome, (P)ersonal, (F)inancial, or (T)ransportation): ");
-                _filelogger.Log("Entering note");
                 var note = _userInput.GetStringInput("Enter the note of the routine: ");
-                _filelogger.Log("Entering schedule");
                 var periodicity = _userInput.GetScheduleInput("Enter the periodicity of the routine (Use (Y)early, (Q)uarterly, (M)onthly, (W)eekly, or (D)aily): ");
                 _filelogger.Log("Opening string list manager");
                 List<string> list = _listmanager.StringListManager();
@@ -107,14 +114,8 @@ namespace BulletJournalApp.UI
                 if (routines != null)
                     id = routines.Any() ? routines.Max(r => r.Id) : 0;
                 var routine = new Routines(name, description, category, list, periodicity, note, id);
-                _filelogger.Log("Sending info to the service");
                 _routineService.AddRoutine(routine);
                 _filelogger.Log("Routine have been added successfully");
-            } catch (Exception ex)
-            {
-                _consolelogger.Error(ex.Message);
-                _filelogger.Error(ex.Message);
-            }
         }
         internal void ListAllRoutines()
         {
@@ -134,10 +135,16 @@ namespace BulletJournalApp.UI
             switch (input)
             {
                 case "C":
+                    _filelogger.Log("Listing all routines by Category");
                     ListRoutinesByCategory();
                     break;
                 case "S":
+                    _filelogger.Log("Listing all routines by Periodicity");
                     ListRoutinesByPeriodicity();
+                    break;
+                default:
+                    _filelogger.Error("Invalid choice. Try again.");
+                    _consolelogger.Error("Invalid choice. Try again.");
                     break;
             }
         }
@@ -176,12 +183,14 @@ namespace BulletJournalApp.UI
             if (routine == null)
             {
                 _consolelogger.Error($"Routine: {name} not found");
+                _filelogger.Error($"Routine: {name} not found");
+                return;
             }
             Console.WriteLine(_formatter.FormatRoutines(routine));
         }
         internal void UpdateRoutineValues()
         {
-            Console.Write("Which value to update?\n" +
+            Console.WriteLine("Which value to update?\n" +
                 "1. Name, Description, and Notes\n" +
                 "2. Category\n" +
                 "3. Periodicity\n" +
@@ -190,16 +199,24 @@ namespace BulletJournalApp.UI
             switch (input)
             {
                 case "1":
+                    _filelogger.Log("Updating routine name, description, and notes");
                     ChangeRoutineNameDescriptionNotes();
                     break;
                 case "2":
+                    _filelogger.Log("Updating routine category");
                     ChangeRoutineCategory();
                     break;
                 case "3":
+                    _filelogger.Log("Updating routine periodicity");
                     ChangeRoutinePeriodicity();
                     break;
                 case "4":
+                    _filelogger.Log("Updating routine task list");
                     ChangeTasksList();
+                    break;
+                default:
+                    _consolelogger.Error("Invalid choice. Try again.");
+                    _filelogger.Error("Invalid choice. Try again.");
                     break;
             }
         }
